@@ -41,28 +41,41 @@
     <h1> {{ buttonState }} </h1>
   </ion-card> -->
   
-  <ion-list radio-group [(ngModel)]="led" (ionChange)="ledOn($event)">
-    <ion-list-header>
-      <h2>Time of the day</h2>
-    </ion-list-header>
+  <ion-card>
+    <ion-card-header>
+      Time of the day
+    </ion-card-header>
     
-    <ion-item>
-      <ion-label>Day Only</ion-label>
-      <ion-radio value="1"></ion-radio>
-    </ion-item>
-    
-    <ion-item>
-      <ion-label>Night Only</ion-label>
-      <ion-radio value="0"></ion-radio>
-    </ion-item>
-    
-    <ion-item>
-      <ion-label>Day and Night</ion-label>
-      <ion-radio value="0"></ion-radio>
-    </ion-item>
+    <ion-list radio-group [(ngModel)]="time" (ionChange)="ledOn($event)">
+      <!-- <ion-list-header>
+        <h2>Time of the day</h2>
+      </ion-list-header> -->
+      
+      <ion-item>
+        <ion-label>Day Only</ion-label>
+        <ion-radio value="1"></ion-radio>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label>Night Only</ion-label>
+        <ion-radio value="0"></ion-radio>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label>Day and Night</ion-label>
+        <ion-radio value="0"></ion-radio>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+  
+  
+  <ion-card>
+    <ion-card-header>
+      Mode
+    </ion-card-header>
     
     <ion-list>
-      <button ion-button full outline>Mode</button>
+      <!-- <button ion-button full outline>Mode</button> -->
       
       <ion-item>
         <button ion-button icon-start full outline>
@@ -96,35 +109,56 @@
         
       </ion-item>
     </ion-list>
+  </ion-card>
+  
+  <ion-card>
+    <ion-card-header>
+      Sensitivity
+    </ion-card-header>
     
     <ion-item>
-      <ion-label>
+      <!-- <ion-label>
         <h2>Sensitivity</h2>
-      </ion-label>
+      </ion-label> -->
       
-      <ion-range min="0" max="1" [(ngModel)]="brightness" (ionChange)="ledRange($event)">
+      <ion-range min="0" max="1" [(ngModel)]="sensitivity" (ionChange)="ledRange($event)">
         <ion-icon range-left small name="sunny"></ion-icon>
         <ion-icon range-right name="sunny"></ion-icon>
       </ion-range>
     </ion-item>
+  </ion-card>
+  
+  <ion-card>
+    <ion-card-header>
+      Time between triggers
+    </ion-card-header>
     
     <ion-item>
-      <ion-label>
+      <!-- <ion-label>
         <h2>Time between triggers</h2>
-      </ion-label>
-      <ion-range min="0" max="1" [(ngModel)]="brightness" (ionChange)="ledRange($event)">
+      </ion-label> -->
+      
+      <ion-range min="0" max="1" [(ngModel)]="triggers" (ionChange)="ledRange($event)">
         <ion-icon range-left small name="timer"></ion-icon>
         <ion-icon range-right name="timer"></ion-icon>
       </ion-range>
     </ion-item>
-    
+  </ion-card>
+  
+  <ion-card>  
     <ion-item>
-      <ion-label> Activate focus signal before trigger signal </ion-label>
+      <ion-label> Activate focus signal before <br /> trigger signal </ion-label>
       <ion-toggle></ion-toggle>
     </ion-item>
-    
+  </ion-card>
+  
+  <ion-card>
+      <ion-card-header>
+          Camera model attached
+          </ion-card-header>
+
     <ion-item>
-      <ion-label>Camera model attached</ion-label>
+      <!-- <ion-label>Camera model attached</ion-label> -->
       <ion-select interface="popover" [(ngModel)]="companyName">
         <ion-option value="">Camera Name</ion-option>
         <!-- <ion-option value="">Male</ion-option> -->
@@ -134,19 +168,8 @@
         <ion-option value="">Model 1</ion-option>
         <ion-option value="">Model 2</ion-option>
       </ion-select>
-      
-      
     </ion-item>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-  </ion-list>
+  </ion-card>
   
 </ion-content>
 

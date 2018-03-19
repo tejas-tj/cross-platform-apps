@@ -28,10 +28,10 @@ export class HomePage {
   }
 
   scan() {
-    this.setStatus('Scanning for Bluetooth LE Devices');
+    this.setStatus('Scanning for BLE Devices');
     this.devices = [];  // clear list
 
-    this.ble.scan([LEDBUTTON_SERVICE], 5).subscribe(
+    this.ble.scan([], 5).subscribe(
       device => this.onDeviceDiscovered(device), 
       error => this.scanError(error)
     );
