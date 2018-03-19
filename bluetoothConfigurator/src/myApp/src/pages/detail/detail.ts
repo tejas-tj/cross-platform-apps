@@ -6,7 +6,15 @@ import { BLE } from '@ionic-native/ble';
 // Bluetooth UUIDs
 const LEDBUTTON_SERVICE = '00001523-1212-efde-1523-785feabcd123';
 const BUTTON_CHARACTERISTIC = '00001524-1212-efde-1523-785feabcd123';
-const LED_CHARACTERISTIC = '00001525-1212-efde-1523-785feabcd123';
+const LED_CHARACTERISTIC = '00001525-1212-efde-1523-785feabcd123'; 
+
+const APPIKOSENSE_SERVICE = '00001523-1212-efde-1523-785feabcd123';
+const APPIKOSENSE_TIME = '00001523-1212-efde-1523-785feabcd123';
+const APPIKOSENSE_MODE = '00001523-1212-efde-1523-785feabcd123';
+const APPIKOSENSE_SENSITIVITY = '00001523-1212-efde-1523-785feabcd123';
+const APPIKOSENSE_TRIGGERS = '00001523-1212-efde-1523-785feabcd123';
+const APPIKOSENSE_ACTIVATE = '00001523-1212-efde-1523-785feabcd123';
+const APPIKOSENSE_CAMERA = '00001523-1212-efde-1523-785feabcd123';
 
 
 @Component({
@@ -16,10 +24,13 @@ const LED_CHARACTERISTIC = '00001525-1212-efde-1523-785feabcd123';
 export class DetailPage {
   
   peripheral: any = {};
-  led: number;
+  /* led: number;
   brightness: number;
   buttonState: number;
-  ledStatus: number;
+  ledStatus: number; */
+  time: number;
+  sensitivity: number;
+  triggers: number;  
   statusMessage: string;
   
   constructor(public navCtrl: NavController, 
@@ -46,12 +57,12 @@ export class DetailPage {
       this.peripheral = peripheral;
       this.setStatus('Connected to ' + (peripheral.name || peripheral.id));
       
-      this.ble.startNotification(this.peripheral.id, LEDBUTTON_SERVICE, LED_CHARACTERISTIC).subscribe(
+      this.ble.startNotification(this.peripheral.id, APPIKOSENSE_SERVICE, LED_CHARACTERISTIC).subscribe(
         
         () => this.showAlert('Unexpected Error', 'Failed to subscribe for button state changes')
       )
 
-      this.ble.startNotification(this.peripheral.id, LEDBUTTON_SERVICE, BUTTON_CHARACTERISTIC).subscribe(
+      this.ble.startNotification(this.peripheral.id, APPIKOSENSE_SERVICE, BUTTON_CHARACTERISTIC).subscribe(
         data => this.onButtonStateChange(data),
         () => this.showAlert('Unexpected Error', 'Failed to subscribe for button state changes')
       )
@@ -70,25 +81,49 @@ export class DetailPage {
   
     }
 
-    ledOn(event) {
+    timeOfDay(event) {
       let buffer = new Uint8Array([this.led]).buffer;
-      this.ble.write(this.peripheral.id, LEDBUTTON_SERVICE, LED_CHARACTERISTIC, buffer).then(
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TIME, buffer).then(
         () => this.setStatus('Set led status to ' + this.led),
         e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
       );
     }
 
-      ledRange(event) {
+      selectMode(event) {
       let sliderBuffer = new Uint8Array([this.brightness]).buffer;
-      this.ble.write(this.peripheral.id, LEDBUTTON_SERVICE, LED_CHARACTERISTIC, sliderBuffer).then(
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_MODE, sliderBuffer).then(
         () => this.setStatus('Set led status to ' + this.brightness),
         e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
       );
     }
 
-    ledDrop(event) {
+    sensitivityThreshold(event) {
       let dropdownBuffer = new Uint8Array([this.ledStatus]).buffer;
-      this.ble.write(this.peripheral.id, LEDBUTTON_SERVICE, LED_CHARACTERISTIC, dropdownBuffer).then(
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_SENSITIVITY, dropdownBuffer).then(
+        () => this.setStatus('Set led status to ' + this.ledStatus),
+        e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
+      );
+    }
+
+    triggerTime(event) {
+      let dropdownBuffer = new Uint8Array([this.ledStatus]).buffer;
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TRIGGERS, dropdownBuffer).then(
+        () => this.setStatus('Set led status to ' + this.ledStatus),
+        e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
+      );
+    }
+
+    activate(event) {
+      let dropdownBuffer = new Uint8Array([this.ledStatus]).buffer;
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_ACTIVATE, dropdownBuffer).then(
+        () => this.setStatus('Set led status to ' + this.ledStatus),
+        e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
+      );
+    }
+
+    cameraDetails(event) {
+      let dropdownBuffer = new Uint8Array([this.ledStatus]).buffer;
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_CAMERA, dropdownBuffer).then(
         () => this.setStatus('Set led status to ' + this.ledStatus),
         e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
       );
