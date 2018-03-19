@@ -52,12 +52,6 @@ export class MyApp {
     });
   }
   
-  /* openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
-  } */
-  
    openPage(page) {
 
     if(page.component == HomePage){
@@ -66,24 +60,5 @@ export class MyApp {
       this.nav.push(page.component);
     }
   }
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    /* if(page.component == HomePage){
-      this.nav.setRoot(HomePage);
-    } else if(page.component != HomePage) {
-      this.nav.setRoot(page.component)
-      this.nav.push(page.component);
-    } */ /* else {
-      this.nav.push(page.component);
-    } */
-    
-    
-    /* this.nav.setRoot(page.component);
-    this.nav.push(page.component); */
-    /* this.rootPage = page.component; */
-
-  /* openPage(page) {
-    this.nav.push(page.component);
-    } */
   
 }
