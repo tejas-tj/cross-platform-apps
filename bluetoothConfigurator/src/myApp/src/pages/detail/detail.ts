@@ -4,17 +4,18 @@ import { ToastController } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
 
 // Bluetooth UUIDs
-const LEDBUTTON_SERVICE = '00001523-1212-efde-1523-785feabcd123';
+/* const LEDBUTTON_SERVICE = '00001523-1212-efde-1523-785feabcd123';
 const BUTTON_CHARACTERISTIC = '00001524-1212-efde-1523-785feabcd123';
-const LED_CHARACTERISTIC = '00001525-1212-efde-1523-785feabcd123'; 
+const LED_CHARACTERISTIC = '00001525-1212-efde-1523-785feabcd123'; */ 
 
-const APPIKOSENSE_SERVICE = '00001523-1212-efde-1523-785feabcd123';
-const APPIKOSENSE_TIME = '00001523-1212-efde-1523-785feabcd123';
-const APPIKOSENSE_MODE = '00001523-1212-efde-1523-785feabcd123';
-const APPIKOSENSE_SENSITIVITY = '00001523-1212-efde-1523-785feabcd123';
-const APPIKOSENSE_TRIGGERS = '00001523-1212-efde-1523-785feabcd123';
-const APPIKOSENSE_ACTIVATE = '00001523-1212-efde-1523-785feabcd123';
-const APPIKOSENSE_CAMERA = '00001523-1212-efde-1523-785feabcd123';
+/* const APPIKOSENSE_SERVICE = '87de07ba-86e0-424b-9960-f8d74a4c7754'; */
+const APPIKOSENSE_SERVICE = '3c73dc5c-07f5-480d-b066-837407fbde0a'
+const APPIKOSENSE_TIME = '3c73dc5c-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_MODE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_SENSITIVITY = '3c73dc5c-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_TRIGGERS = '3c73dc5c-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_ACTIVATE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_CAMERA = '3c73dc5c-07f5-480d-b066-837407fbde0a';
 
 
 @Component({
@@ -24,14 +25,20 @@ const APPIKOSENSE_CAMERA = '00001523-1212-efde-1523-785feabcd123';
 export class DetailPage {
   
   peripheral: any = {};
-  /* led: number;
+  
+  led: number;
   brightness: number;
   buttonState: number;
-  ledStatus: number; */
+  ledStatus: number; 
+  
   time: number;
   sensitivity: number;
   triggers: number;  
   statusMessage: string;
+  
+  public buttonClickedBurst: boolean = false;
+  public buttonClickedBulb: boolean = false;
+  public buttonClickedVideo: boolean = false;
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -61,74 +68,92 @@ export class DetailPage {
         
         () => this.showAlert('Unexpected Error', 'Failed to subscribe for button state changes')
       )
-
+      
       this.ble.startNotification(this.peripheral.id, APPIKOSENSE_SERVICE, BUTTON_CHARACTERISTIC).subscribe(
         data => this.onButtonStateChange(data),
         () => this.showAlert('Unexpected Error', 'Failed to subscribe for button state changes')
       )
       
     }
-
-      onButtonStateChange(buffer:ArrayBuffer) {
+    
+    onButtonStateChange(buffer:ArrayBuffer) {
       var data = new Uint8Array(buffer);
       console.log(data[0]);
       this.brightness = Number(data);
-  
-      this.ngZone.run(() => {
+      
+      /* this.ngZone.run(() => {
         this.buttonState = data[0];
         this.ledRange(event);
-      });
-  
+      }); */
+      
     }
 
+    
+    
     timeOfDay(event) {
-      let buffer = new Uint8Array([this.led]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TIME, buffer).then(
-        () => this.setStatus('Set led status to ' + this.led),
-        e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
+      let buffer = new Uint8Array([this.time]).buffer;
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TIME, buffer) .then(
+        () => this.setStatus('Set led status to ' + this.time) ,
+        e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e) 
       );
     }
-
-      selectMode(event) {
+    
+    selectMode(event) {
       let sliderBuffer = new Uint8Array([this.brightness]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_MODE, sliderBuffer).then(
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_MODE, sliderBuffer) .then(
         () => this.setStatus('Set led status to ' + this.brightness),
         e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
-      );
+      ); 
+    }
+    
+    public onButtonClickBurst() {
+      
+      this.buttonClickedBurst = !this.buttonClickedBurst;
     }
 
+    public onButtonClickBulb() {
+      
+      this.buttonClickedBulb = !this.buttonClickedBulb;
+    }
+
+    public onButtonClickVideo() {
+      
+      this.buttonClickedVideo = !this.buttonClickedVideo;
+    }
+    
     sensitivityThreshold(event) {
-      let dropdownBuffer = new Uint8Array([this.ledStatus]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_SENSITIVITY, dropdownBuffer).then(
-        () => this.setStatus('Set led status to ' + this.ledStatus),
+      let dropdownBuffer = new Uint8Array([this.sensitivity]).buffer;
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_SENSITIVITY, dropdownBuffer) .then(
+        () => this.setStatus('Set led status to ' + this.sensitivity),
         e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
-      );
+      ); 
     }
-
+    
     triggerTime(event) {
-      let dropdownBuffer = new Uint8Array([this.ledStatus]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TRIGGERS, dropdownBuffer).then(
-        () => this.setStatus('Set led status to ' + this.ledStatus),
+      let dropdownBuffer = new Uint8Array([this.triggers]).buffer;
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TRIGGERS, dropdownBuffer) .then(
+        () => this.setStatus('Set led status to ' + this.triggers),
         e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
-      );
+      ); 
     }
-
+    
     activate(event) {
       let dropdownBuffer = new Uint8Array([this.ledStatus]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_ACTIVATE, dropdownBuffer).then(
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_ACTIVATE, dropdownBuffer) .then(
         () => this.setStatus('Set led status to ' + this.ledStatus),
         e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
-      );
+      ); 
     }
-
+    
     cameraDetails(event) {
       let dropdownBuffer = new Uint8Array([this.ledStatus]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_CAMERA, dropdownBuffer).then(
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_CAMERA, dropdownBuffer) .then(
         () => this.setStatus('Set led status to ' + this.ledStatus),
         e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
-      );
+      ); 
     }
   
+    
     // Disconnect peripheral when leaving the page
     ionViewWillLeave() {
       console.log('ionViewWillLeave disconnecting Bluetooth');
@@ -137,7 +162,7 @@ export class DetailPage {
         () => console.log('ERROR disconnecting ' + JSON.stringify(this.peripheral))
       )
     }
-
+    
     showAlert(title, message) {
       let alert = this.alertCtrl.create({
         title: title,
@@ -153,5 +178,7 @@ export class DetailPage {
         this.statusMessage = message;
       });
     }
+
+  
     
   }

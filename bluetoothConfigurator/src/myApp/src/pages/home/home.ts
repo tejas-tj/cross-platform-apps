@@ -31,12 +31,12 @@ export class HomePage {
     this.setStatus('Scanning for BLE Devices');
     this.devices = [];  // clear list
 
-    this.ble.scan([], 5).subscribe(
+    this.ble.scan([], 15).subscribe(
       device => this.onDeviceDiscovered(device), 
       error => this.scanError(error)
     );
 
-    setTimeout(this.setStatus.bind(this), 5000, 'Scan complete');
+    setTimeout(this.setStatus.bind(this), 15000, 'Scan complete');
   }
 
   onDeviceDiscovered(device) {
@@ -58,7 +58,7 @@ export class HomePage {
     let toast = this.toastCtrl.create({
       message: 'Error scanning for Bluetooth low energy devices',
       position: 'middle',
-      duration: 5000
+      duration: 15000
     });
     toast.present();
   }
