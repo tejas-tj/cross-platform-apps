@@ -64,12 +64,12 @@ export class DetailPage {
       this.peripheral = peripheral;
       this.setStatus('Connected to ' + (peripheral.name || peripheral.id));
       
-      this.ble.startNotification(this.peripheral.id, APPIKOSENSE_SERVICE, LED_CHARACTERISTIC).subscribe(
+      this.ble.startNotification(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TIME).subscribe(
         
         () => this.showAlert('Unexpected Error', 'Failed to subscribe for button state changes')
       )
       
-      this.ble.startNotification(this.peripheral.id, APPIKOSENSE_SERVICE, BUTTON_CHARACTERISTIC).subscribe(
+      this.ble.startNotification(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_MODE).subscribe(
         data => this.onButtonStateChange(data),
         () => this.showAlert('Unexpected Error', 'Failed to subscribe for button state changes')
       )
