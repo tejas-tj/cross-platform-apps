@@ -77,48 +77,56 @@
     
     <ion-list>
       
-      <button ion-item color="light" class="bottom-border">
+      <button ion-item [disabled]="isDisabled" (click)="onButtonClickDisable()" class="bottom-border">
         <ion-icon name="image" item-start></ion-icon>
         Image trigger - single
       </button>
       
-      <button ion-item class="bottom-border" (click)="onButtonClickBurst()">
+      <button ion-item [disabled]="isDisabled" class="bottom-border" (click)="onButtonClickBurst();onButtonClickDisable()">
         <ion-icon name="images" item-start></ion-icon>
         Image trigger - burst
       </button>
       
       <ion-item *ngIf="buttonClickedBurst" class="bottom-border">
-        <ion-label color="primary" stacked>Time between bursts in ms</ion-label>
-        <ion-input type="number" min="100" max="1000" value="" placeholder="Enter value in ms"></ion-input>
+        <ion-label color="primary" stacked>Time between bursts in ms
+          <ion-badge color="primary" item-end>{{this.burstTime}} ms</ion-badge>
+        </ion-label>
+        <ion-input type="number" [(ngModel)]="burstTime" min="100" max="1000" value="" placeholder="Enter value in ms"></ion-input>
       </ion-item>
       
       
-      <button ion-item class="bottom-border" (click)="onButtonClickBulb()">
+      <button ion-item [disabled]="isDisabled" class="bottom-border" (click)="onButtonClickBulb();onButtonClickDisable()">
         <ion-icon name="bulb" item-start></ion-icon>
         Bulb exposure with its duration
       </button>
       
       <ion-item *ngIf="buttonClickedBulb" class="bottom-border">
-        <ion-label color="primary" stacked>Time for exposure at night in ms</ion-label>
-        <ion-input type="number" min="10" max="100000" value="" placeholder="Enter value in ms"></ion-input>
+        <ion-label color="primary" stacked>Time for exposure at night in ms
+          <ion-badge color="primary" item-end>{{this.exposureTime}} ms</ion-badge>
+        </ion-label>
+        <ion-input type="number" [(ngModel)]="exposureTime" min="10" max="100000" value="" placeholder="Enter value in ms"></ion-input>
       </ion-item>
       
-      <button ion-item class="bottom-border" (click)="onButtonClickVideo()">
+      <button ion-item [disabled]="isDisabled" class="bottom-border" (click)="onButtonClickVideo();onButtonClickDisable()">
         <ion-icon name="videocam" item-start></ion-icon>
         Video
       </button>
       
       <ion-item *ngIf="buttonClickedVideo">
-        <ion-label color="primary" stacked>Duration of the video in s</ion-label>
-        <ion-input type="number" min="1" max="100000" value="" placeholder="Enter value in s"></ion-input>
+        <ion-label color="primary" stacked>Duration of the video in s
+          <ion-badge color="primary" item-end>{{this.videoDuration}} s</ion-badge>
+        </ion-label>
+        <ion-input type="number" [(ngModel)]="videoDuration" min="1" max="100000" value="" placeholder="Enter value in s"></ion-input>
       </ion-item>
       
       <ion-item *ngIf="buttonClickedVideo" class="bottom-border">
-        <ion-label color="primary" stacked>Extension time in case more motion is detected</ion-label>
-        <ion-input type="number" min="1" max="100000" value="" placeholder="Enter value in s"></ion-input>
+        <ion-label color="primary" stacked>Extension time in case more motion is detected
+          <ion-badge color="primary" item-end>{{videoExtension}} s</ion-badge>
+        </ion-label>
+        <ion-input type="number" [(ngModel)]="videoExtension" min="1" max="100000" value="" placeholder="Enter value in s"></ion-input>
       </ion-item>
       
-      <button ion-item class="bottom-border">
+      <button ion-item [disabled]="isDisabled" class="bottom-border" (click)="onButtonClickDisable()">
         <ion-icon name="aperture" item-start></ion-icon>
         Focus the camera
       </button>
@@ -133,7 +141,7 @@
     </ion-card-header>
     
     
-  
+    
     <ion-item>
       <!-- <ion-label>
         <h2>Sensitivity</h2>
@@ -177,17 +185,20 @@
     </ion-card-header>
     
     <ion-item>
-      <!-- <ion-label>Camera model attached</ion-label> -->
-      <ion-select interface="popover" [(ngModel)]="companyName" placeholder="Company Name">
-        <ion-option value="">Camera Name</ion-option>
-        <!-- <ion-option value="">Male</ion-option> -->
+      <ion-label>Company Name</ion-label>
+      <ion-select interface="popover" (ionChange)="setModelNames(company)" [(ngModel)]="company">
+        <ion-option [value]="company" *ngFor = "let company of companies">{{company.name}}  </ion-option> 
       </ion-select>
       
-      <ion-select interface="popover" [(ngModel)]="modelName" placeholder="Model Name">
-        <ion-option value="">Model 1</ion-option>
-        <ion-option value="">Model 2</ion-option>
+    </ion-item>
+    <ion-item *ngIf="selectedModels">
+      <ion-label>Model Name</ion-label>
+      <ion-select interface="popover" [(ngModel)]="model">
+        <ion-option [value]="model" *ngFor = "let model of selectedModels">{{model.name}}</ion-option>
       </ion-select>
     </ion-item>
+    
+    
   </ion-card>
   
   

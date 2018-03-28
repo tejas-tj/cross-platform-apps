@@ -36,9 +36,23 @@ export class DetailPage {
   triggers: number;  
   statusMessage: string;
   
-  public buttonClickedBurst: boolean = false;
-  public buttonClickedBulb: boolean = false;
-  public buttonClickedVideo: boolean = false;
+  buttonClicked: boolean = false;
+  buttonClickedBurst: boolean = false;
+  buttonClickedBulb: boolean = false;
+  buttonClickedVideo: boolean = false;
+  
+  
+  companies: any[];
+  models: any[];
+  
+  
+  selectedModels: any[];
+  
+  
+  company: any;
+  model: any;
+  
+  isDisabled: boolean = false;
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -56,7 +70,12 @@ export class DetailPage {
         peripheral => this.showAlert('Disconnected', 'The peripheral unexpectedly disconnected')
       );
       
+      this.initializeCompany();
+      this.initializeModel();
+      
     }
+    
+    
     
     // the connection to the peripheral was successful
     onConnected(peripheral) {
@@ -87,7 +106,7 @@ export class DetailPage {
       }); */
       
     }
-
+    
     
     
     timeOfDay(event) {
@@ -110,16 +129,22 @@ export class DetailPage {
       
       this.buttonClickedBurst = !this.buttonClickedBurst;
     }
-
+    
     public onButtonClickBulb() {
       
       this.buttonClickedBulb = !this.buttonClickedBulb;
     }
-
+    
     public onButtonClickVideo() {
       
       this.buttonClickedVideo = !this.buttonClickedVideo;
     }
+    
+    onButtonClickDisable() {
+      this.isDisabled = true;
+    }
+    
+    
     
     sensitivityThreshold(event) {
       let dropdownBuffer = new Uint8Array([this.sensitivity]).buffer;
@@ -152,7 +177,30 @@ export class DetailPage {
         e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
       ); 
     }
-  
+    
+    initializeCompany(){
+      this.companies = [
+        {id: 1, name: 'Canon'},
+        {id: 2, name: 'Nikon'},
+        {id: 3, name: 'Sony'}
+      ];
+    }
+    
+    initializeModel(){
+      this.models = [
+        {id: 1, name: 'Canon EOS 80D', company_id: 1, company_name: 'Canon'},
+        {id: 2, name: 'Canon PowerShot ELPH 190 IS', company_id: 1, company_name: 'Canon'},
+        {id: 3, name: 'Nikon D5100', company_id: 2, company_name: 'Nikon'},
+        {id: 4, name: 'Nikon D5200', company_id: 2, company_name: 'Nikon'},
+        {id: 5, name: 'Sony Alpha 580', company_id: 3, company_name: 'Sony'},
+        {id: 7, name: 'Sony Alpha 33', company_id: 3, company_name: 'Sony'}
+      ];
+    }
+    
+    setModelNames(company) {
+      this.selectedModels = this.models.filter(model => model.company_id == company.id)
+    }
+    
     
     // Disconnect peripheral when leaving the page
     ionViewWillLeave() {
@@ -178,7 +226,7 @@ export class DetailPage {
         this.statusMessage = message;
       });
     }
-
-  
+    
+    
     
   }
