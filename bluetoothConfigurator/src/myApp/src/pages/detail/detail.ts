@@ -200,6 +200,10 @@ export class DetailPage {
     setModelNames(company) {
       this.selectedModels = this.models.filter(model => model.company_id == company.id)
     }
+
+    onButtonClickWrite() {
+      
+    }
     
     
     // Disconnect peripheral when leaving the page

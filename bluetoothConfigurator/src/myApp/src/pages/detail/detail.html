@@ -143,9 +143,6 @@
     
     
     <ion-item>
-      <!-- <ion-label>
-        <h2>Sensitivity</h2>
-      </ion-label> -->
       
       <ion-range min="0" max="100" pin="true" [(ngModel)]="sensitivity" (ionChange)="sensitivityThreshold($event)">
         <ion-icon range-left small name="sunny"></ion-icon>
@@ -161,9 +158,6 @@
     </ion-card-header>
     
     <ion-item>
-      <!-- <ion-label>
-        <h2>Time between triggers</h2>
-      </ion-label> -->
       
       <ion-range min="100" max="2000" pin="true" step="100" snaps="true" [(ngModel)]="triggers" (ionChange)="triggerTime($event)">
         <ion-icon range-left small name="timer"></ion-icon>
