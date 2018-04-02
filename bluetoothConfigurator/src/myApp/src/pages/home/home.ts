@@ -5,7 +5,7 @@ import { ToastController } from 'ionic-angular';
 import { DetailPage } from '../detail/detail'; 
 
 // Bluetooth UUIDs
-const LEDBUTTON_SERVICE = '00001523-1212-efde-1523-785feabcd123';
+const APPIKOSENSE_SERVICE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
 
 @Component({
   selector: 'page-home',
@@ -31,12 +31,12 @@ export class HomePage {
     this.setStatus('Scanning for BLE Devices');
     this.devices = [];  // clear list
 
-    this.ble.scan([], 15).subscribe(
+    this.ble.startScan([]).subscribe(
       device => this.onDeviceDiscovered(device), 
       error => this.scanError(error)
     );
 
-    setTimeout(this.setStatus.bind(this), 15000, 'Scan complete');
+    /* setTimeout(this.setStatus.bind(this), 150000, 'Scan complete'); */
   }
 
   onDeviceDiscovered(device) {
@@ -58,7 +58,7 @@ export class HomePage {
     let toast = this.toastCtrl.create({
       message: 'Error scanning for Bluetooth low energy devices',
       position: 'middle',
-      duration: 15000
+      /* duration: 15000 */
     });
     toast.present();
   }

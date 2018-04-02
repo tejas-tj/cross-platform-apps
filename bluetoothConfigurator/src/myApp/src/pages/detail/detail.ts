@@ -4,18 +4,15 @@ import { ToastController } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
 
 // Bluetooth UUIDs
-/* const LEDBUTTON_SERVICE = '00001523-1212-efde-1523-785feabcd123';
-const BUTTON_CHARACTERISTIC = '00001524-1212-efde-1523-785feabcd123';
-const LED_CHARACTERISTIC = '00001525-1212-efde-1523-785feabcd123'; */ 
 
 /* const APPIKOSENSE_SERVICE = '87de07ba-86e0-424b-9960-f8d74a4c7754'; */
-const APPIKOSENSE_SERVICE = '3c73dc5c-07f5-480d-b066-837407fbde0a'
-const APPIKOSENSE_TIME = '3c73dc5c-07f5-480d-b066-837407fbde0a';
-const APPIKOSENSE_MODE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
-const APPIKOSENSE_SENSITIVITY = '3c73dc5c-07f5-480d-b066-837407fbde0a';
-const APPIKOSENSE_TRIGGERS = '3c73dc5c-07f5-480d-b066-837407fbde0a';
-const APPIKOSENSE_ACTIVATE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
-const APPIKOSENSE_CAMERA = '3c73dc5c-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_SERVICE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_TIME = '3c73dc5c-07f6-480d-b066-837407fbde0a';
+const APPIKOSENSE_MODE = '3c73dc5c-07f7-480d-b066-837407fbde0a';
+const APPIKOSENSE_SENSITIVITY = '3c73dc58-07f8-480d-b066-837407fbde0a';
+const APPIKOSENSE_TRIGGERS = '3c73dc5c-07f9-480d-b066-837407fbde0a';
+const APPIKOSENSE_ACTIVATE = '3c73dc5c-07fa-480d-b066-837407fbde0a';
+const APPIKOSENSE_CAMERA = '3c73dc5c-07fb-480d-b066-837407fbde0a';
 
 
 @Component({
@@ -32,8 +29,11 @@ export class DetailPage {
   ledStatus: number; 
   
   time: number;
+  mode: number;
   sensitivity: number;
-  triggers: number;  
+  triggers: number;
+  isActivated: number;
+  
   statusMessage: string;
   
   buttonClicked: boolean = false;
@@ -53,6 +53,12 @@ export class DetailPage {
   model: any;
   
   isDisabled: boolean = false;
+  
+  public buttonColor: string = "plain";
+  
+  styling: any = {
+    'clickBg': false
+  };
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -109,20 +115,14 @@ export class DetailPage {
     
     
     
-    timeOfDay(event) {
-      let buffer = new Uint8Array([this.time]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TIME, buffer) .then(
-        () => this.setStatus('Set led status to ' + this.time) ,
-        e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e) 
-      );
+    public timeOfDay(event) {
+      
+      
     }
     
-    selectMode(event) {
-      let sliderBuffer = new Uint8Array([this.brightness]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_MODE, sliderBuffer) .then(
-        () => this.setStatus('Set led status to ' + this.brightness),
-        e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
-      ); 
+    public selectMode(event) {
+      
+      
     }
     
     public onButtonClickBurst() {
@@ -140,42 +140,35 @@ export class DetailPage {
       this.buttonClickedVideo = !this.buttonClickedVideo;
     }
     
-    onButtonClickDisable() {
+    /* onButtonClickDisable() {
       this.isDisabled = true;
+    } */
+    
+    onButtonClickDisable(event) {
+      this.buttonColor = "light";
     }
     
     
     
     sensitivityThreshold(event) {
-      let dropdownBuffer = new Uint8Array([this.sensitivity]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_SENSITIVITY, dropdownBuffer) .then(
-        () => this.setStatus('Set led status to ' + this.sensitivity),
-        e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
-      ); 
+      
+      
     }
     
     triggerTime(event) {
-      let dropdownBuffer = new Uint8Array([this.triggers]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TRIGGERS, dropdownBuffer) .then(
-        () => this.setStatus('Set led status to ' + this.triggers),
-        e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
-      ); 
+      
+      
     }
     
     activate(event) {
-      let dropdownBuffer = new Uint8Array([this.ledStatus]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_ACTIVATE, dropdownBuffer) .then(
-        () => this.setStatus('Set led status to ' + this.ledStatus),
-        e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
-      ); 
+      
+      
+      
     }
     
     cameraDetails(event) {
-      let dropdownBuffer = new Uint8Array([this.ledStatus]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_CAMERA, dropdownBuffer) .then(
-        () => this.setStatus('Set led status to ' + this.ledStatus),
-        e => this.showAlert('Unexpected Error', 'Error updating LED characteristic ' + e)
-      ); 
+      
+      
     }
     
     initializeCompany(){
@@ -200,8 +193,38 @@ export class DetailPage {
     setModelNames(company) {
       this.selectedModels = this.models.filter(model => model.company_id == company.id)
     }
-
-    onButtonClickWrite() {
+    
+    onButtonClickWrite(event) {
+      
+      let timeBuffer = new Uint8Array([this.time]).buffer;
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TIME, timeBuffer) .then(
+        () => this.setStatus('Set led status to ' + this.time)  
+      );
+      
+      let modeBuffer = new Uint8Array([this.mode]).buffer;
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_MODE, modeBuffer) .then(
+        () => this.setStatus('Set led status to ' + this.brightness)
+      ); 
+      
+      let sensitivityBuffer = new Uint8Array([this.sensitivity]).buffer;
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_SENSITIVITY, sensitivityBuffer) .then(
+        () => this.setStatus('Set led status to ' + this.sensitivity)
+      ); 
+      
+      let triggersBuffer = new Uint8Array([this.triggers]).buffer;
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TRIGGERS, triggersBuffer) .then(
+        () => this.setStatus('Set led status to ' + this.triggers)
+      ); 
+      
+      let activateBuffer = new Uint8Array([this.isActivated]).buffer;
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_ACTIVATE, activateBuffer) .then(
+        () => this.setStatus('Set led status to ' + this.isActivated)
+      ); 
+      
+      let cameraBuffer = new Uint8Array([this.ledStatus]).buffer;
+      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_CAMERA, cameraBuffer) .then(
+        () => this.setStatus('Set led status to ' + this.ledStatus)
+      );
       
     }
     

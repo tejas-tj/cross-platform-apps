@@ -52,7 +52,8 @@ export class MyApp {
     });
   }
   
-   openPage(page) {
+  // Adding functionality to the Android back button 
+  openPage(page) {
 
     if(page.component == HomePage){
       this.nav.setRoot(HomePage);

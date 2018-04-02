@@ -6,40 +6,7 @@
 
 <ion-content class="padding">
   
-  <!-- <ion-list radio-group [(ngModel)]="led" (ionChange)="ledOn($event)">
-    <ion-list-header>
-      LED Status
-    </ion-list-header>
-    
-    <ion-item>
-      <ion-label>On</ion-label>
-      <ion-radio value="1"></ion-radio>
-    </ion-item>
-    
-    <ion-item>
-      <ion-label>Off</ion-label>
-      <ion-radio value="0"></ion-radio>
-    </ion-item>
-  </ion-list>
   
-  <ion-item>
-    <ion-range min="0" max="1" [(ngModel)]="brightness" (ionChange)="ledRange($event)">
-      <ion-icon range-left small name="sunny"></ion-icon>
-      <ion-icon range-right name="sunny"></ion-icon>
-    </ion-range>
-  </ion-item>
-  
-  <ion-item>
-    <ion-label>LED Status</ion-label>
-    <ion-select interface="popover" [(ngModel)]="ledStatus" (ionChange)="ledDrop($event)">
-      <ion-option value="1">On</ion-option>
-      <ion-option value="0">Off</ion-option>
-    </ion-select>
-  </ion-item>
-  
-  <ion-card>
-    <h1> {{ buttonState }} </h1>
-  </ion-card> -->
   
   <ion-card>
     <ion-card-header>
@@ -77,12 +44,12 @@
     
     <ion-list>
       
-      <button ion-item [disabled]="isDisabled" (click)="onButtonClickDisable()" class="bottom-border">
+      <button ion-item ngClass="styling" (click)="onButtonClickDisable($event)" [color]="buttonColor" class="bottom-border">
         <ion-icon name="image" item-start></ion-icon>
         Image trigger - single
       </button>
       
-      <button ion-item [disabled]="isDisabled" class="bottom-border" (click)="onButtonClickBurst();onButtonClickDisable()">
+      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickBurst();onButtonClickDisable($event)" [color]="buttonColor">
         <ion-icon name="images" item-start></ion-icon>
         Image trigger - burst
       </button>
@@ -95,7 +62,7 @@
       </ion-item>
       
       
-      <button ion-item [disabled]="isDisabled" class="bottom-border" (click)="onButtonClickBulb();onButtonClickDisable()">
+      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickBulb();onButtonClickDisable($event)" [color]="buttonColor">
         <ion-icon name="bulb" item-start></ion-icon>
         Bulb exposure with its duration
       </button>
@@ -107,7 +74,7 @@
         <ion-input type="number" [(ngModel)]="exposureTime" min="10" max="100000" value="" placeholder="Enter value in ms"></ion-input>
       </ion-item>
       
-      <button ion-item [disabled]="isDisabled" class="bottom-border" (click)="onButtonClickVideo();onButtonClickDisable()">
+      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickVideo();onButtonClickDisable($event)" [color]="buttonColor">
         <ion-icon name="videocam" item-start></ion-icon>
         Video
       </button>
@@ -126,7 +93,7 @@
         <ion-input type="number" [(ngModel)]="videoExtension" min="1" max="100000" value="" placeholder="Enter value in s"></ion-input>
       </ion-item>
       
-      <button ion-item [disabled]="isDisabled" class="bottom-border" (click)="onButtonClickDisable()">
+      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickDisable($event)" [color]="buttonColor">
         <ion-icon name="aperture" item-start></ion-icon>
         Focus the camera
       </button>
@@ -169,7 +136,7 @@
   <ion-card>  
     <ion-item>
       <ion-label text-wrap> <b>Activate focus signal before trigger signal </b></ion-label>
-      <ion-toggle (ionChange)="activate($event)"></ion-toggle>
+      <ion-toggle  (ionChange)="activate($event)"></ion-toggle>
     </ion-item>
   </ion-card>
   
@@ -193,21 +160,20 @@
     </ion-item>
     
     
-  </ion-card>
-  
-  
-  
-  <div (click)="onButtonClickWrite()" class="btn-wrapper">
-    <button ion-button block>
-      Write
-    </button>
-  </div>
-  
+  </ion-card>  
   
 </ion-content>
 
-<ion-footer>
-  <ion-toolbar>
+
+<ion-footer class="positioning">
+  <ion-toolbar item-left>
     <p>{{ statusMessage }}</p>
   </ion-toolbar>
+  
+  <button ion-button item-right (click)="onButtonClickWrite()" class="move-right">
+    Write
+  </button>
+  
+  
+  
 </ion-footer>

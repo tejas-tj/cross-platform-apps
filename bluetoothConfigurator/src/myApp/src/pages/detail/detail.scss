@@ -11,6 +11,17 @@ page-detail {
         padding: 3%;
     }
 
+    .positioning {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .move-right {
+        float: right;
+        margin-top: 3%;
+        margin-right: 3%;
+    }
+
     .bottom-border {
         border-bottom: 1px solid #C0C0BE;
     }
