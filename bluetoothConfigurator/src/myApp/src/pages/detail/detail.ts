@@ -198,32 +198,38 @@ export class DetailPage {
       
       let timeBuffer = new Uint8Array([this.time]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TIME, timeBuffer) .then(
-        () => this.setStatus('Set led status to ' + this.time)  
+        () => this.setStatus('Set led status to ' + this.time),
+        e => console.log(e)
       );
       
       let modeBuffer = new Uint8Array([this.mode]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_MODE, modeBuffer) .then(
-        () => this.setStatus('Set led status to ' + this.brightness)
+        () => this.setStatus('Set led status to ' + this.mode),
+        e => console.log(e)
       ); 
       
       let sensitivityBuffer = new Uint8Array([this.sensitivity]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_SENSITIVITY, sensitivityBuffer) .then(
-        () => this.setStatus('Set led status to ' + this.sensitivity)
+        () => this.setStatus('Set led status to ' + this.sensitivity),
+        e => console.log(e)
       ); 
       
       let triggersBuffer = new Uint8Array([this.triggers]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TRIGGERS, triggersBuffer) .then(
-        () => this.setStatus('Set led status to ' + this.triggers)
+        () => this.setStatus('Set led status to ' + this.triggers),
+        e => console.log(e)
       ); 
       
       let activateBuffer = new Uint8Array([this.isActivated]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_ACTIVATE, activateBuffer) .then(
-        () => this.setStatus('Set led status to ' + this.isActivated)
+        () => this.setStatus('Set led status to ' + this.isActivated),
+        e => console.log(e)
       ); 
       
       let cameraBuffer = new Uint8Array([this.ledStatus]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_CAMERA, cameraBuffer) .then(
-        () => this.setStatus('Set led status to ' + this.ledStatus)
+        () => this.setStatus('Set led status to ' + this.ledStatus),
+        e => console.log(e)
       );
       
     }
