@@ -40,12 +40,12 @@
     
     <ion-list>
       
-      <button ion-item ngClass="styling" (click)="onButtonClickSingle($event)" [color]="buttonColor" class="bottom-border">
+      <button ion-item ngClass="styling" (click)="onButtonClickSingle($event);onButtonClickDisable($event)" [color]="buttonColor" class="bottom-border">
         <ion-icon name="image" item-start></ion-icon>
         Image trigger - single
       </button>
       
-      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickBurst($event)" [color]="buttonColor">
+      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickBurst($event);onButtonClickDisable($event)" [color]="buttonColor">
         <ion-icon name="images" item-start></ion-icon>
         Image trigger - burst
       </button>
@@ -58,7 +58,7 @@
       </ion-item>
       
       
-      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickBulb($event)" [color]="buttonColor">
+      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickBulb($event);onButtonClickDisable($event)" [color]="buttonColor">
         <ion-icon name="bulb" item-start></ion-icon>
         Bulb exposure with its duration
       </button>
@@ -71,7 +71,7 @@
       </ion-item>
       
       
-      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickVideo($event)" [color]="buttonColor">
+      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickVideo($event);onButtonClickDisable($event)" [color]="buttonColor">
         <ion-icon name="videocam" item-start></ion-icon>
         Video
       </button>
@@ -91,7 +91,7 @@
       </ion-item>
       
       
-      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickFocus($event)" [color]="buttonColor">
+      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickFocus($event);onButtonClickDisable($event)" [color]="buttonColor">
         <ion-icon name="aperture" item-start></ion-icon>
         Focus the camera
       </button>

@@ -98,56 +98,47 @@ export class DetailPage {
       
     }
 
-    public onButtonClickSingle() {
+    public onButtonClickSingle(event) {
       
     }
     
+    // To show input box to enter time between bursts
     public onButtonClickBurst() {
-  
       this.buttonClickedBurst = !this.buttonClickedBurst;
-      
     }
     
+    // To show input box to enter time for exposure at night
     public onButtonClickBulb() {
- 
       this.buttonClickedBulb = !this.buttonClickedBulb;
-
     }
     
+    // To show input box to enter duration of video & extension time
     public onButtonClickVideo() {
-      
       this.buttonClickedVideo = !this.buttonClickedVideo;
-
     }
 
     public onButtonClickFocus() {
       
     }
     
+    // To grey out modes which are not selected
     onButtonClickDisable(event) {
       this.buttonColor = "light";
     }
     
-    
-    
     sensitivityThreshold(event) {
-      
       
     }
     
     triggerTime(event) {
       
-      
     }
     
     activate(event) {
       
-      
-      
     }
     
     cameraDetails(event) {
-      
       
     }
     
