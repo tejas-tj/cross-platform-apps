@@ -6,17 +6,13 @@
 
 <ion-content class="padding">
   
-  
-  
+  <!-- Card with radio buttons to select time of the day -->
   <ion-card>
     <ion-card-header>
       Time of the day
     </ion-card-header>
     
     <ion-list radio-group [(ngModel)]="time" (ionChange)="timeOfDay($event)">
-      <!-- <ion-list-header>
-        <h2>Time of the day</h2>
-      </ion-list-header> -->
       
       <ion-item>
         <ion-label>Day Only</ion-label>
@@ -36,20 +32,20 @@
   </ion-card>
   
   
+  <!-- Card with list of buttons to select mode -->
   <ion-card>
     <ion-card-header>
       Mode
     </ion-card-header>
     
-    
     <ion-list>
       
-      <button ion-item ngClass="styling" (click)="onButtonClickDisable($event)" [color]="buttonColor" class="bottom-border">
+      <button ion-item ngClass="styling" (click)="onButtonClickSingle($event)" [color]="buttonColor" class="bottom-border">
         <ion-icon name="image" item-start></ion-icon>
         Image trigger - single
       </button>
       
-      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickBurst();onButtonClickDisable($event)" [color]="buttonColor">
+      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickBurst($event)" [color]="buttonColor">
         <ion-icon name="images" item-start></ion-icon>
         Image trigger - burst
       </button>
@@ -62,7 +58,7 @@
       </ion-item>
       
       
-      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickBulb();onButtonClickDisable($event)" [color]="buttonColor">
+      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickBulb($event)" [color]="buttonColor">
         <ion-icon name="bulb" item-start></ion-icon>
         Bulb exposure with its duration
       </button>
@@ -74,7 +70,8 @@
         <ion-input type="number" [(ngModel)]="exposureTime" min="10" max="100000" value="" placeholder="Enter value in ms"></ion-input>
       </ion-item>
       
-      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickVideo();onButtonClickDisable($event)" [color]="buttonColor">
+      
+      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickVideo($event)" [color]="buttonColor">
         <ion-icon name="videocam" item-start></ion-icon>
         Video
       </button>
@@ -93,7 +90,8 @@
         <ion-input type="number" [(ngModel)]="videoExtension" min="1" max="100000" value="" placeholder="Enter value in s"></ion-input>
       </ion-item>
       
-      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickDisable($event)" [color]="buttonColor">
+      
+      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickFocus($event)" [color]="buttonColor">
         <ion-icon name="aperture" item-start></ion-icon>
         Focus the camera
       </button>
@@ -101,16 +99,14 @@
     </ion-list>
   </ion-card>
   
+  <!-- Card with slider to set sensitivity threshold for the detector -->
   <ion-card>
     <ion-card-header>
       Sensitivity
       <ion-badge color="primary" item-end>{{this.sensitivity}}%</ion-badge> 
     </ion-card-header>
     
-    
-    
     <ion-item>
-      
       <ion-range min="0" max="100" pin="true" [(ngModel)]="sensitivity" (ionChange)="sensitivityThreshold($event)">
         <ion-icon range-left small name="sunny"></ion-icon>
         <ion-icon range-right name="sunny"></ion-icon>
@@ -118,6 +114,7 @@
     </ion-item>
   </ion-card>
   
+  <!-- Card with slider to set time between triggers in milliseconds -->
   <ion-card>
     <ion-card-header>
       Time between triggers
@@ -125,7 +122,6 @@
     </ion-card-header>
     
     <ion-item>
-      
       <ion-range min="100" max="2000" pin="true" step="100" snaps="true" [(ngModel)]="triggers" (ionChange)="triggerTime($event)">
         <ion-icon range-left small name="timer"></ion-icon>
         <ion-icon range-right name="timer"></ion-icon>
@@ -133,6 +129,7 @@
     </ion-item>
   </ion-card>
   
+  <!-- Card with toggle button to activate focus signal before trigger signal -->
   <ion-card>  
     <ion-item>
       <ion-label text-wrap> <b>Activate focus signal before trigger signal </b></ion-label>
@@ -140,40 +137,41 @@
     </ion-item>
   </ion-card>
   
+  <!-- Card with drop downs to select camera model attached -->
   <ion-card>
     <ion-card-header>
       Camera model attached
     </ion-card-header>
     
+    <!-- The model names drop down appears and gets populated only when the company name is selected. -->
     <ion-item>
       <ion-label>Company Name</ion-label>
       <ion-select interface="popover" (ionChange)="setModelNames(company)" [(ngModel)]="company">
         <ion-option [value]="company" *ngFor = "let company of companies">{{company.name}}  </ion-option> 
       </ion-select>
-      
     </ion-item>
+    
     <ion-item *ngIf="selectedModels">
       <ion-label>Model Name</ion-label>
       <ion-select interface="popover" [(ngModel)]="model">
         <ion-option [value]="model" *ngFor = "let model of selectedModels">{{model.name}}</ion-option>
       </ion-select>
     </ion-item>
-    
-    
   </ion-card>  
   
 </ion-content>
 
 
+<!-- Footer which displays status messages and consists of write button -->
 <ion-footer class="positioning">
+  
   <ion-toolbar item-left>
     <p>{{ statusMessage }}</p>
   </ion-toolbar>
   
+  <!-- Button to write to the device -->
   <button ion-button item-right (click)="onButtonClickWrite()" class="move-right">
     Write
   </button>
-  
-  
   
 </ion-footer>

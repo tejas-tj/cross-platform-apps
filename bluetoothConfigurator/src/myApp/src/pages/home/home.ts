@@ -15,66 +15,78 @@ export class HomePage {
   
   devices: any[] = [];
   statusMessage: string;
-
+  
   constructor(public navCtrl: NavController, 
-              private toastCtrl: ToastController,
-              private ble: BLE,
-              private ngZone: NgZone) { 
+    private toastCtrl: ToastController,
+    private ble: BLE,
+    private ngZone: NgZone) { 
+    }
+
+    // To enable bluetoooth if not enabled
+    ionViewDidEnter() {
+      console.log('ionViewDidEnter HomePage');
+      this.ble.isEnabled()
+      .then(() => this.scan())
+      .catch(() => {
+        this.ble.enable()
+        .then(() => this.scan())
+        .catch(()=>this.ble.showBluetoothSettings());
+      })
+    }
+    
+    // To continuously scan for BLE Devices (stopScan is never called)
+    scan() {
+      this.setStatus('Scanning for Appiko BLE Devices');
+      this.devices = [];  // clear list
+      
+      this.ble.startScan([]).subscribe(
+        device => this.onDeviceDiscovered(device), 
+        error => this.scanError(error)
+      );
+      
+      /* setTimeout(this.setStatus.bind(this), 150000, 'Scan complete'); */
+    }
+    
+    // To list the devices as they are discovered
+    onDeviceDiscovered(device) {
+      console.log('Discovered ' + JSON.stringify(device, null, 2));
+      this.ngZone.run(() => {
+        this.devices.push(device);
+      });
+      
+      // To sort and list devices according to RSSI
+      this.devices.sort(function (a, b) {
+        return b.rssi - a.rssi;
+      });
+    }
+    
+    
+    // If location permission is denied, you'll end up here
+    scanError(error) {
+      this.setStatus('Error ' + error);
+      let toast = this.toastCtrl.create({
+        message: 'Error scanning for Appiko BLE devices',
+        position: 'middle',
+        /* duration: 15000 */
+      });
+      toast.present();
+    }
+    
+    // Display messages in the footer
+    setStatus(message) {
+      console.log(message);
+      this.ngZone.run(() => {
+        this.statusMessage = message;
+      });
+    }
+    
+    // Takes you to device details page on click 
+    deviceSelected(device) {
+      console.log(JSON.stringify(device) + ' selected');
+      this.navCtrl.push(DetailPage, {
+        device: device
+      });
+    }
+    
   }
-
-  ionViewDidEnter() {
-    console.log('ionViewDidEnter');
-    this.scan();
-  }
-
-  scan() {
-    this.setStatus('Scanning for BLE Devices');
-    this.devices = [];  // clear list
-
-    this.ble.startScan([]).subscribe(
-      device => this.onDeviceDiscovered(device), 
-      error => this.scanError(error)
-    );
-
-    /* setTimeout(this.setStatus.bind(this), 150000, 'Scan complete'); */
-  }
-
-  onDeviceDiscovered(device) {
-    console.log('Discovered ' + JSON.stringify(device, null, 2));
-    this.ngZone.run(() => {
-      this.devices.push(device);
-    });
-
-    // To sort and list devices according to RSSI
-    this.devices.sort(function (a, b) {
-      return b.rssi - a.rssi;
-    });
-  }
-
-
-  // If location permission is denied, you'll end up here
-  scanError(error) {
-    this.setStatus('Error ' + error);
-    let toast = this.toastCtrl.create({
-      message: 'Error scanning for Bluetooth low energy devices',
-      position: 'middle',
-      /* duration: 15000 */
-    });
-    toast.present();
-  }
-
-  setStatus(message) {
-    console.log(message);
-    this.ngZone.run(() => {
-      this.statusMessage = message;
-    });
-  }
-
-   deviceSelected(device) {
-    console.log(JSON.stringify(device) + ' selected');
-    this.navCtrl.push(DetailPage, {
-      device: device
-    });
-  }
-
-}
+  

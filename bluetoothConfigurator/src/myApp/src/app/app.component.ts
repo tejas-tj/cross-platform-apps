@@ -40,11 +40,6 @@ export class MyApp {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       
-      //Registration of push in Android and Windows Phone
-      /* this.platform.registerBackButtonAction(() => {
-        this.app.navPop();
-      }); */
-      
        this.platform.registerBackButtonAction(() => {
         if (this.nav.canGoBack())
         this.nav.pop().then(() => {}, () => {}); // If called very fast in a row, pop will reject because no pages
