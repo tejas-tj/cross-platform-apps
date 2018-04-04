@@ -182,7 +182,7 @@ export class DetailPage {
       
       let timeBuffer = new Uint8Array([this.time]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TIME, timeBuffer).then(
-        () => this.setStatus('Set led status to ' + this.time) 
+        () => this.setStatus('Set time to ' + this.time) 
       )
       .catch(
         e => console.log(e)
@@ -191,7 +191,7 @@ export class DetailPage {
 
       let modeBuffer = new Uint8Array([this.mode]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_MODE, modeBuffer).then(
-        () => this.setStatus('Set led status to ' + this.mode)  
+        () => this.setStatus('Set mode to ' + this.mode)  
       )
       .catch(
         e => console.log(e)
@@ -200,7 +200,7 @@ export class DetailPage {
 
       let sensitivityBuffer = new Uint8Array([this.sensitivity]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_SENSITIVITY, sensitivityBuffer).then(
-        () => this.setStatus('Set led status to ' + this.sensitivity) 
+        () => this.setStatus('Set sensitivity to ' + this.sensitivity) 
       )
       .catch(
         e => console.log(e)
@@ -209,7 +209,7 @@ export class DetailPage {
 
       let triggersBuffer = new Uint8Array([this.triggers]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TRIGGERS, triggersBuffer).then(
-        () => this.setStatus('Set led status to ' + this.triggers)  
+        () => this.setStatus('Set time between triggers to ' + this.triggers)  
       )
       .catch(
         e => console.log(e)
@@ -218,16 +218,16 @@ export class DetailPage {
 
       let activateBuffer = new Uint8Array([this.isActivated]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_ACTIVATE, activateBuffer).then(
-        () => this.setStatus('Set led status to ' + this.isActivated) 
+        () => this.setStatus('Set signal status to ' + this.isActivated) 
       )
       .catch(
         e => console.log(e)
       );
       
-      
+
       let cameraBuffer = new Uint8Array([this.model]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_CAMERA, cameraBuffer).then(
-        () => this.setStatus('Set led status to ' + this.model) 
+        () => this.setStatus('Set camera model attached to ' + this.model) 
       )
       .catch(
         e => console.log(e)
