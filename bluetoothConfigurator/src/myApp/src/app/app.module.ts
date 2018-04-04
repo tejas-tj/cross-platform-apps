@@ -6,7 +6,6 @@ import { BLE } from '@ionic-native/ble';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { DetailPage } from '../pages/detail/detail';
-import { ListPage } from '../pages/list/list';
 import { DebugPage } from '../pages/debug/debug';
 import { AboutPage } from '../pages/about/about';
 import { HelpPage } from '../pages/help/help';
@@ -19,7 +18,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     MyApp,
     HomePage,
     DetailPage,
-    ListPage,
     DebugPage,
     AboutPage,
     HelpPage  
@@ -33,7 +31,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     MyApp,
     HomePage,
     DetailPage,
-    ListPage,
     DebugPage,
     AboutPage,
     HelpPage
