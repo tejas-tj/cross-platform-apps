@@ -3,7 +3,7 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Appiko Sensor Configurator</ion-title>
+    <ion-title>Setup - Sense Configuration</ion-title>
     <ion-buttons end>
         <button ion-button (click)="scan()">
           Scan
@@ -15,7 +15,7 @@
 <ion-content padding>
   <ion-list> 
     <button ion-item *ngFor="let device of devices" (click)="deviceSelected(device)">
-      <h2>{{ device.name || 'Unnamed' }}</h2>
+      <h2>{{ device.name }}</h2>
       <p>{{ device.id }}</p>
       <p>RSSI: {{ device.rssi }}</p>
     </button>  

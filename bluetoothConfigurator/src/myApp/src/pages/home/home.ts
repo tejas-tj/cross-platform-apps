@@ -4,6 +4,9 @@ import { NavController } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { DetailPage } from '../detail/detail'; 
 
+// Appiko Sense Device Names by default
+const APPIKO_SENSE_PI = 'SensePi';
+
 // Bluetooth UUIDs
 const APPIKOSENSE_SERVICE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
 
@@ -50,8 +53,13 @@ export class HomePage {
     // To list the devices as they are discovered
     onDeviceDiscovered(device) {
       console.log('Discovered ' + JSON.stringify(device, null, 2));
+
       this.ngZone.run(() => {
-        this.devices.push(device);
+        if (device.name == APPIKO_SENSE_PI) {
+          console.log('Discovered device is an Appiko SensePi \(determined from advertised name\)');
+          this.devices.push(device);
+        } else
+            console.log('Discovered device is NOT an Appiko SensePi \(as determined from advertised name\)');
       });
       
       // To sort and list devices according to RSSI

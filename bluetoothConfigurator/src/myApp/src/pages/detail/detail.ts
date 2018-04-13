@@ -4,6 +4,7 @@ import { BLE } from '@ionic-native/ble';
 
 // Bluetooth UUIDs
 const APPIKOSENSE_SERVICE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
+
 const APPIKOSENSE_TIME = '3c73dc5c-07f6-480d-b066-837407fbde0a';
 const APPIKOSENSE_MODE = '3c73dc5c-07f7-480d-b066-837407fbde0a';
 const APPIKOSENSE_SENSITIVITY = '3c73dc58-07f8-480d-b066-837407fbde0a';
