@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
 
 // Bluetooth UUIDs
@@ -58,22 +58,38 @@ export class DetailPage {
     public navParams: NavParams,
     private ble: BLE,
     private alertCtrl: AlertController,
+    public loadingCtrl: LoadingController,
     private ngZone: NgZone) {
       
       let device = navParams.get('device');
       
       this.setStatus('Connecting to ' + device.name || device.id);
-      
+     
+      console.log('Present loading control : ')
+
+      let loading = this.loadingCtrl.create({
+      content: 'Connecting to device...'
+      });
+
+      loading.present();
+
       this.ble.connect(device.id).subscribe(
-        peripheral => this.onConnected(peripheral),
-        peripheral => this.showAlert('Disconnected', 'The peripheral unexpectedly disconnected')
+        peripheral => {
+          this.onConnected(peripheral);
+          loading.dismiss();
+        },
+        peripheral => {
+          this.showAlert('Disconnected', 'The peripheral unexpectedly disconnected. Pls scan and try again');
+          loading.dismiss();
+          this.navCtrl.pop();  
+        }
+        
       );
-      
+
       this.initializeCompany();
       this.initializeModel();
       
     }
-    
     
     
     // When connection to the peripheral is successful
