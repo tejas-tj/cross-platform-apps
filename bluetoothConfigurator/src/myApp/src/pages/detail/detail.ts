@@ -3,14 +3,14 @@ import { NavController, NavParams, AlertController, LoadingController } from 'io
 import { BLE } from '@ionic-native/ble';
 
 // Bluetooth UUIDs
-const APPIKOSENSE_SERVICE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_SERVICE = '3c73dc50-07f5-480d-b066-837407fbde0a';
 
-const APPIKOSENSE_TIME = '3c73dc5c-07f6-480d-b066-837407fbde0a';
-const APPIKOSENSE_MODE = '3c73dc5c-07f7-480d-b066-837407fbde0a';
-const APPIKOSENSE_SENSITIVITY = '3c73dc58-07f8-480d-b066-837407fbde0a';
-const APPIKOSENSE_TRIGGERS = '3c73dc5c-07f9-480d-b066-837407fbde0a';
-const APPIKOSENSE_ACTIVATE = '3c73dc5c-07fa-480d-b066-837407fbde0a';
-const APPIKOSENSE_CAMERA = '3c73dc5c-07fb-480d-b066-837407fbde0a';
+const APPIKOSENSE_TIME = '3c73dc51-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_MODE = '3c73dc52-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_SENSITIVITY = '3c73dc53-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_TRIGGERS = '3c73dc54-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_ACTIVATE = '3c73dc55-07f5-480d-b066-837407fbde0a';
+const APPIKOSENSE_CAMERA = '3c73dc56-07f5-480d-b066-837407fbde0a';
 
 
 @Component({
