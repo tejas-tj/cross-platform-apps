@@ -3,7 +3,6 @@ import { NavController, NavParams, AlertController, LoadingController } from 'io
 import { BLE } from '@ionic-native/ble';
 
 // Bluetooth UUIDs
-
 const UUID_SENSE_PI_SERVICE = '3c73dc50-07f5-480d-b066-837407fbde0a';
 const UUID_SENSE_PI_TIME = '3c73dc51-07f5-480d-b066-837407fbde0a';
                                
@@ -23,7 +22,6 @@ enum TIME_SETTING {
   DAY_ONLY,
   DAYNIGHT_BOTH 
 }
-
 
 @Component({
   selector: 'page-detail',
