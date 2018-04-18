@@ -3,14 +3,26 @@ import { NavController, NavParams, AlertController, LoadingController } from 'io
 import { BLE } from '@ionic-native/ble';
 
 // Bluetooth UUIDs
-const APPIKOSENSE_SERVICE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
 
-const APPIKOSENSE_TIME = '3c73dc5c-07f6-480d-b066-837407fbde0a';
-const APPIKOSENSE_MODE = '3c73dc5c-07f7-480d-b066-837407fbde0a';
-const APPIKOSENSE_SENSITIVITY = '3c73dc58-07f8-480d-b066-837407fbde0a';
-const APPIKOSENSE_TRIGGERS = '3c73dc5c-07f9-480d-b066-837407fbde0a';
-const APPIKOSENSE_ACTIVATE = '3c73dc5c-07fa-480d-b066-837407fbde0a';
-const APPIKOSENSE_CAMERA = '3c73dc5c-07fb-480d-b066-837407fbde0a';
+const UUID_SENSE_PI_SERVICE = '3c73dc50-07f5-480d-b066-837407fbde0a';
+const UUID_SENSE_PI_TIME = '3c73dc51-07f5-480d-b066-837407fbde0a';
+                               
+const UUID_SENSE_PI_INTERFACE_VERSION = '3c73dc51-07f5-480d-b066-837407fbde0a';
+
+/*
+const UUID_SENSE_PI_TIME = '3c73dc51-07f5-480d-b066-837407fbde0a';
+const UUID_SENSE_PI_MODE = '3c73dc52-07f5-480d-b066-837407fbde0a';
+const UUID_SENSE_PI_SENSITIVITY = '3c73dc53-07f5-480d-b066-837407fbde0a';
+const UUID_SENSE_PI_TRIGGERS = '3c73dc54-07f5-480d-b066-837407fbde0a';
+const UUID_SENSE_PI_ACTIVATE = '3c73dc55-07f5-480d-b066-837407fbde0a';
+const UUID_SENSE_PI_CAMERA = '3c73dc56-07f5-480d-b066-837407fbde0a';
+*/
+
+enum TIME_SETTING {
+  NIGHT_ONLY,
+  DAY_ONLY,
+  DAYNIGHT_BOTH 
+}
 
 
 @Component({
@@ -21,7 +33,8 @@ export class DetailPage {
   
   peripheral: any = {};
     
-  time: number;
+  timeSetting: Uint8Array;
+
   mode: number;
   sensitivity: number;
   triggers: number;
@@ -68,13 +81,14 @@ export class DetailPage {
       console.log('Present loading control : ')
 
       let loading = this.loadingCtrl.create({
-      content: 'Connecting to device...'
+      content: 'Connecting to device :' + device.name || device.id
       });
 
       loading.present();
 
       this.ble.connect(device.id).subscribe(
         peripheral => {
+          //pnarasim tbd: disable back during this time. else the connecting loading ctrler shows on home page too
           this.onConnected(peripheral);
           loading.dismiss();
         },
@@ -97,25 +111,34 @@ export class DetailPage {
       
       this.peripheral = peripheral;
       this.setStatus('Connected to ' + (peripheral.name || peripheral.id));
-      
-      this.ble.startNotification(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TIME).subscribe(
-        
+      console.log(JSON.stringify(peripheral, null, 2));
+      //pnarasim : why this?
+      /*this.ble.startNotification(this.peripheral.id, UUID_SENSE_PI_SERVICE, UUID_SENSE_PI_TIME).subscribe(
         () => this.showAlert('Unexpected Error', 'Failed to subscribe')
-      )
-      
+      )*/
     }
   
 
-    public timeOfDay(event) {
+    public setTimeSetting(event) {
+      console.log('timeSetting : time was set to ' + event);
+      this.timeSetting = new Uint8Array(4);
+      this.timeSetting[0]=0x00;
+      this.timeSetting[1]=0x00;
+      this.timeSetting[2]=0x00;
+      this.timeSetting[3]=event;
+    }
+    
+    /* pnarasim: unused
+    public selectMode(event) {
+            
+    }
+    */
+
+    public setSingleTrigger(event) {
       
     }
     
-    public selectMode(event) {
-      
-      
-    }
-
-    public onButtonClickSingle(event) {
+    public unsetSingleTrigger(event) {
       
     }
     
@@ -188,15 +211,15 @@ export class DetailPage {
     // To write the value of each characteristic to the device 
     onButtonClickWrite(event) {
       
-      let timeBuffer = new Uint8Array([this.time]).buffer;
-      this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_TIME, timeBuffer).then(
-        () => this.setStatus('Set time to ' + this.time) 
+      this.ble.write(this.peripheral.id, UUID_SENSE_PI_SERVICE, UUID_SENSE_PI_TIME, this.timeSetting.buffer).then(
+        () => this.setStatus('Successfully Set timeSetting on device to ' + this.timeSetting) 
       )
       .catch(
-        e => console.log(e)
+        e => console.log(e),
       );
       
-
+      
+/*
       let modeBuffer = new Uint8Array([this.mode]).buffer;
       this.ble.write(this.peripheral.id, APPIKOSENSE_SERVICE, APPIKOSENSE_MODE, modeBuffer).then(
         () => this.setStatus('Set mode to ' + this.mode)  
@@ -240,9 +263,10 @@ export class DetailPage {
       .catch(
         e => console.log(e)
       );
-      
+    */
+
     }
-    
+  
     
     // Disconnect peripheral when leaving the page
     ionViewWillLeave() {

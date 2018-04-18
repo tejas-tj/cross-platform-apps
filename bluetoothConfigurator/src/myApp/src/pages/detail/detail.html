@@ -10,21 +10,19 @@
   <!-- Card with radio buttons to select time of the day -->
   <ion-card>
     <ion-card-header>
-      Time of the day
+      Time Setting
     </ion-card-header>
     
-    <ion-list radio-group [(ngModel)]="time" (ionChange)="timeOfDay($event)">
-      
-      <ion-item>
-        <ion-label>Day Only</ion-label>
-        <ion-radio value="1"></ion-radio>
-      </ion-item>
+    <ion-list radio-group [(ngModel)]="time" (ionChange)="setTimeSetting($event)">
       
       <ion-item>
         <ion-label>Night Only</ion-label>
         <ion-radio value="0"></ion-radio>
       </ion-item>
-      
+      <ion-item>
+        <ion-label>Day Only</ion-label>
+        <ion-radio value="1"></ion-radio>
+      </ion-item>      
       <ion-item>
         <ion-label>Day and Night</ion-label>
         <ion-radio value="2"></ion-radio>
@@ -36,12 +34,13 @@
   <!-- Card with list of buttons to select mode -->
   <ion-card>
     <ion-card-header>
-      Mode
+      Trigger Mode
     </ion-card-header>
     
     <ion-list>
+
       
-      <button ion-item ngClass="styling" (click)="onButtonClickSingle($event);onButtonClickDisable($event)" [color]="buttonColor" class="bottom-border">
+      <button ion-item ngClass="styling" (click)="setSingleTrigger($event);unsetSingleTrigger($event)" [color]="buttonColor" class="bottom-border">
         <ion-icon name="image" item-start></ion-icon>
         Image trigger - single
       </button>

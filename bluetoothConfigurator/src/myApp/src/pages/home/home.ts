@@ -8,7 +8,10 @@ import { DetailPage } from '../detail/detail';
 const APPIKO_SENSE_PI = 'SensePi';
 
 // Bluetooth UUIDs
-const APPIKOSENSE_SERVICE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
+const UUID_SENSE_PI_SERVICE = '3c73dc50-07f5-480d-b066-837407fbde0a';
+
+//pnarasim : old UUID
+//const APPIKOSENSE_SERVICE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
 
 @Component({
   selector: 'page-home',
