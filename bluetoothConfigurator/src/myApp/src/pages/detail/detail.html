@@ -37,65 +37,67 @@
       Trigger Mode
     </ion-card-header>
     
-    <ion-list>
+    <ion-list radio-group [(ngModel)]="mode" (ionChange)="setMode($event)">
 
       
-      <button ion-item ngClass="styling" (click)="setSingleTrigger($event);unsetSingleTrigger($event)" [color]="buttonColor" class="bottom-border">
-        <ion-icon name="image" item-start></ion-icon>
-        Image trigger - single
-      </button>
+      <ion-item>
+       <ion-label> Set Single Trigger </ion-label>
+       <ion-icon name="image" item-start></ion-icon>
+       <ion-radio value = "0"></ion-radio>
+      </ion-item>
       
-      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickBurst($event);onButtonClickDisable($event)" [color]="buttonColor">
-        <ion-icon name="images" item-start></ion-icon>
-        Image trigger - burst
-      </button>
+      <ion-item>
+       <ion-label> Set Burst Trigger</ion-label>
+       <ion-icon name="images" item-start></ion-icon>
+       <ion-radio value = "1"></ion-radio>
+      </ion-item>
       
-      <ion-item *ngIf="buttonClickedBurst" class="bottom-border">
+      <ion-item *ngIf="radioClickedBurst" class="bottom-border">
         <ion-label color="primary" stacked>Time between bursts in ms
-          <ion-badge color="primary" item-end>{{this.burstTime}} ms</ion-badge>
+          <ion-badge color="primary" item-end>{{this.burstGap}} ms</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="burstTime" min="100" max="1000" value="" placeholder="Enter value in ms"></ion-input>
+        <ion-input type="number" [(ngModel)]="burstGap" (ionChange)="setBurstGap($event)" min="100" max="1000" value="" placeholder="Enter value in ms"></ion-input>
       </ion-item>
       
-      
-      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickBulb($event);onButtonClickDisable($event)" [color]="buttonColor">
-        <ion-icon name="bulb" item-start></ion-icon>
-        Bulb exposure with its duration
-      </button>
-      
-      <ion-item *ngIf="buttonClickedBulb" class="bottom-border">
+      <ion-item>
+       <ion-label> Set Bulb Exposure </ion-label>
+       <ion-icon name="bulb" item-start></ion-icon>
+       <ion-radio value = "2"></ion-radio>
+      </ion-item>
+
+      <ion-item *ngIf="radioClickedBulb" class="bottom-border">
         <ion-label color="primary" stacked>Time for exposure at night in ms
-          <ion-badge color="primary" item-end>{{this.exposureTime}} ms</ion-badge>
+          <ion-badge color="primary" item-end>{{this.bulbExposureTime}} ms</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="exposureTime" min="10" max="100000" value="" placeholder="Enter value in ms"></ion-input>
+        <ion-input type="number" [(ngModel)]="bulbExposureTime" (ionChange)="setBulbExposureTime($event)" min="10" max="100000" value="" placeholder="Enter value in ms"></ion-input>
       </ion-item>
       
+      <ion-item>
+       <ion-label> Set Video Mode </ion-label>
+       <ion-icon name="videocam" item-start></ion-icon>
+       <ion-radio value = "3"></ion-radio>
+      </ion-item>
       
-      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickVideo($event);onButtonClickDisable($event)" [color]="buttonColor">
-        <ion-icon name="videocam" item-start></ion-icon>
-        Video
-      </button>
-      
-      <ion-item *ngIf="buttonClickedVideo">
+      <ion-item *ngIf="radioClickedVideo">
         <ion-label color="primary" stacked>Duration of the video in s
           <ion-badge color="primary" item-end>{{this.videoDuration}} s</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="videoDuration" min="1" max="100000" value="" placeholder="Enter value in s"></ion-input>
+        <ion-input type="number" [(ngModel)]="videoDuration" (ionChange)="setVideoDuration($event)" min="1" max="100000" value="" placeholder="Enter value in s"></ion-input>
       </ion-item>
       
-      <ion-item *ngIf="buttonClickedVideo" class="bottom-border">
+      <ion-item *ngIf="radioClickedVideo" class="bottom-border">
         <ion-label color="primary" stacked>Extension time in case more motion is detected
-          <ion-badge color="primary" item-end>{{videoExtension}} s</ion-badge>
+          <ion-badge color="primary" item-end>{{this.videoExtension}} s</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="videoExtension" min="1" max="100000" value="" placeholder="Enter value in s"></ion-input>
+        <ion-input type="number" [(ngModel)]="videoExtension" (ionChange)="setVideoExtension($event)" min="1" max="100000" value="" placeholder="Enter value in s"></ion-input>
       </ion-item>
       
-      
-      <button ion-item  ngClass="styling" class="bottom-border" (click)="onButtonClickFocus($event);onButtonClickDisable($event)" [color]="buttonColor">
-        <ion-icon name="aperture" item-start></ion-icon>
-        Focus the camera
-      </button>
-      
+      <ion-item>
+       <ion-label> Set Focus Mode </ion-label>
+       <ion-icon name="aperture" item-start></ion-icon>
+       <ion-radio value = "4"></ion-radio>
+      </ion-item>
+            
     </ion-list>
   </ion-card>
   
@@ -107,7 +109,7 @@
     </ion-card-header>
     
     <ion-item>
-      <ion-range min="0" max="100" pin="true" [(ngModel)]="sensitivity" (ionChange)="sensitivityThreshold($event)">
+      <ion-range min="0" max="100" pin="true" [(ngModel)]="sensitivity" (ionChange)="setSensitivityThreshold($event)">
         <ion-icon range-left small name="sunny"></ion-icon>
         <ion-icon range-right name="sunny"></ion-icon>
       </ion-range>
@@ -118,11 +120,11 @@
   <ion-card>
     <ion-card-header>
       Time between triggers
-      <ion-badge color="primary" item-end>{{this.triggers}} ms</ion-badge>
+      <ion-badge color="primary" item-end>{{this.triggerGap}} ms</ion-badge>
     </ion-card-header>
     
     <ion-item>
-      <ion-range min="100" max="2000" pin="true" step="100" snaps="true" [(ngModel)]="triggers" (ionChange)="triggerTime($event)">
+      <ion-range min="100" max="2000" pin="true" step="100" snaps="true" [(ngModel)]="triggerGap" (ionChange)="setTimeBetweenTriggers($event)">
         <ion-icon range-left small name="timer"></ion-icon>
         <ion-icon range-right name="timer"></ion-icon>
       </ion-range>
@@ -133,26 +135,26 @@
   <ion-card>  
     <ion-item>
       <ion-label text-wrap> <b>Activate focus signal before trigger signal </b></ion-label>
-      <ion-toggle  (ionChange)="activate($event)"></ion-toggle>
+      <ion-toggle  [(ngModel)]="focusActivated" (ionChange)="activateFocus($event)" [checked]="false"></ion-toggle>
     </ion-item>
   </ion-card>
   
   <!-- Card with drop downs to select camera model attached -->
   <ion-card>
     <ion-card-header>
-      Camera model attached
+      Camera Make and Model
     </ion-card-header>
     
     <!-- The model names drop down appears and gets populated only when the company name is selected. -->
     <ion-item>
-      <ion-label>Company Name</ion-label>
-      <ion-select interface="popover" (ionChange)="setModelNames(company)" [(ngModel)]="company">
-        <ion-option [value]="company" *ngFor = "let company of companies">{{company.name}}  </ion-option> 
+      <ion-label>Camera Make</ion-label>
+      <ion-select interface="popover" (ionChange)="setModelNames(make)" [(ngModel)]="make">
+        <ion-option [value]="make" *ngFor = "let make of makes">{{make.name}}  </ion-option> 
       </ion-select>
     </ion-item>
     
     <ion-item *ngIf="selectedModels">
-      <ion-label>Model Name</ion-label>
+      <ion-label>Camera Model</ion-label>
       <ion-select interface="popover" [(ngModel)]="model">
         <ion-option [value]="model" *ngFor = "let model of selectedModels">{{model.name}}</ion-option>
       </ion-select>
