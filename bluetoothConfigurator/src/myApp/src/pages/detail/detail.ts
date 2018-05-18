@@ -114,7 +114,7 @@ export class DetailPage {
       });
 
       loading.present();
-
+      
       this.ble.connect(device.id).subscribe(
         peripheral => {
           //pnarasim tbd: disable back during this time. else the connecting loading ctrler shows on home page too

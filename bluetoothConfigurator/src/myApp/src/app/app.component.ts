@@ -36,12 +36,7 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
-      this.splashScreen.hide();
-      
-       this.platform.registerBackButtonAction(() => {
-        if (this.nav.canGoBack())
-        this.nav.pop().then(() => {}, () => {}); // If called very fast in a row, pop will reject because no pages
-      }, 500); 
+      this.splashScreen.hide(); 
     });
   }
   

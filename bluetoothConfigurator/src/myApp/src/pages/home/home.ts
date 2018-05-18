@@ -1,11 +1,16 @@
 import { BLE } from '@ionic-native/ble';
 import { Component, NgZone } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Platform } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { DetailPage } from '../detail/detail'; 
 
 // Appiko Sense Device Names by default
 const APPIKO_SENSE_PI = 'SensePi';
+const APPIKO_SENSE_PI_COMPLETE_LOCAL_NAME = 'SensePi';
+// shortened local name is SPaabbyymmddnnnn : aa is board rev, bb is manufacturing location
+const APPIKO_SENSE_SHORTENED_LOCAL_NAME = 'SP' 
+
+const APPIKO_SENSE_RE = /SP[0-9]+/g;
 
 // Bluetooth UUIDs
 const UUID_SENSE_PI_SERVICE = '3c73dc50-07f5-480d-b066-837407fbde0a';
@@ -22,7 +27,8 @@ export class HomePage {
   devices: any[] = [];
   statusMessage: string;
   
-  constructor(public navCtrl: NavController, 
+  constructor(public navCtrl: NavController,
+    private platform: Platform, 
     private toastCtrl: ToastController,
     private ble: BLE,
     private ngZone: NgZone) { 
@@ -56,16 +62,17 @@ export class HomePage {
     // To list the devices as they are discovered
     onDeviceDiscovered(device) {
       console.log('Discovered ' + JSON.stringify(device, null, 2));
-
       this.ngZone.run(() => {
-        if (device.name == APPIKO_SENSE_PI) {
-          console.log('Discovered device is an Appiko SensePi \(determined from advertised name\)');
+        var device_name_str = new String(device.name);
+        if ((device.name == APPIKO_SENSE_PI_COMPLETE_LOCAL_NAME) || (device_name_str.search(APPIKO_SENSE_RE)>=0) ) {
+          console.log('Discovered device is an Appiko SensePi');
           this.devices.push(device);
         } else
-            console.log('Discovered device is NOT an Appiko SensePi \(as determined from advertised name\)');
-      });
+            console.log('Discovered device is NOT an Appiko SensePi');
+        }
+      );
       
-      // To sort and list devices according to RSSI
+      // To sort and list devices according to RSSI/
       this.devices.sort(function (a, b) {
         return b.rssi - a.rssi;
       });
@@ -94,6 +101,9 @@ export class HomePage {
     // Takes you to device details page on click 
     deviceSelected(device) {
       console.log(JSON.stringify(device) + ' selected');
+      //stop scan when device is selected
+      console.log("Stopping scan");
+      this.ble.stopScan();
       this.navCtrl.push(DetailPage, {
         device: device
       });
