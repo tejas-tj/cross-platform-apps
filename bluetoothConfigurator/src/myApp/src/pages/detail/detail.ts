@@ -229,10 +229,8 @@ export class DetailPage {
       //pnarasim : make sure html and the value of this var are sync-ed! tbd
       if (!this.focusActivated) {
         console.log('Focus activated');
-        this.focusActivated = true;
       } else {
         console.log('Focus de-activated');
-        this.focusActivated = false;
       }
     }
 
