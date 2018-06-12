@@ -9,6 +9,7 @@ import { DetailPage } from '../pages/detail/detail';
 import { DebugPage } from '../pages/debug/debug';
 import { AboutPage } from '../pages/about/about';
 import { HelpPage } from '../pages/help/help';
+import {TestConfigPage} from '../pages/test-config/test-config';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -20,7 +21,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     DetailPage,
     DebugPage,
     AboutPage,
-    HelpPage  
+    HelpPage,
+    TestConfigPage  
   ],
   imports: [
     BrowserModule,
@@ -33,7 +35,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     DetailPage,
     DebugPage,
     AboutPage,
-    HelpPage
+    HelpPage,
+    TestConfigPage
   ],
   providers: [
     StatusBar,

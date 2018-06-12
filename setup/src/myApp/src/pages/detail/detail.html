@@ -6,6 +6,29 @@
 
 <ion-content class="padding">
 
+  <!-- Card with radio buttons to select trigger mode -->
+  <ion-card>
+    <ion-card-header>
+      Trigger Setting
+    </ion-card-header>
+    
+    <ion-list radio-group [(ngModel)]="triggerSetting" (ionChange)="setTriggerSetting($event)">
+      
+      <ion-item>
+        <ion-label>Timer Only</ion-label>
+        <ion-radio value="0"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>Motion Only</ion-label>
+        <ion-radio value="1"></ion-radio>
+      </ion-item>      
+      <ion-item>
+        <ion-label>Both Timer and Motion</ion-label>
+        <ion-radio value="2"></ion-radio>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+  
   
   <!-- Card with radio buttons to select time of the day -->
   <ion-card>
@@ -13,7 +36,7 @@
       Time Setting
     </ion-card-header>
     
-    <ion-list radio-group [(ngModel)]="time" (ionChange)="setTimeSetting($event)">
+    <ion-list radio-group [(ngModel)]="timeSetting" (ionChange)="setTimeSetting($event)">
       
       <ion-item>
         <ion-label>Night Only</ion-label>
@@ -53,10 +76,10 @@
       </ion-item>
       
       <ion-item *ngIf="radioClickedBurst" class="bottom-border">
-        <ion-label color="primary" stacked>Time between bursts in ms
-          <ion-badge color="primary" item-end>{{this.burstGap}} ms</ion-badge>
+        <ion-label color="primary" stacked>Time between bursts in s
+          <ion-badge color="primary" item-end>{{this.burstGap}} s</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="burstGap" (ionChange)="setBurstGap($event)" min="100" max="1000" value="" placeholder="Enter value in ms"></ion-input>
+        <ion-input type="number" [(ngModel)]="burstGap" (ionChange)="setBurstGap($event)" min="100" max="1000" value="" placeholder="Enter value in s"></ion-input>
       </ion-item>
       
       <ion-item>
@@ -66,10 +89,10 @@
       </ion-item>
 
       <ion-item *ngIf="radioClickedBulb" class="bottom-border">
-        <ion-label color="primary" stacked>Time for exposure at night in ms
-          <ion-badge color="primary" item-end>{{this.bulbExposureTime}} ms</ion-badge>
+        <ion-label color="primary" stacked>Time for exposure at night in s
+          <ion-badge color="primary" item-end>{{this.bulbExposureTime}} s</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="bulbExposureTime" (ionChange)="setBulbExposureTime($event)" min="10" max="100000" value="" placeholder="Enter value in ms"></ion-input>
+        <ion-input type="number" [(ngModel)]="bulbExposureTime" (ionChange)="setBulbExposureTime($event)" min="10" max="100000" value="" placeholder="Enter value in s"></ion-input>
       </ion-item>
       
       <ion-item>
@@ -101,6 +124,14 @@
     </ion-list>
   </ion-card>
   
+  <!-- Time interval for timer trigger -->
+  <ion-card>  
+    <ion-item *ngIf="radioClickedTriggerTimer">
+      <ion-label text-wrap> <b>Time interval for timer based triggers (in mins) </b></ion-label>
+      <ion-input type=number [(ngModel)]="triggerTimerInterval" (ionChange)="setTriggerTimerInterval($event)" min="10" max="1440" value="" placeholder="Enter value in minutes"> </ion-input>
+    </ion-item>
+  </ion-card>
+  
   <!-- Card with slider to set sensitivity threshold for the detector -->
   <ion-card>
     <ion-card-header>
@@ -116,11 +147,11 @@
     </ion-item>
   </ion-card>
   
-  <!-- Card with slider to set time between triggers in milliseconds -->
+  <!-- Card with slider to set time between triggers in seconds -->
   <ion-card>
     <ion-card-header>
       Time between triggers
-      <ion-badge color="primary" item-end>{{this.triggerGap}} ms</ion-badge>
+      <ion-badge color="primary" item-end>{{this.triggerGap}} s</ion-badge>
     </ion-card-header>
     
     <ion-item>
@@ -139,6 +170,7 @@
     </ion-item>
   </ion-card>
   
+
   <!-- Card with drop downs to select camera model attached -->
   <ion-card>
     <ion-card-header>
@@ -172,7 +204,7 @@
   </ion-toolbar>
   
   <!-- Button to write to the device -->
-  <button ion-button item-right (click)="onButtonClickWrite()" class="move-right">
+  <button ion-button item-right *ngIf="realConnection" (click)="onButtonClickWrite()" class="move-right">
     Write
   </button>
   

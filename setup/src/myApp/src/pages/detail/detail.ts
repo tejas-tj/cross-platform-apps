@@ -2,6 +2,10 @@ import { Component, NgZone } from '@angular/core';
 import { NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
 
+// TBD : these shd be common to home.ts too : figure out how to share common header file
+const APPIKO_DUMMY_DEVICE_MAC = 'AA:BB:CC:DD:EE:FF';
+const APPIKO_DUMMY_DEVICE_NAME = 'Dummy Device (Sample to view config options)';
+
 // Bluetooth UUIDs
 const UUID_SENSE_PI_SERVICE = '3c73dc50-07f5-480d-b066-837407fbde0a';
 const UUID_SENSE_BOARD_SETTINGS = '3c73dc51-07f5-480d-b066-837407fbde0a';
@@ -52,6 +56,11 @@ enum MODE_SETTING {
   TRIGGER_FOCUS  
 }
 
+enum TRIGGER_SETTING {
+  TRIGGER_TIMER_ONLY,
+  TRIGGER_PIR_ONLY,
+  TRIGGER_BOTH  
+}
 
 @Component({
   selector: 'page-detail',
@@ -59,22 +68,28 @@ enum MODE_SETTING {
 })
 export class DetailPage {
   
+  realConnection: boolean = true;
+
   peripheral: any = {};
     
   //settings : SensePiSettings;
-
+  triggerSetting: number;
   timeSetting: number;
   mode: number;
   sensitivity: number;
   triggerGap: number;
   focusActivated: boolean = false;
 
-  
+  radioClickedTriggerTimer: boolean = false;
+  radioClickedTriggerPIR: boolean = false;
+  radioClickedTriggerBoth: boolean = false;
+
   burstGap: number;
   bulbExposureTime: number;
   videoDuration: number;
   videoExtension: number;
-  
+  triggerTimerInterval: number;
+
   radioClickedSingle: boolean = false;
   radioClickedBurst: boolean = false;
   radioClickedBulb: boolean = false;
@@ -104,30 +119,40 @@ export class DetailPage {
     private ngZone: NgZone) {
       
       let device = navParams.get('device');
-      
-      this.setStatus('Connecting to ' + device.name || device.id);
+  
+      if (device.name == APPIKO_DUMMY_DEVICE_NAME) {
+        this.realConnection = false;
+      } else {
+        this.realConnection = true;
+      }
+
+      if (!this.realConnection) {
+        // go stratight to options and disable the write
+        this.onConnected(device);
+      } else {
+
+        this.setStatus('Connecting to ' + device.name || device.id);
      
-      console.log('Present loading control : ')
+        console.log('Present loading control : ')
 
-      let loading = this.loadingCtrl.create({
-      content: 'Connecting to device :' + device.name || device.id
-      });
+        let loading = this.loadingCtrl.create({
+        content: 'Connecting to device :' + device.name || device.id
+        });
 
-      loading.present();
-      
-      this.ble.connect(device.id).subscribe(
-        peripheral => {
-          //pnarasim tbd: disable back during this time. else the connecting loading ctrler shows on home page too
-          this.onConnected(peripheral);
-          loading.dismiss();
-        },
-        peripheral => {
-          this.showAlert('Disconnected', 'The peripheral unexpectedly disconnected. Pls scan and try again');
-          loading.dismiss();
-          this.navCtrl.pop();  
-        }
-        
-      );
+        loading.present();
+        this.ble.connect(device.id).subscribe(
+          peripheral => {
+            //pnarasim tbd: disable back during this time. else the connecting loading ctrler shows on home page too
+            this.onConnected(peripheral);
+            loading.dismiss();
+          },
+          peripheral => {
+            this.showAlert('Disconnected', 'The peripheral unexpectedly disconnected. Pls scan and try again');
+            loading.dismiss();
+            this.navCtrl.pop();  
+          }
+        );
+      }
 
       this.initializeMakes();
       this.initializeModels();
@@ -147,6 +172,38 @@ export class DetailPage {
       )*/
     }
   
+
+    public setTriggerSetting(event) {
+      console.log('triggerSetting : trigger was set to ' + event);
+      this.triggerSetting = event;
+      switch (+event)  {
+        case TRIGGER_SETTING.TRIGGER_TIMER_ONLY : {
+          console.log("Trigger mode is TIMER only");
+          this.radioClickedTriggerTimer = true;
+          this.radioClickedTriggerPIR = false;
+          this.radioClickedTriggerBoth = false;
+          break;
+        }
+        case TRIGGER_SETTING.TRIGGER_PIR_ONLY : {
+          console.log("Trigger mode is MOTION only");
+          this.radioClickedTriggerTimer = false;
+          this.radioClickedTriggerPIR = true;
+          this.radioClickedTriggerBoth = false;
+          break;
+        }
+        case TRIGGER_SETTING.TRIGGER_BOTH : {
+          console.log("Trigger mode is TIMER + MOTION");
+          this.radioClickedTriggerTimer = false;
+          this.radioClickedTriggerPIR = false;
+          this.radioClickedTriggerBoth = true;
+          break;
+        }
+        default :{
+          console.log("default trigger?");
+          break;
+        }
+      }
+    }
 
     public setTimeSetting(event) {
       console.log('timeSetting : time was set to ' + event);
@@ -216,7 +273,11 @@ export class DetailPage {
         } 
       }
     }
-        
+  
+    public setTriggerTimerInterval(event) {
+      console.log('Interval for Timer based Triggers set to ' + this.triggerTimerInterval);
+    }
+
     public setSensitivityThreshold(event) {
       console.log('Sensitivity Threshold set to ' + this.sensitivity);
     }
@@ -356,7 +417,13 @@ export class DetailPage {
     
     // Disconnect peripheral when leaving the page
     ionViewWillLeave() {
+      if (!this.realConnection) {
+        console.log("Leaving, no ble to disconnect");
+        return;
+      }
       console.log('ionViewWillLeave disconnecting Bluetooth');
+
+
       this.ble.disconnect(this.peripheral.id).then(
         () => console.log('Disconnected ' + JSON.stringify(this.peripheral)),
         () => console.log('ERROR disconnecting ' + JSON.stringify(this.peripheral))

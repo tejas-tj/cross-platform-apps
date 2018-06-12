@@ -7,6 +7,7 @@ import { HomePage } from '../pages/home/home';
 import { DebugPage } from '../pages/debug/debug';
 import { AboutPage } from '../pages/about/about';
 import { HelpPage } from '../pages/help/help';
+import {TestConfigPage} from '../pages/test-config/test-config';
 
 @Component({
   templateUrl: 'app.html'
@@ -26,7 +27,8 @@ export class MyApp {
       { title: 'Home', component: HomePage },
       { title: 'Debug', component: DebugPage },
       { title: 'About', component: AboutPage },
-      { title: 'Help', component: HelpPage }
+      { title: 'Help', component: HelpPage },
+      { title: 'Test Config', component: TestConfigPage}
     ];
     
   }
