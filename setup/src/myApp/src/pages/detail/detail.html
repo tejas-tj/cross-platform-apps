@@ -174,7 +174,7 @@
   <!-- Card with drop downs to select camera model attached -->
   <ion-card>
     <ion-card-header>
-      Camera Make and Model
+      Camera Make
     </ion-card-header>
     
     <!-- The model names drop down appears and gets populated only when the company name is selected. -->
@@ -183,14 +183,7 @@
       <ion-select interface="popover" (ionChange)="setModelNames(make)" [(ngModel)]="make">
         <ion-option [value]="make" *ngFor = "let make of makes">{{make.name}}  </ion-option> 
       </ion-select>
-    </ion-item>
-    
-    <ion-item *ngIf="selectedModels">
-      <ion-label>Camera Model</ion-label>
-      <ion-select interface="popover" [(ngModel)]="model">
-        <ion-option [value]="model" *ngFor = "let model of selectedModels">{{model.name}}</ion-option>
-      </ion-select>
-    </ion-item>
+    </ion-item>    
   </ion-card>  
   
 </ion-content>

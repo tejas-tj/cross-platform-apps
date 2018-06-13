@@ -22,7 +22,6 @@ const OFFSET_SENSITIVITY=5;
 const OFFSET_TRIGGER_GAP=6;
 const OFFSET_FOCUS_ACTIVATED=8;
 const OFFSET_MAKE=9;
-const OFFSET_MODEL=10;
 
 /* not needed now
 enum TIME_SETTING {
@@ -99,11 +98,8 @@ export class DetailPage {
   public buttonColor: string = "plain";
     
   makes: any[];
-  models: any[];
-  selectedModels: any[];
   
   make: any;
-  model: any;
   
   statusMessage: string;
   
@@ -155,7 +151,6 @@ export class DetailPage {
       }
 
       this.initializeMakes();
-      this.initializeModels();
       
     }
     
@@ -295,7 +290,7 @@ export class DetailPage {
       }
     }
 
-    // To initialize make names for camera model attached
+    // To initialize make names for camera attached
     initializeMakes() {
       this.makes = [
         { id: 1, name: 'Canon' },
@@ -304,22 +299,6 @@ export class DetailPage {
       ];
     }
     
-    // To initialize model names for camera model attached
-    initializeModels() {
-      this.models = [
-        { id: 1, name: 'Canon EOS 80D', make_id: 1, make_name: 'Canon' },
-        { id: 2, name: 'Canon PowerShot ELPH 190 IS', make_id: 1, make_name: 'Canon' },
-        { id: 3, name: 'Nikon D5100', make_id: 2, make_name: 'Nikon' },
-        { id: 4, name: 'Nikon D5200', make_id: 2, make_name: 'Nikon' },
-        { id: 5, name: 'Sony Alpha 580', make_id: 3, make_name: 'Sony' },
-        { id: 7, name: 'Sony Alpha 33', make_id: 3, make_name: 'Sony' }
-      ];
-    }
-    
-    // To populate model names based on selected make name
-    setModelNames(make) {
-      this.selectedModels = this.models.filter(model => model.make_id == make.id)
-    }
 
     public print_settings_arraybufffer(writeBuffer:ArrayBuffer) {
 
@@ -333,7 +312,6 @@ export class DetailPage {
       console.log('triggerGap = ' + dataview.getUint16(OFFSET_TRIGGER_GAP));
       console.log('focusActivated = ' + dataview.getUint8(OFFSET_FOCUS_ACTIVATED));
       console.log('make = ' + dataview.getUint8(OFFSET_MAKE));
-      console.log('model = ' + dataview.getUint8(OFFSET_MODEL));
     }
 
     
@@ -350,7 +328,6 @@ export class DetailPage {
         uint16 triggerGaps
         uint8 focusActivated
         uint8 make
-        uint8 model
       */
 
       let writeBuffer = new ArrayBuffer(SENSEPI_SETTINGS_LENGTH);
@@ -392,7 +369,6 @@ export class DetailPage {
       dataview.setUint16(OFFSET_TRIGGER_GAP, this.triggerGap); 
       dataview.setUint8(OFFSET_FOCUS_ACTIVATED, +this.focusActivated);
       dataview.setUint8(OFFSET_MAKE, this.make); 
-      dataview.setUint8(OFFSET_MODEL, this.model);
  
       this.print_settings_arraybufffer(writeBuffer);
 
