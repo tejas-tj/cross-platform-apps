@@ -73,33 +73,47 @@ export class DetailPage {
     
   //settings : SensePiSettings;
   triggerSetting: number;
-  timeSetting: number;
-  mode: number;
-  sensitivity: number;
-  triggerGap: number;
-  focusActivated: boolean = false;
 
   radioClickedTriggerTimer: boolean = false;
-  radioClickedTriggerPIR: boolean = false;
+  radioClickedTriggerPir: boolean = false;
   radioClickedTriggerBoth: boolean = false;
 
-  burstGap: number;
-  bulbExposureTime: number;
-  videoDuration: number;
-  videoExtension: number;
-  triggerTimerInterval: number;
+  timerInterval: number;
+  timerOpertimeSetting: number;
+  timerMode: number;
 
-  radioClickedSingle: boolean = false;
-  radioClickedBurst: boolean = false;
-  radioClickedBulb: boolean = false;
-  radioClickedVideo: boolean = false;
-  radioClickedFocus: boolean = false;
+  timerBurstGap: number;
+  timerBulbExposureTime: number;
+  timerVideoDuration: number;
+  timerVideoExtension: number;
+  radioTimerClickedSingle: boolean = false;
+  radioTimerClickedBurst: boolean = false;
+  radioTimerClickedBulb: boolean = false;
+  radioTimerClickedVideo: boolean = false;
+  radioTimerClickedFocus: boolean = false;
+  
+  pirOpertimeSetting: number;
+  pirMode: number;
+  pirBurstGap: number;
+  pirBulbExposureTime: number;
+  pirVideoDuration: number;
+  pirVideoExtension: number;
+  radioPirClickedSingle: boolean = false;
+  radioPirClickedBurst: boolean = false;
+  radioPirClickedBulb: boolean = false;
+  radioPirClickedVideo: boolean = false;
+  radioPirClickedFocus: boolean = false;
 
+
+  pirThreshold: number;
+  pirAmplification: number;
+  pirInterTriggerTime: number;
+  
   public buttonColor: string = "plain";
     
   makes: any[];
   
-  make: any;
+  make: number;
   
   statusMessage: string;
   
@@ -167,7 +181,7 @@ export class DetailPage {
       )*/
     }
   
-
+    // TIMER Settings
     public setTriggerSetting(event) {
       console.log('triggerSetting : trigger was set to ' + event);
       this.triggerSetting = event;
@@ -175,21 +189,21 @@ export class DetailPage {
         case TRIGGER_SETTING.TRIGGER_TIMER_ONLY : {
           console.log("Trigger mode is TIMER only");
           this.radioClickedTriggerTimer = true;
-          this.radioClickedTriggerPIR = false;
+          this.radioClickedTriggerPir = false;
           this.radioClickedTriggerBoth = false;
           break;
         }
         case TRIGGER_SETTING.TRIGGER_PIR_ONLY : {
           console.log("Trigger mode is MOTION only");
           this.radioClickedTriggerTimer = false;
-          this.radioClickedTriggerPIR = true;
+          this.radioClickedTriggerPir = true;
           this.radioClickedTriggerBoth = false;
           break;
         }
         case TRIGGER_SETTING.TRIGGER_BOTH : {
           console.log("Trigger mode is TIMER + MOTION");
-          this.radioClickedTriggerTimer = false;
-          this.radioClickedTriggerPIR = false;
+          this.radioClickedTriggerTimer = true;
+          this.radioClickedTriggerPir = true;
           this.radioClickedTriggerBoth = true;
           break;
         }
@@ -200,67 +214,67 @@ export class DetailPage {
       }
     }
 
-    public setTimeSetting(event) {
-      console.log('timeSetting : time was set to ' + event);
-      this.timeSetting = event;
+    public setTimerOpertimeSetting(event) {
+      console.log('TIMER : timerOpertimeSetting : time was set to ' + event);
+      this.timerOpertimeSetting = event;
     }
     
-    public resetModes() {
-      this.radioClickedSingle = false;
-      this.radioClickedBurst = false;
-      this.radioClickedBulb = false;
-      this.radioClickedVideo = false;
-      this.radioClickedFocus = false;
+    public resetTimerModes() {
+      this.radioTimerClickedSingle = false;
+      this.radioTimerClickedBurst = false;
+      this.radioTimerClickedBulb = false;
+      this.radioTimerClickedVideo = false;
+      this.radioTimerClickedFocus = false;
     }
 
-    public setBurstGap(event) {
-      console.log("Burst Gap is set to " + this.burstGap);
+    public setTimerBurstGap(event) {
+      console.log("TIMER: Burst Gap is set to " + this.timerBurstGap);
     }
 
-    public setBulbExposureTime(event) {
-      console.log("Bulb Exposure Time is set to " + this.bulbExposureTime);
+    public setTimerBulbExposureTime(event) {
+      console.log("TIMER: Bulb Exposure Time is set to " + this.timerBulbExposureTime);
     }
 
-    public setVideoDuration(event) {
-       console.log("Video Duration is set to " + this.videoDuration);
+    public setTimerVideoDuration(event) {
+       console.log("TIMER: Video Duration is set to " + this.timerVideoDuration);
     }
 
-    public setVideoExtension(event) {
-       console.log("Video Extension is set to " + this.videoExtension);
+    public setTimerVideoExtension(event) {
+       console.log("TIMER: Video Extension is set to " + this.timerVideoExtension);
     }
 
-    public setMode(event) {
-      console.log('mode : mode selected was ' + event);
+    public setTimerMode(event) {
+      console.log('TIMER : mode : mode selected was ' + event);
       //everytime user selects a different mode, reset all to zero.
-      this.resetModes();
-      this.mode = event;
+      this.resetTimerModes();
+      this.timerMode = event;
       switch (+event) {
         case MODE_SETTING.TRIGGER_SINGLE: {
-          console.log('Radio button SINGLE TRIGGER selected');
-          this.radioClickedSingle = true;
+          console.log('TIMER: Radio button SINGLE TRIGGER selected');
+          this.radioTimerClickedSingle = true;
           break;
         } 
         case MODE_SETTING.TRIGGER_BURST:{
-          console.log('Radio button BURST TRIGGER selected');
-          this.radioClickedBurst = true;
-          console.log('Burst Gap selected as ' + this.burstGap);
+          console.log('TIMER: Radio button BURST TRIGGER selected');
+          this.radioTimerClickedBurst = true;
+          console.log('Burst Gap selected as ' + this.timerBurstGap);
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          console.log('Radio button BULB EXPPOSURE TRIGGER selected');
-          this.radioClickedBulb = true;
-          console.log('bulbExposureTime set to ' + this.bulbExposureTime);
+          console.log('TIMER: Radio button BULB EXPPOSURE TRIGGER selected');
+          this.radioTimerClickedBulb = true;
+          console.log('TIMER: bulbExposureTime set to ' + this.timerBulbExposureTime);
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
-          console.log('Radio button VIDEO TRIGGER selected');
-          this.radioClickedVideo = true;
-          console.log('videoDuration = ' + this.videoDuration + ' videoExtension = ' + this.videoExtension);
+          console.log('TIMER: Radio button VIDEO TRIGGER selected');
+          this.radioTimerClickedVideo = true;
+          console.log('TIMER: videoDuration = ' + this.timerVideoDuration + ' videoExtension = ' + this.timerVideoExtension);
          break;
         }
         case MODE_SETTING.TRIGGER_FOCUS: {
-          console.log('Radio button FOCUS TRIGGER selected');
-          this.radioClickedFocus = true;
+          console.log('TIMER: Radio button FOCUS TRIGGER selected');
+          this.radioTimerClickedFocus = true;
           break;
         }
         default: { 
@@ -270,26 +284,92 @@ export class DetailPage {
     }
   
     public setTriggerTimerInterval(event) {
-      console.log('Interval for Timer based Triggers set to ' + this.triggerTimerInterval);
+      console.log('Pir: Interval set to ' + this.timerInterval);
     }
 
-    public setSensitivityThreshold(event) {
-      console.log('Sensitivity Threshold set to ' + this.sensitivity);
-    }
+    // PIR settings
 
-    public setTimeBetweenTriggers(event) {
-     console.log('Time between triggers set to ' + this.triggerGap); 
+    public setPirOpertimeSetting(event) {
+      console.log('Pir : PirOpertimeSetting : time was set to ' + event);
+      this.pirOpertimeSetting = event;
     }
     
-    public activateFocus(event) {
-      //pnarasim : make sure html and the value of this var are sync-ed! tbd
-      if (!this.focusActivated) {
-        console.log('Focus activated');
-      } else {
-        console.log('Focus de-activated');
+    public resetPirModes() {
+      this.radioPirClickedSingle = false;
+      this.radioPirClickedBurst = false;
+      this.radioPirClickedBulb = false;
+      this.radioPirClickedVideo = false;
+      this.radioPirClickedFocus = false;
+    }
+
+    public setPirBurstGap(event) {
+      console.log("Pir: Burst Gap is set to " + this.pirBurstGap);
+    }
+
+    public setPirBulbExposureTime(event) {
+      console.log("Pir: Bulb Exposure Time is set to " + this.pirBulbExposureTime);
+    }
+
+    public setPirVideoDuration(event) {
+       console.log("Pir: Video Duration is set to " + this.pirVideoDuration);
+    }
+
+    public setPirVideoExtension(event) {
+       console.log("Pir: Video Extension is set to " + this.pirVideoExtension);
+    }
+
+    public setPirMode(event) {
+      console.log('Pir : mode : mode selected was ' + event);
+      //everytime user selects a different mode, reset all to zero.
+      this.resetPirModes();
+      this.pirMode = event;
+      switch (+event) {
+        case MODE_SETTING.TRIGGER_SINGLE: {
+          console.log('Pir: Radio button SINGLE TRIGGER selected');
+          this.radioPirClickedSingle = true;
+          break;
+        } 
+        case MODE_SETTING.TRIGGER_BURST:{
+          console.log('Pir: Radio button BURST TRIGGER selected');
+          this.radioPirClickedBurst = true;
+          console.log('Burst Gap selected as ' + this.pirBurstGap);
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
+          console.log('Pir: Radio button BULB EXPPOSURE TRIGGER selected');
+          this.radioPirClickedBulb = true;
+          console.log('Pir: bulbExposureTime set to ' + this.pirBulbExposureTime);
+          break;
+        }
+        case MODE_SETTING.TRIGGER_VIDEO: {
+          console.log('Pir: Radio button VIDEO TRIGGER selected');
+          this.radioPirClickedVideo = true;
+          console.log('Pir: videoDuration = ' + this.pirVideoDuration + ' videoExtension = ' + this.pirVideoExtension);
+         break;
+        }
+        case MODE_SETTING.TRIGGER_FOCUS: {
+          console.log('Pir: Radio button FOCUS TRIGGER selected');
+          this.radioPirClickedFocus = true;
+          break;
+        }
+        default: { 
+          break; 
+        } 
       }
     }
 
+    public setPirThreshold(event) {
+      console.log('Pir: Threshold set to ' + this.pirThreshold);
+    }
+
+    public setPirAmplification(event) {
+      console.log('Pir: Amplification set to ' + this.pirAmplification);
+    }
+
+    public setPirInterTriggerTime(event) {
+     console.log('Pir: Inter Trigger Time set to ' + this.pirInterTriggerTime); 
+    }
+    
     // To initialize make names for camera attached
     initializeMakes() {
       this.makes = [
@@ -299,10 +379,15 @@ export class DetailPage {
       ];
     }
     
+    public setMake(event) {
+      this.make = event.id;
+      console.log('Make = ' + event.id + " Make name = " + event.name);
+    }
 
     public print_settings_arraybufffer(writeBuffer:ArrayBuffer) {
 
       var dataview = new DataView(writeBuffer);
+      console.log('triggerSetting = ' + dataview.getUint8(OFFSET_TRIGGER_TYPE));
 
       console.log('timeSetting = ' + dataview.getUint8(OFFSET_TIME));
       console.log('mode = ' + dataview.getUint8(OFFSET_MODE));
@@ -312,6 +397,7 @@ export class DetailPage {
       console.log('triggerGap = ' + dataview.getUint16(OFFSET_TRIGGER_GAP));
       console.log('focusActivated = ' + dataview.getUint8(OFFSET_FOCUS_ACTIVATED));
       console.log('make = ' + dataview.getUint8(OFFSET_MAKE));
+      
     }
 
     
@@ -333,6 +419,8 @@ export class DetailPage {
       let writeBuffer = new ArrayBuffer(SENSEPI_SETTINGS_LENGTH);
       var dataview = new DataView(writeBuffer);
       //start writing the values
+      /*
+      dataview.setUint8(OFFSET_TRIGGER_TYPE, this.trigggerSetting);
       dataview.setUint8(OFFSET_TIME,this.timeSetting);
       dataview.setUint8(OFFSET_MODE,this.mode);
       
@@ -371,8 +459,9 @@ export class DetailPage {
       dataview.setUint8(OFFSET_MAKE, this.make); 
  
       this.print_settings_arraybufffer(writeBuffer);
-
+      */
       return writeBuffer;
+
     }
 
     
