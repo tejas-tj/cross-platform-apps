@@ -83,6 +83,7 @@ export class DetailPage {
   timerMode: number;
 
   timerBurstGap: number;
+  timerBurstNumber: number;
   timerBulbExposureTime: number;
   timerVideoDuration: number;
   timerVideoExtension: number;
@@ -95,6 +96,7 @@ export class DetailPage {
   pirOpertimeSetting: number;
   pirMode: number;
   pirBurstGap: number;
+  pirBurstNumber: number;
   pirBulbExposureTime: number;
   pirVideoDuration: number;
   pirVideoExtension: number;
@@ -230,6 +232,10 @@ export class DetailPage {
     public setTimerBurstGap(event) {
       console.log("TIMER: Burst Gap is set to " + this.timerBurstGap);
     }
+    
+    public setTimerBurstNumber(event) {
+      console.log("TIMER: Burst Number of shots is set to " + this.timerBurstNumber);
+    }
 
     public setTimerBulbExposureTime(event) {
       console.log("TIMER: Bulb Exposure Time is set to " + this.timerBulbExposureTime);
@@ -257,7 +263,7 @@ export class DetailPage {
         case MODE_SETTING.TRIGGER_BURST:{
           console.log('TIMER: Radio button BURST TRIGGER selected');
           this.radioTimerClickedBurst = true;
-          console.log('Burst Gap selected as ' + this.timerBurstGap);
+          console.log('Burst Gap selected as ' + this.timerBurstGap  + ' and burst number of shots is ' + this.timerBurstNumber);
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
@@ -306,6 +312,10 @@ export class DetailPage {
       console.log("Pir: Burst Gap is set to " + this.pirBurstGap);
     }
 
+    public setPirBurstNumber(event) {
+      console.log("Pir: Burst Number of shots is set to " + this.pirBurstNumber);
+    }
+
     public setPirBulbExposureTime(event) {
       console.log("Pir: Bulb Exposure Time is set to " + this.pirBulbExposureTime);
     }
@@ -332,7 +342,7 @@ export class DetailPage {
         case MODE_SETTING.TRIGGER_BURST:{
           console.log('Pir: Radio button BURST TRIGGER selected');
           this.radioPirClickedBurst = true;
-          console.log('Burst Gap selected as ' + this.pirBurstGap);
+          console.log('Burst Gap selected as ' + this.pirBurstGap + ' and burst number of shots is ' + this.pirBurstNumber);
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
@@ -386,7 +396,7 @@ export class DetailPage {
 
     public print_settings_arraybufffer(writeBuffer:ArrayBuffer) {
 
-      var dataview = new DataView(writeBuffer);
+      /*var dataview = new DataView(writeBuffer);
       console.log('triggerSetting = ' + dataview.getUint8(OFFSET_TRIGGER_TYPE));
 
       console.log('timeSetting = ' + dataview.getUint8(OFFSET_TIME));
@@ -397,13 +407,19 @@ export class DetailPage {
       console.log('triggerGap = ' + dataview.getUint16(OFFSET_TRIGGER_GAP));
       console.log('focusActivated = ' + dataview.getUint8(OFFSET_FOCUS_ACTIVATED));
       console.log('make = ' + dataview.getUint8(OFFSET_MAKE));
-      
+      */
     }
 
     
     public constructArrayBufferToWrite():ArrayBuffer {
       /*
         Format of ArrayBuffer that the board expects : make this fw version dependent next
+        uint8 cam_company;
+        uint8 pirThresholdCompare:1, pirThreshold:7;
+        uint8 pirMode;
+        union {
+          uint16 pirBurstGap;
+        }
         uint8 timeSetting
         unint32 mode[
           uint8 single|burst|bulbexp|video|focus
