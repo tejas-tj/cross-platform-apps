@@ -13,39 +13,40 @@ const UUID_SENSE_PI_USER_SETTINGS = '3c73dc52-07f5-480d-b066-837407fbde0a';
 
 const FW_VER='1.0';
 
-const SENSEPI_SETTINGS_LENGTH=11;
-const OFFSET_TIME=0;
-const OFFSET_MODE=1;
-const OFFSET_BURSTGAP_BULBEXP=2;
-const OFFSET_VIDEO=4;
-const OFFSET_SENSITIVITY=5;
-const OFFSET_TRIGGER_GAP=6;
-const OFFSET_FOCUS_ACTIVATED=8;
-const OFFSET_MAKE=9;
+const SENSEPI_SETTINGS_LENGTH=17;
 
-/* not needed now
+const OFFSET_TRIGGER_SETTING=0;
+const OFFSET_PIR_OPER=1;
+const OFFSET_PIR_MODE=2;
+const OFFSET_PIR_MODE_DATA=3;
+const OFFSET_PIR_MODE_DATA_LARGER_VALUE=3;
+const OFFSET_PIR_MODE_DATA_SMALLER_VALUE=5;
+const OFFSET_PIR_MODE_BURST_GAP=3;
+const OFFSET_PIR_MODE_BURST_NUMBER=5;
+const OFFSET_PIR_MODE_BULB_EXPOSURE=3;
+const OFFSET_PIR_MODE_VIDEO_DURATION=3;
+const OFFSET_PIR_MODE_VIDEO_EXTENSION=5;
+const OFFSET_PIR_THRESHOLD=6;
+const OFFSET_PIR_AMPLIFICATION=7;
+const OFFSET_PIR_INTERTRIGGERTIME=8;
+
+const OFFSET_TIMER_INTERVAL=10;
+const OFFSET_TIMER_OPER=12;
+const OFFSET_TIMER_MODE=13;
+const OFFSET_TIMER_MODE_DATA=14;
+const OFFSET_TIMER_MODE_DATA_LARGER_VALUE=3;
+const OFFSET_TIMER_MODE_DATA_SMALLER_VALUE=5;
+const OFFSET_TIMER_MODE_BURST_GAP=14;
+const OFFSET_TIMER_MODE_BURST_NUMBER=16;
+const OFFSET_TIMER_MODE_BULB_EXPOSURE=14;
+const OFFSET_TIMER_MODE_VIDEO_DURATION=14;
+const OFFSET_TIMER_MODE_VIDEO_EXTENSION=16;
+
 enum TIME_SETTING {
   NIGHT_ONLY,
   DAY_ONLY,
   DAYNIGHT_BOTH 
 }
-*/
-
-//pnarasim : want to use this type throughout, but not able to pass to the html
-//this is a placeholder till i figure that out
-/*
-type SensePiSettings  = {
-  timeSetting: number;
-  mode: number;
-  burstGap: number;
-  bulbExposureTime: number;
-  videoDuration: number;
-  videoExtension: number;
-  sensitivity: number;
-  triggerGap: number;
-  focusActivated: boolean;
-}
-*/
 
 enum MODE_SETTING {
   TRIGGER_SINGLE,
@@ -290,7 +291,7 @@ export class DetailPage {
     }
   
     public setTriggerTimerInterval(event) {
-      console.log('Pir: Interval set to ' + this.timerInterval);
+      console.log('Timer: Interval set to ' + this.timerInterval);
     }
 
     // PIR settings
@@ -396,86 +397,164 @@ export class DetailPage {
 
     public print_settings_arraybufffer(writeBuffer:ArrayBuffer) {
 
-      /*var dataview = new DataView(writeBuffer);
-      console.log('triggerSetting = ' + dataview.getUint8(OFFSET_TRIGGER_TYPE));
+      var dataview = new DataView(writeBuffer);
+      console.log("===============SETTINGS WRITTEN TO BOARD ============================")
 
-      console.log('timeSetting = ' + dataview.getUint8(OFFSET_TIME));
-      console.log('mode = ' + dataview.getUint8(OFFSET_MODE));
-      console.log('burstGap | bulbExposureTime = ' + dataview.getUint16(OFFSET_BURSTGAP_BULBEXP));
-      console.log('videoDuration:videoExtension = ' + dataview.getUint8(OFFSET_VIDEO));
-      console.log('sensitivity = ' + dataview.getUint8(OFFSET_SENSITIVITY));
-      console.log('triggerGap = ' + dataview.getUint16(OFFSET_TRIGGER_GAP));
-      console.log('focusActivated = ' + dataview.getUint8(OFFSET_FOCUS_ACTIVATED));
-      console.log('make = ' + dataview.getUint8(OFFSET_MAKE));
-      */
+      console.log('triggerSetting (1 byte)= ' + dataview.getUint8(OFFSET_TRIGGER_SETTING));
+      // == PIR Settings ====
+      console.log('PIR OpertimeSetting (1 byte)= ' + dataview.getUint8(OFFSET_PIR_OPER));
+      console.log('PIR mode (1 byte)= ' + dataview.getUint8(OFFSET_PIR_MODE));
+      switch(+dataview.getUint8(OFFSET_PIR_MODE)) {
+        case MODE_SETTING.TRIGGER_SINGLE: {
+          //no extra data to record.
+          console.log("PIR Mode Larger Value (2 bytes) =" + dataview.getUint16(OFFSET_PIR_MODE_DATA_LARGER_VALUE));
+          console.log("PIR Mode Smaller Value (1 bytes) =" + dataview.getUint8(OFFSET_PIR_MODE_DATA_SMALLER_VALUE));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BURST: {
+          console.log("PIR BurstGap (2 bytes)= " + dataview.getUint16(OFFSET_PIR_MODE_BURST_GAP));
+          console.log("PIR BurstNumber (1 byte)= " + dataview.getUint8(OFFSET_PIR_MODE_BURST_NUMBER));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
+          //pnarasim TBD : getuint24
+          console.log("PIR BulbExposureTime = (3 bytes)" + dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_VIDEO: {
+          console.log("PIR VideoDuration = (2 bytes)" + dataview.getUint16(OFFSET_PIR_MODE_VIDEO_DURATION) + " VideoExtension (1 byte)= " + dataview.getUint8(OFFSET_PIR_MODE_VIDEO_EXTENSION)); 
+          break;
+        }
+        default: {
+          break;
+        }
+      
+      }
+    
+      console.log('PIR Threshold (1 byte)= ' + dataview.getUint8(OFFSET_PIR_THRESHOLD));
+      console.log('PIR Amplification (1 byte)= ' + dataview.getUint8(OFFSET_PIR_AMPLIFICATION));
+      console.log('PIR InterTriggerTime (2 bytes)= ' + dataview.getUint16(OFFSET_PIR_INTERTRIGGERTIME));
+      
+      // === TIMER Settings ===
+      console.log('TIMER timerInterval (2 bytes)= ' + dataview.getUint8(OFFSET_TIMER_INTERVAL));
+      console.log('TIMER OpertimeSetting (1 byte)= ' + dataview.getUint8(OFFSET_TIMER_OPER));
+      console.log('TIMER mode (1 byte)= ' + dataview.getUint8(OFFSET_TIMER_MODE));
+      switch(+dataview.getUint8(OFFSET_TIMER_MODE)) {
+        case MODE_SETTING.TRIGGER_SINGLE: {
+          //no extra data to record.
+          console.log("TIMER Mode Larger Value (2 bytes)=" + dataview.getUint16(OFFSET_TIMER_MODE_DATA_LARGER_VALUE));
+          console.log("TIMER Mode Smaller Value (1 byte)=" + dataview.getUint8(OFFSET_TIMER_MODE_DATA_SMALLER_VALUE));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BURST: {
+          console.log("TIMER BurstGap (2 bytes)= " + dataview.getUint16(OFFSET_TIMER_MODE_BURST_GAP));
+          console.log("TIMER BurstNumber (1 byte)= " + dataview.getUint8(OFFSET_TIMER_MODE_BURST_NUMBER));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
+          //pnarasim TBD : getuint24
+          console.log("TIMER BulbExposureTime (3 bytes) = " + dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_VIDEO: {
+          console.log("TIMER VideoDuration (2 bytes)= " + dataview.getUint16(OFFSET_TIMER_MODE_VIDEO_DURATION) + " VideoExtension (1 byte)= " + dataview.getUint8(OFFSET_TIMER_MODE_VIDEO_EXTENSION)); 
+          break;
+        }
+        default: {
+          break;
+        }
+      
+      }
+    
+      console.log("===========================================")
     }
 
     
     public constructArrayBufferToWrite():ArrayBuffer {
       /*
-        Format of ArrayBuffer that the board expects : make this fw version dependent next
-        uint8 cam_company;
-        uint8 pirThresholdCompare:1, pirThreshold:7;
-        uint8 pirMode;
-        union {
-          uint16 pirBurstGap;
-        }
-        uint8 timeSetting
-        unint32 mode[
-          uint8 single|burst|bulbexp|video|focus
-          uint16 burstGap|bulbExposureTime
-          uint8 videoDuration:4, videoExtension:4
-        ] 
-        uint8 sensitivity
-        uint16 triggerGaps
-        uint8 focusActivated
-        uint8 make
+        Format of ArrayBuffer that the board expects : make this fw version dependent next        
       */
 
       let writeBuffer = new ArrayBuffer(SENSEPI_SETTINGS_LENGTH);
       var dataview = new DataView(writeBuffer);
+
       //start writing the values
-      /*
-      dataview.setUint8(OFFSET_TRIGGER_TYPE, this.trigggerSetting);
-      dataview.setUint8(OFFSET_TIME,this.timeSetting);
-      dataview.setUint8(OFFSET_MODE,this.mode);
       
-      switch (+this.mode) {
+      dataview.setUint8(OFFSET_TRIGGER_SETTING, this.triggerSetting);
+
+      // ==== PIR SETTINGS ++++
+      dataview.setUint8(OFFSET_PIR_OPER, this.pirOpertimeSetting);
+      
+      dataview.setUint8(OFFSET_PIR_MODE,this.pirMode);
+      
+      switch (+this.pirMode) {
         case MODE_SETTING.TRIGGER_SINGLE: {
           //no extra data to record.
-          dataview.setUint16(OFFSET_BURSTGAP_BULBEXP, 0);
-          dataview.setUint8(OFFSET_VIDEO, 0);
+          dataview.setUint16(OFFSET_PIR_MODE_DATA_LARGER_VALUE, 0);
+          dataview.setUint8(OFFSET_PIR_MODE_DATA_SMALLER_VALUE, 0);
           break;
         }
         case MODE_SETTING.TRIGGER_BURST: {
-          dataview.setUint16(OFFSET_BURSTGAP_BULBEXP, this.burstGap);
-          dataview.setUint8(OFFSET_VIDEO, 0);
+          dataview.setUint16(OFFSET_PIR_MODE_BURST_GAP, this.pirBurstGap);
+          dataview.setUint8(OFFSET_PIR_MODE_BURST_NUMBER, this.pirBurstNumber);
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          dataview.setUint16(OFFSET_BURSTGAP_BULBEXP, this.bulbExposureTime);
-          dataview.setUint8(OFFSET_VIDEO, 0);
+          //pnarasim tbd getuint24
+          dataview.setUint16(OFFSET_PIR_MODE_BULB_EXPOSURE, this.pirBulbExposureTime);
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
-          var viddata  = this.videoDuration << 4;
-          viddata |= this.videoExtension;
-          console.log("Combining " + this.videoDuration + " and " + this.videoExtension + " gives " + viddata);
-          dataview.setUint16(OFFSET_BURSTGAP_BULBEXP, 0);
-          dataview.setUint8(OFFSET_VIDEO, viddata); 
+          dataview.setUint16(OFFSET_PIR_MODE_VIDEO_DURATION, this.pirVideoDuration);
+          dataview.setUint8(OFFSET_PIR_MODE_VIDEO_EXTENSION, this.pirVideoExtension); 
           break;
         }
         default: {
           break;
         }
       } 
-      dataview.setUint8(OFFSET_SENSITIVITY, this.sensitivity);
-      dataview.setUint16(OFFSET_TRIGGER_GAP, this.triggerGap); 
-      dataview.setUint8(OFFSET_FOCUS_ACTIVATED, +this.focusActivated);
-      dataview.setUint8(OFFSET_MAKE, this.make); 
- 
+      dataview.setUint8(OFFSET_PIR_THRESHOLD, this.pirThreshold);
+      dataview.setUint8(OFFSET_PIR_AMPLIFICATION, this.pirAmplification);
+      dataview.setUint16(OFFSET_PIR_INTERTRIGGERTIME, this.pirInterTriggerTime); 
+      
+      //dataview.setUint8(OFFSET_MAKE, this.make); 
+
+      // ==== TIMER SETTINGS ++++
+      dataview.setUint16(OFFSET_TIMER_INTERVAL, this.timerInterval);
+      
+      dataview.setUint8(OFFSET_TIMER_OPER, this.timerOpertimeSetting);
+      
+      dataview.setUint8(OFFSET_TIMER_MODE,this.timerMode);
+      
+      switch (+this.timerMode) {
+        case MODE_SETTING.TRIGGER_SINGLE: {
+          //no extra data to record.
+          dataview.setUint16(OFFSET_TIMER_MODE_DATA_LARGER_VALUE, 0);
+          dataview.setUint8(OFFSET_TIMER_MODE_DATA_SMALLER_VALUE, 0);
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BURST: {
+          dataview.setUint16(OFFSET_TIMER_MODE_BURST_GAP, this.timerBurstGap);
+          dataview.setUint8(OFFSET_TIMER_MODE_BURST_NUMBER, this.timerBurstNumber);
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
+          //pnarasim tbd getuint24 
+          dataview.setUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE, this.timerBulbExposureTime);
+          break;
+        }
+        case MODE_SETTING.TRIGGER_VIDEO: {
+          dataview.setUint16(OFFSET_TIMER_MODE_VIDEO_DURATION, this.timerVideoDuration);
+          dataview.setUint8(OFFSET_TIMER_MODE_VIDEO_EXTENSION, this.timerVideoExtension); 
+          break;
+        }
+        default: {
+          break;
+        }
+      } 
+      
       this.print_settings_arraybufffer(writeBuffer);
-      */
+      
       return writeBuffer;
 
     }
@@ -484,13 +563,14 @@ export class DetailPage {
     // To write the value of each characteristic to the device 
     onButtonClickWrite(event) {
 
-      let data = this.constructArrayBufferToWrite();      
+      let data = this.constructArrayBufferToWrite();  
+      console.log("Size of buffer being written is " + data.byteLength);    
       this.ble.write(this.peripheral.id, UUID_SENSE_PI_SERVICE, UUID_SENSE_PI_USER_SETTINGS, data).then(
         () => this.setStatus('Write Success'),
         //console.log('Wrote all settings to the device = ' + data)
       )
       .catch(
-        e => console.log('eror in writing to device : ' + e),
+        e => console.log('error in writing to device : ' + e),
       );
        
     }
