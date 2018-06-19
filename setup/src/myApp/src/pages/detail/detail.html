@@ -63,7 +63,16 @@
         <ion-radio value="2"></ion-radio>
       </ion-item>
     </ion-list>  
-    
+    <ion-item>
+      <ion-label> Day Night Threshold  
+        <ion-badge color="primary" item-end>{{timerDNThreshold}}s</ion-badge>
+      </ion-label>
+      <ion-range min="0" max="127" pin="true" [(ngModel)]="timerDNThreshold" (ionChange)="setTimerDNThreshold($event)">
+        <ion-label range-left>0</ion-label>
+        <ion-label range-right>127</ion-label>
+       </ion-range>
+    </ion-item>
+
     <ion-list radio-group [(ngModel)]="timerMode" (ionChange)="setTimerMode($event)">
       <ion-item>
        <ion-label> Set Single Trigger </ion-label>
@@ -99,13 +108,13 @@
         <ion-input type="number" [(ngModel)]="timerBulbExposureTime" (ionChange)="setTimerBulbExposureTime($event)" min="0.5" max="1677215" value="" placeholder="seconds"></ion-input>
       </ion-item>
       
-      <ion-item>
+      <ion-item *ngIf="(make!=1)">
        <ion-label> Set Video Mode </ion-label>
        <ion-icon name="videocam" item-start></ion-icon>
        <ion-radio value = "3"></ion-radio>
       </ion-item>
       
-      <ion-item *ngIf="radioTimerClickedVideo">
+      <ion-item *ngIf="radioTimerClickedVideo&&(make!=1)">
         <ion-label color="primary" >Duration of the video in s
           <ion-badge color="primary" item-end>{{this.timerVideoDuration}} s</ion-badge>
         </ion-label>
@@ -141,6 +150,15 @@
         <ion-radio value="2"></ion-radio>
       </ion-item>
     </ion-list>  
+    <ion-item>
+      <ion-label> Day Night Threshold  
+        <ion-badge color="primary" item-end>{{pirDNThreshold}}s</ion-badge>
+      </ion-label>
+      <ion-range min="0" max="127" pin="true" [(ngModel)]="pirDNThreshold" (ionChange)="setPirDNThreshold($event)">
+        <ion-label range-left>0</ion-label>
+        <ion-label range-right>127</ion-label>
+       </ion-range>
+    </ion-item>
     
     <ion-list radio-group [(ngModel)]="pirMode" (ionChange)="setPirMode($event)">
       <ion-item>
@@ -180,13 +198,13 @@
         <ion-input type="number" [(ngModel)]="pirBulbExposureTime" (ionChange)="setPirBulbExposureTime($event)" min="0.5" max="16777215" value="" placeholder="seconds"></ion-input>
       </ion-item>
       
-      <ion-item>
+      <ion-item *ngIf="(make!=1)">
        <ion-label> Set Video Mode </ion-label>
        <ion-icon name="videocam" item-start></ion-icon>
        <ion-radio value = "3"></ion-radio>
       </ion-item>
       
-      <ion-item *ngIf="radioPirClickedVideo">
+      <ion-item *ngIf="radioPirClickedVideo&&(make!=1)">
         <ion-label color="primary" >Duration of the video in s
           <ion-badge color="primary" item-end>{{this.pirVideoDuration}} s</ion-badge>
         </ion-label>

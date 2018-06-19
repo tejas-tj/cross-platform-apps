@@ -13,6 +13,10 @@ const UUID_SENSE_PI_USER_SETTINGS = '3c73dc52-07f5-480d-b066-837407fbde0a';
 
 const FW_VER='1.0';
 
+const CAMERA_MAKE_NIKON=1;
+const CAMERA_MAKE_CANON=2;
+const CAMERA_MAKE_SONY=3;
+
 const SENSEPI_SETTINGS_LENGTH=17;
 
 const OFFSET_TRIGGER_SETTING=0;
@@ -34,8 +38,8 @@ const OFFSET_TIMER_INTERVAL=10;
 const OFFSET_TIMER_OPER=12;
 const OFFSET_TIMER_MODE=13;
 const OFFSET_TIMER_MODE_DATA=14;
-const OFFSET_TIMER_MODE_DATA_LARGER_VALUE=3;
-const OFFSET_TIMER_MODE_DATA_SMALLER_VALUE=5;
+const OFFSET_TIMER_MODE_DATA_LARGER_VALUE=14;
+const OFFSET_TIMER_MODE_DATA_SMALLER_VALUE=16;
 const OFFSET_TIMER_MODE_BURST_GAP=14;
 const OFFSET_TIMER_MODE_BURST_NUMBER=16;
 const OFFSET_TIMER_MODE_BULB_EXPOSURE=14;
@@ -81,6 +85,7 @@ export class DetailPage {
 
   timerInterval: number;
   timerOpertimeSetting: number;
+  timerDNThreshold: number;
   timerMode: number;
 
   timerBurstGap: number;
@@ -95,6 +100,7 @@ export class DetailPage {
   radioTimerClickedFocus: boolean = false;
   
   pirOpertimeSetting: number;
+  pirDNThreshold: number;
   pirMode: number;
   pirBurstGap: number;
   pirBurstNumber: number;
@@ -221,6 +227,9 @@ export class DetailPage {
       console.log('TIMER : timerOpertimeSetting : time was set to ' + event);
       this.timerOpertimeSetting = event;
     }
+   public setTimerDNThreshold(event) {
+      console.log('Timer: DayNight Threshold set to ' + this.timerDNThreshold);
+    }
     
     public resetTimerModes() {
       this.radioTimerClickedSingle = false;
@@ -231,6 +240,7 @@ export class DetailPage {
     }
 
     public setTimerBurstGap(event) {
+      //pnarasim : sending data in units of 0.1 - so if user enters 2.5, send 25
       console.log("TIMER: Burst Gap is set to " + this.timerBurstGap);
     }
     
@@ -300,7 +310,10 @@ export class DetailPage {
       console.log('Pir : PirOpertimeSetting : time was set to ' + event);
       this.pirOpertimeSetting = event;
     }
-    
+    public setPirDNThreshold(event) {
+      console.log('Pir: DayNight Threshold set to ' + this.pirDNThreshold);
+    }
+   
     public resetPirModes() {
       this.radioPirClickedSingle = false;
       this.radioPirClickedBurst = false;
@@ -372,21 +385,21 @@ export class DetailPage {
     public setPirThreshold(event) {
       console.log('Pir: Threshold set to ' + this.pirThreshold);
     }
-
+ 
     public setPirAmplification(event) {
       console.log('Pir: Amplification set to ' + this.pirAmplification);
     }
 
     public setPirInterTriggerTime(event) {
-     console.log('Pir: Inter Trigger Time set to ' + this.pirInterTriggerTime); 
+      console.log('Pir: Inter Trigger Time set to ' + this.pirInterTriggerTime); 
     }
     
     // To initialize make names for camera attached
     initializeMakes() {
       this.makes = [
-        { id: 1, name: 'Canon' },
-        { id: 2, name: 'Nikon' },
-        { id: 3, name: 'Sony' }
+        { id: CAMERA_MAKE_CANON, name: 'Canon' },
+        { id: CAMERA_MAKE_NIKON, name: 'Nikon' },
+        { id: CAMERA_MAKE_SONY, name: 'Sony' }
       ];
     }
     
@@ -402,7 +415,9 @@ export class DetailPage {
 
       console.log('triggerSetting (1 byte)= ' + dataview.getUint8(OFFSET_TRIGGER_SETTING));
       // == PIR Settings ====
-      console.log('PIR OpertimeSetting (1 byte)= ' + dataview.getUint8(OFFSET_PIR_OPER));
+      console.log('PIR OpertimeSetting DN Threshold = ' + (dataview.getUint8(OFFSET_PIR_OPER)>>1));
+      console.log('PIR OpertimeSetting DN mode = ' + (dataview.getUint8(OFFSET_PIR_OPER) & 1));
+
       console.log('PIR mode (1 byte)= ' + dataview.getUint8(OFFSET_PIR_MODE));
       switch(+dataview.getUint8(OFFSET_PIR_MODE)) {
         case MODE_SETTING.TRIGGER_SINGLE: {
@@ -417,8 +432,7 @@ export class DetailPage {
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          //pnarasim TBD : getuint24
-          console.log("PIR BulbExposureTime = (3 bytes)" + dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE));
+          console.log("PIR BulbExposureTime = (3 bytes)" + ((dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE)<<8) + dataview.getUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2)));
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
@@ -436,8 +450,15 @@ export class DetailPage {
       console.log('PIR InterTriggerTime (2 bytes)= ' + dataview.getUint16(OFFSET_PIR_INTERTRIGGERTIME));
       
       // === TIMER Settings ===
-      console.log('TIMER timerInterval (2 bytes)= ' + dataview.getUint8(OFFSET_TIMER_INTERVAL));
-      console.log('TIMER OpertimeSetting (1 byte)= ' + dataview.getUint8(OFFSET_TIMER_OPER));
+      console.log('TIMER timerInterval (2 bytes)= ' + dataview.getUint16(OFFSET_TIMER_INTERVAL));
+      console.log('testttt = ' + dataview.getUint8(OFFSET_TIMER_OPER));
+      if (dataview.getUint8(OFFSET_TIMER_OPER) == 1) {
+        console.log("TIMER DN mode = both");
+      } else {
+        console.log('TIMER OpertimeSetting DN threshold = ' + (dataview.getUint8(OFFSET_TIMER_OPER)>>1));
+        console.log('TIMER OpertimeSetting DN mode = ' + (dataview.getUint8(OFFSET_TIMER_OPER)&1));  
+      }
+      
       console.log('TIMER mode (1 byte)= ' + dataview.getUint8(OFFSET_TIMER_MODE));
       switch(+dataview.getUint8(OFFSET_TIMER_MODE)) {
         case MODE_SETTING.TRIGGER_SINGLE: {
@@ -452,8 +473,7 @@ export class DetailPage {
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          //pnarasim TBD : getuint24
-          console.log("TIMER BulbExposureTime (3 bytes) = " + dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE));
+          console.log("TIMER BulbExposureTime (3 bytes) = " + ((dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE)<<8)+dataview.getUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2)));
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
@@ -483,7 +503,11 @@ export class DetailPage {
       dataview.setUint8(OFFSET_TRIGGER_SETTING, this.triggerSetting);
 
       // ==== PIR SETTINGS ++++
-      dataview.setUint8(OFFSET_PIR_OPER, this.pirOpertimeSetting);
+      if (this.pirOpertimeSetting == TIME_SETTING.DAYNIGHT_BOTH) {
+        dataview.setUint8(OFFSET_PIR_OPER, 1);
+      } else {
+        dataview.setUint8(OFFSET_PIR_OPER, (this.pirDNThreshold<<1 + this.pirOpertimeSetting));
+      }
       
       dataview.setUint8(OFFSET_PIR_MODE,this.pirMode);
       
@@ -495,13 +519,13 @@ export class DetailPage {
           break;
         }
         case MODE_SETTING.TRIGGER_BURST: {
-          dataview.setUint16(OFFSET_PIR_MODE_BURST_GAP, this.pirBurstGap);
+          dataview.setUint16(OFFSET_PIR_MODE_BURST_GAP, (this.pirBurstGap*10));
           dataview.setUint8(OFFSET_PIR_MODE_BURST_NUMBER, this.pirBurstNumber);
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          //pnarasim tbd getuint24
-          dataview.setUint16(OFFSET_PIR_MODE_BULB_EXPOSURE, this.pirBulbExposureTime);
+          dataview.setUint16(OFFSET_PIR_MODE_BULB_EXPOSURE, ((this.pirBulbExposureTime*10)>>8));
+          dataview.setUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2, ((this.pirBulbExposureTime*10) & ~4294967040));
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
@@ -515,14 +539,19 @@ export class DetailPage {
       } 
       dataview.setUint8(OFFSET_PIR_THRESHOLD, this.pirThreshold);
       dataview.setUint8(OFFSET_PIR_AMPLIFICATION, this.pirAmplification);
-      dataview.setUint16(OFFSET_PIR_INTERTRIGGERTIME, this.pirInterTriggerTime); 
+      dataview.setUint16(OFFSET_PIR_INTERTRIGGERTIME, (this.pirInterTriggerTime*10)); 
       
       //dataview.setUint8(OFFSET_MAKE, this.make); 
 
       // ==== TIMER SETTINGS ++++
       dataview.setUint16(OFFSET_TIMER_INTERVAL, this.timerInterval);
       
-      dataview.setUint8(OFFSET_TIMER_OPER, this.timerOpertimeSetting);
+      if (this.timerOpertimeSetting == TIME_SETTING.DAYNIGHT_BOTH) {
+        dataview.setUint8(OFFSET_TIMER_OPER, 1);
+      } else {
+        dataview.setUint8(OFFSET_TIMER_OPER, ((this.timerDNThreshold<<1) + this.timerOpertimeSetting));
+        console.log('writing ' + (this.timerDNThreshold<<1) + ' + ' + this.timerOpertimeSetting);
+      }
       
       dataview.setUint8(OFFSET_TIMER_MODE,this.timerMode);
       
@@ -534,13 +563,13 @@ export class DetailPage {
           break;
         }
         case MODE_SETTING.TRIGGER_BURST: {
-          dataview.setUint16(OFFSET_TIMER_MODE_BURST_GAP, this.timerBurstGap);
+          dataview.setUint16(OFFSET_TIMER_MODE_BURST_GAP, (this.timerBurstGap*10));
           dataview.setUint8(OFFSET_TIMER_MODE_BURST_NUMBER, this.timerBurstNumber);
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          //pnarasim tbd getuint24 
-          dataview.setUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE, this.timerBulbExposureTime);
+          dataview.setUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE, ((this.timerBulbExposureTime*10)>>8));
+          dataview.setUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2, ((this.timerBulbExposureTime*10) & ~4294967040));
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
