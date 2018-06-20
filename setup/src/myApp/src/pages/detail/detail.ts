@@ -506,6 +506,7 @@ export class DetailPage {
       if (this.pirOpertimeSetting == TIME_SETTING.DAYNIGHT_BOTH) {
         dataview.setUint8(OFFSET_PIR_OPER, 1);
       } else {
+       	console.log("DN THRESH = " + (this.pirDNThreshold<<1 + this.pirOpertimeSetting));
         dataview.setUint8(OFFSET_PIR_OPER, (this.pirDNThreshold<<1 + this.pirOpertimeSetting));
       }
       
@@ -519,17 +520,17 @@ export class DetailPage {
           break;
         }
         case MODE_SETTING.TRIGGER_BURST: {
-          dataview.setUint16(OFFSET_PIR_MODE_BURST_GAP, (this.pirBurstGap*10));
+          dataview.setUint16(OFFSET_PIR_MODE_BURST_GAP, (this.pirBurstGap*10), true);
           dataview.setUint8(OFFSET_PIR_MODE_BURST_NUMBER, this.pirBurstNumber);
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          dataview.setUint16(OFFSET_PIR_MODE_BULB_EXPOSURE, ((this.pirBulbExposureTime*10)>>8));
-          dataview.setUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2, ((this.pirBulbExposureTime*10) & ~4294967040));
+          dataview.setUint16(OFFSET_PIR_MODE_BULB_EXPOSURE, ((this.pirBulbExposureTime*10)&0xFFFF), true);
+          dataview.setUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2, ((this.pirBulbExposureTime*10) >>16));
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
-          dataview.setUint16(OFFSET_PIR_MODE_VIDEO_DURATION, this.pirVideoDuration);
+          dataview.setUint16(OFFSET_PIR_MODE_VIDEO_DURATION, this.pirVideoDuration, true);
           dataview.setUint8(OFFSET_PIR_MODE_VIDEO_EXTENSION, this.pirVideoExtension); 
           break;
         }
@@ -539,12 +540,12 @@ export class DetailPage {
       } 
       dataview.setUint8(OFFSET_PIR_THRESHOLD, this.pirThreshold);
       dataview.setUint8(OFFSET_PIR_AMPLIFICATION, this.pirAmplification);
-      dataview.setUint16(OFFSET_PIR_INTERTRIGGERTIME, (this.pirInterTriggerTime*10)); 
+      dataview.setUint16(OFFSET_PIR_INTERTRIGGERTIME, (this.pirInterTriggerTime*10), true); 
       
       //dataview.setUint8(OFFSET_MAKE, this.make); 
 
       // ==== TIMER SETTINGS ++++
-      dataview.setUint16(OFFSET_TIMER_INTERVAL, this.timerInterval);
+      dataview.setUint16(OFFSET_TIMER_INTERVAL, this.timerInterval, true);
       
       if (this.timerOpertimeSetting == TIME_SETTING.DAYNIGHT_BOTH) {
         dataview.setUint8(OFFSET_TIMER_OPER, 1);
@@ -563,17 +564,17 @@ export class DetailPage {
           break;
         }
         case MODE_SETTING.TRIGGER_BURST: {
-          dataview.setUint16(OFFSET_TIMER_MODE_BURST_GAP, (this.timerBurstGap*10));
+          dataview.setUint16(OFFSET_TIMER_MODE_BURST_GAP, (this.timerBurstGap*10), true);
           dataview.setUint8(OFFSET_TIMER_MODE_BURST_NUMBER, this.timerBurstNumber);
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          dataview.setUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE, ((this.timerBulbExposureTime*10)>>8));
-          dataview.setUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2, ((this.timerBulbExposureTime*10) & ~4294967040));
+          dataview.setUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE, ((this.timerBulbExposureTime*10)&0xFFFF), true);
+          dataview.setUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2, ((this.timerBulbExposureTime*10)>>16));
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
-          dataview.setUint16(OFFSET_TIMER_MODE_VIDEO_DURATION, this.timerVideoDuration);
+          dataview.setUint16(OFFSET_TIMER_MODE_VIDEO_DURATION, this.timerVideoDuration, true);
           dataview.setUint8(OFFSET_TIMER_MODE_VIDEO_EXTENSION, this.timerVideoExtension); 
           break;
         }
