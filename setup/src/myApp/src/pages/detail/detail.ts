@@ -506,8 +506,9 @@ export class DetailPage {
       if (this.pirOpertimeSetting == TIME_SETTING.DAYNIGHT_BOTH) {
         dataview.setUint8(OFFSET_PIR_OPER, 1);
       } else {
-       	console.log("DN THRESH = " + (this.pirDNThreshold<<1 + this.pirOpertimeSetting));
-        dataview.setUint8(OFFSET_PIR_OPER, (this.pirDNThreshold<<1 + this.pirOpertimeSetting));
+        dataview.setUint8(OFFSET_PIR_OPER, ((this.pirDNThreshold<<1) + (this.pirOpertimeSetting&0x01)));
+        console.log('PIR DNT = ' + (this.pirDNThreshold<<1) + ' + ' + this.pirOpertimeSetting + ' = ' + 
+          (((this.pirDNThreshold<<1) + (this.pirOpertimeSetting&0x01))));
       }
       
       dataview.setUint8(OFFSET_PIR_MODE,this.pirMode);
@@ -550,8 +551,9 @@ export class DetailPage {
       if (this.timerOpertimeSetting == TIME_SETTING.DAYNIGHT_BOTH) {
         dataview.setUint8(OFFSET_TIMER_OPER, 1);
       } else {
-        dataview.setUint8(OFFSET_TIMER_OPER, ((this.timerDNThreshold<<1) + this.timerOpertimeSetting));
-        console.log('writing ' + (this.timerDNThreshold<<1) + ' + ' + this.timerOpertimeSetting);
+        dataview.setUint8(OFFSET_TIMER_OPER, ((this.timerDNThreshold<<1) + (this.timerOpertimeSetting&0x01)));
+        console.log('TIMER DNT = ' + (this.timerDNThreshold<<1) + ' + ' + this.timerOpertimeSetting + ' = ' + 
+          (((this.timerDNThreshold<<1) + (this.timerOpertimeSetting&0x01))));
       }
       
       dataview.setUint8(OFFSET_TIMER_MODE,this.timerMode);
