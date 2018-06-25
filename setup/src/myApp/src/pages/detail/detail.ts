@@ -432,7 +432,8 @@ export class DetailPage {
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          console.log("PIR BulbExposureTime = (3 bytes)" + ((dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE)<<8) + dataview.getUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2)));
+          console.log("PIR BulbExposureTime = (3 bytes)" + 
+            ((dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE)) + (dataview.getUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2)<<16)));
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
@@ -451,7 +452,7 @@ export class DetailPage {
       
       // === TIMER Settings ===
       console.log('TIMER timerInterval (2 bytes)= ' + dataview.getUint16(OFFSET_TIMER_INTERVAL));
-      console.log('testttt = ' + dataview.getUint8(OFFSET_TIMER_OPER));
+      
       if (dataview.getUint8(OFFSET_TIMER_OPER) == 1) {
         console.log("TIMER DN mode = both");
       } else {
@@ -473,7 +474,8 @@ export class DetailPage {
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          console.log("TIMER BulbExposureTime (3 bytes) = " + ((dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE)<<8)+dataview.getUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2)));
+          console.log("TIMER BulbExposureTime (3 bytes) = " + 
+            ((dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE))+(dataview.getUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2)<<16)));
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
