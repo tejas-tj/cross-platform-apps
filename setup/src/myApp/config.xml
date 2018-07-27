@@ -84,6 +84,8 @@
     <plugin name="cordova-plugin-ble-central" spec="^1.1.4">
         <variable name="BLUETOOTH_USAGE_DESCRIPTION" value="Configuring Local BLE devices" />
     </plugin>
-    <engine name="android" spec="7.0.0" />
     <engine name="ios" spec="4.5.4" />
+    <engine name="android" spec="^7.0.0" />
+    <plugin name="cordova-plugin-app-preferences" spec="^0.99.3" />
+    <plugin name="cordova-plugin-nativestorage" spec="^2.3.2" />
 </widget>

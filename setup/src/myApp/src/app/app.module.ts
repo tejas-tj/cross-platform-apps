@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -22,7 +23,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     DebugPage,
     AboutPage,
     HelpPage,
-    TestConfigPage  
+    TestConfigPage
   ],
   imports: [
     BrowserModule,
@@ -42,6 +43,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    NativeStorage,
     BLE
   ]
 })

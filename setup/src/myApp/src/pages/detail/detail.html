@@ -5,6 +5,15 @@
 </ion-header>
 
 <ion-content class="padding">
+<ion-fab right edge>
+  <button ion-fab >
+    Profile
+  </button>
+  <ion-fab-list side="bottom">
+    <button ion-fab (click)="onButtonClickSaveSettings()" > Save </button>
+    <button ion-fab (click)="onButtonClickPopSettings()" > Pop </button>
+  </ion-fab-list> 
+</ion-fab>
 
   <!-- Card with radio buttons to select trigger mode -->
   <ion-card>
@@ -270,9 +279,10 @@
     <p>{{ statusMessage }}</p>
   </ion-toolbar>
   
+
   <!-- Button to write to the device -->
   <button ion-button item-right *ngIf="realConnection" (click)="onButtonClickWrite()" class="move-right">
-    Write
+    Write to Device
   </button>
   
 </ion-footer>

@@ -1,6 +1,7 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 // TBD : these shd be common to home.ts too : figure out how to share common header file
 const APPIKO_DUMMY_DEVICE_MAC = 'AA:BB:CC:DD:EE:FF';
@@ -135,6 +136,7 @@ export class DetailPage {
     private ble: BLE,
     private alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
+    private nstorage: NativeStorage,
     private ngZone: NgZone) {
       
       let device = navParams.get('device');
@@ -548,7 +550,7 @@ export class DetailPage {
       //dataview.setUint8(OFFSET_MAKE, this.make); 
 
       // ==== TIMER SETTINGS ++++
-      dataview.setUint16(OFFSET_TIMER_INTERVAL, this.timerInterval, true);
+      dataview.setUint16(OFFSET_TIMER_INTERVAL, (this.timerInterval*10), true);
       
       if (this.timerOpertimeSetting == TIME_SETTING.DAYNIGHT_BOTH) {
         dataview.setUint8(OFFSET_TIMER_OPER, 1);
@@ -593,6 +595,59 @@ export class DetailPage {
 
     }
 
+    onButtonClickSaveSettings(event) {
+      // save all the current settings
+      console.log("Saving all current values to default profile"); 
+      this.nstorage.setItem('TRIGGER_SETTING', this.triggerSetting);
+      this.nstorage.setItem('TIMER_INTERVAL', this.timerInterval);
+      this.nstorage.setItem('TIMER_OPERSETTING', this.timerOpertimeSetting);
+      this.nstorage.setItem('TIMER_DNTHRESHOLD', this.timerDNThreshold);
+      this.nstorage.setItem('TIMER_MODE', this.timerMode);
+      this.nstorage.setItem('TIMER_BURSTGAP', this.timerBurstGap);
+      this.nstorage.setItem('TIMER_BURSTNUMBER', this.timerBurstNumber);
+      this.nstorage.setItem('TIMER_BULBEXPOSURE', this.timerBulbExposureTime);
+      this.nstorage.setItem('TIMER_VIDEODURATION', this.timerVideoDuration);
+      this.nstorage.setItem('TIMER_VIDEO_EXTENSION', this.timerVideoExtension);
+      this.nstorage.setItem('PIR_OPERSETTING', this.pirOpertimeSetting);
+      this.nstorage.setItem('PIR_DNTHRESHOLD', this.pirDNThreshold);
+      this.nstorage.setItem('PIR_MODE', this.pirMode);
+      this.nstorage.setItem('PIR_BURSTGAP', this.pirBurstGap);
+      this.nstorage.setItem('PIR_BURSTNUMBER', this.pirBurstNumber);
+      this.nstorage.setItem('PIR_BULBEXPOSURE', this.pirBulbExposureTime);
+      this.nstorage.setItem('PIR_VIDEODURATION', this.pirVideoDuration);
+      this.nstorage.setItem('PIR_VIDEOEXTENSION', this.pirVideoExtension);
+      this.nstorage.setItem('PIR_THRESHOLD', this.pirThreshold);
+      this.nstorage.setItem('PIR_AMPLIFICATION', this.pirAmplification);
+      this.nstorage.setItem('PIR_INTERTRIGGERTIME', this.pirInterTriggerTime);
+    }
+
+
+    async onButtonClickPopSettings(event) {
+      console.log("Popping all settings from saved/default profile");
+      this.triggerSetting = await this.nstorage.getItem('TRIGGER_SETTING');
+
+      this.timerInterval = await this.nstorage.getItem('TIMER_INTERVAL');
+      this.timerOpertimeSetting = await this.nstorage.getItem('TIMER_OPERSETTING');
+      this.timerDNThreshold = await this.nstorage.getItem('TIMER_DNTHRESHOLD');
+      this.timerMode = await this.nstorage.getItem('TIMER_MODE');
+      this.timerBurstGap = await this.nstorage.getItem('TIMER_BURSTGAP');
+      this.timerBurstNumber = await this.nstorage.getItem('TIMER_BURSTNUMBER');
+      this.timerBulbExposureTime = await this.nstorage.getItem('TIMER_BULBEXPOSURE');
+      this.timerVideoDuration = await this.nstorage.getItem('TIMER_VIDEODURATION');
+      this.timerVideoExtension = await this.nstorage.getItem('TIMER_VIDEO_EXTENSION');
+      this.pirOpertimeSetting = await this.nstorage.getItem('PIR_OPERSETTING');
+      this.pirDNThreshold = await this.nstorage.getItem('PIR_DNTHRESHOLD');
+      this.pirMode = await this.nstorage.getItem('PIR_MODE');
+      this.pirBurstGap = await this.nstorage.getItem('PIR_BURSTGAP');
+      this.pirBurstNumber = await this.nstorage.getItem('PIR_BURSTNUMBER');
+      this.pirBulbExposureTime = await this.nstorage.getItem('PIR_BULBEXPOSURE');
+      this.pirVideoDuration = await this.nstorage.getItem('PIR_VIDEODURATION');
+      this.pirVideoExtension = await this.nstorage.getItem('PIR_VIDEOEXTENSION');
+      this.pirThreshold = await this.nstorage.getItem('PIR_THRESHOLD');
+      this.pirAmplification = await this.nstorage.getItem('PIR_AMPLIFICATION');
+      this.pirInterTriggerTime = await this.nstorage.getItem('PIR_INTERTRIGGERTIME');
+      
+    }
     
     // To write the value of each characteristic to the device 
     onButtonClickWrite(event) {
