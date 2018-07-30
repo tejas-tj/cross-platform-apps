@@ -5,6 +5,7 @@
 </ion-header>
 
 <ion-content class="padding">
+<!-- Hide Profile buttons for now : just delivering a change for a demo to sandesh.
 <ion-fab right edge>
   <button ion-fab >
     Profile
@@ -14,7 +15,7 @@
     <button ion-fab (click)="onButtonClickPopSettings()" > Pop </button>
   </ion-fab-list> 
 </ion-fab>
-
+-->
   <!-- Card with radio buttons to select trigger mode -->
   <ion-card>
     <ion-card-header>
@@ -31,10 +32,12 @@
         <ion-label>Motion Only</ion-label>
         <ion-radio value="1"></ion-radio>
       </ion-item>      
+      <!-- Disabling the both timer and motion option till some bugs are ironed out
       <ion-item>
         <ion-label>Both Timer and Motion</ion-label>
         <ion-radio value="2"></ion-radio>
       </ion-item>
+      -->
     </ion-list>
   </ion-card>
   <!-- Card with drop downs to select camera model attached -->
