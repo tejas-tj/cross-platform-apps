@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-navbar color="appiko" >
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Setup - Configure Sense</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-tabs selectedIndex="0" tabsPlacement="top">
+    <ion-tab tabIcon="bluetooth" tabTitle="BLE Scan" [root]="tab1Root" on-select="scan()"> </ion-tab>
+    <ion-tab tabIcon="clock" tabTitle="History" [root]="tab2Root"> </ion-tab>
+  </ion-tabs>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <p>{{ statusMessage }}</p>
+  </ion-toolbar>
+</ion-footer>

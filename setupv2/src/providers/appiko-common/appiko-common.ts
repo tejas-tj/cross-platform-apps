@@ -1,0 +1,26 @@
+import { Injectable } from '@angular/core';
+
+
+/*
+  Generated class for the AppikoCommonProvider provider.
+
+  See https://angular.io/guide/dependency-injection for more info on providers
+  and Angular DI.
+*/
+@Injectable()
+export class AppikoCommonProvider {
+
+	APPIKO_SENSE_RE = /S[0-9]+/g;
+
+  	//testing mode vars
+  	APPIKO_DUMMY_DEVICE_MAC = 'AA:BB:CC:DD:EE:FF';
+  	APPIKO_DUMMY_SENSE_PI = 'Dummy SensePi (Sample to view config options)';
+
+  	// Bluetooth UUIDs
+  	UUID_SENSE_PI_SERVICE = '3c73dc50-07f5-480d-b066-837407fbde0a';
+  	
+  	constructor() {
+    	console.log('Hello AppikoCommonProvider Provider');
+  	}
+
+}
