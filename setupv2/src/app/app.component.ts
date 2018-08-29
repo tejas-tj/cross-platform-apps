@@ -6,9 +6,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { HomePage } from '../pages/home/home';
 import { ScanlistPage } from '../pages/scanlist/scanlist';
 import { ConnecthistoryPage } from '../pages/connecthistory/connecthistory';
-import { DetailPage } from '../pages/detail/detail';
+import { SensepiconfigPage } from '../pages/sensepiconfig/sensepiconfig';
+import { AboutPage } from '../pages/about/about';
 import { AppikoCommonProvider } from '../providers/appiko-common/appiko-common';
-import { AppikoSensePiProvider } from '../providers/appiko-sense-pi/appiko-sense-pi';
 
 @Component({
   templateUrl: 'app.html'
@@ -28,7 +28,7 @@ export class MyApp {
       this.pages = [
         { title: 'Home', component: HomePage },
         //{ title: 'Debug', component: DebugPage },
-        //{ title: 'About', component: AboutPage },
+        { title: 'About', component: AboutPage },
         //{ title: 'Help', component: HelpPage },
         //{ title: 'Test Config', component: TestConfigPage}
       ];

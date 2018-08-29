@@ -3,7 +3,6 @@ import { NavController } from 'ionic-angular';
 
 import { ScanlistPage } from '../scanlist/scanlist';
 import { ConnecthistoryPage } from '../connecthistory/connecthistory';
-import { DetailPage } from '../detail/detail';
 
 @Component({
   selector: 'page-home',

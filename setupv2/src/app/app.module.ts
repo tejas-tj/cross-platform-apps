@@ -8,9 +8,9 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ScanlistPage } from '../pages/scanlist/scanlist';
 import { ConnecthistoryPage } from '../pages/connecthistory/connecthistory';
-import { DetailPage } from '../pages/detail/detail';
+import { SensepiconfigPage } from '../pages/sensepiconfig/sensepiconfig';
+import { AboutPage } from '../pages/about/about';
 import { AppikoCommonProvider } from '../providers/appiko-common/appiko-common';
-import { AppikoSensePiProvider } from '../providers/appiko-sense-pi/appiko-sense-pi';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,8 @@ import { AppikoSensePiProvider } from '../providers/appiko-sense-pi/appiko-sense
     HomePage,
     ScanlistPage,
     ConnecthistoryPage,
-    DetailPage
+    SensepiconfigPage,
+    AboutPage
   ],
   imports: [
     BrowserModule,
@@ -30,15 +31,15 @@ import { AppikoSensePiProvider } from '../providers/appiko-sense-pi/appiko-sense
     HomePage,
     ScanlistPage,
     ConnecthistoryPage,
-    DetailPage
+    SensepiconfigPage,
+    AboutPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     BLE,
-    AppikoCommonProvider,
-    AppikoSensePiProvider
+    AppikoCommonProvider
   ]
 })
 export class AppModule {}

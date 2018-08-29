@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class AppikoCommonProvider {
 
-	APPIKO_SENSE_RE = /S[0-9]+/g;
+	  APPIKO_SENSE_RE = /S[0-9]+/g;
 
   	//testing mode vars
   	APPIKO_DUMMY_DEVICE_MAC = 'AA:BB:CC:DD:EE:FF';
@@ -19,6 +19,17 @@ export class AppikoCommonProvider {
   	// Bluetooth UUIDs
   	UUID_SENSE_PI_SERVICE = '3c73dc50-07f5-480d-b066-837407fbde0a';
   	
+    APPIKO_SENSE_PI = 'SensePi';
+    APPIKO_SENSE_PI_COMPLETE_LOCAL_NAME = 'SensePi';
+    // shortened local name is SPaabbyymmddnnnn : aa is board rev, bb is manufacturing location
+    APPIKO_SENSE_PI_SHORTENED_LOCAL_NAME = 'SP' 
+  
+    FW_VER = '1.0';
+
+    // Bluetooth UUIDs
+    UUID_SENSE_PI_BOARD_SETTINGS = '3c73dc51-07f5-480d-b066-837407fbde0a';
+    UUID_SENSE_PI_USER_SETTINGS = '3c73dc52-07f5-480d-b066-837407fbde0a';
+
   	constructor() {
     	console.log('Hello AppikoCommonProvider Provider');
   	}
