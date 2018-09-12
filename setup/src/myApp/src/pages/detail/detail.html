@@ -112,7 +112,7 @@
         <ion-label color="primary" >Time between bursts </ion-label>
         <ion-input type="number" [(ngModel)]="timerBurstGap" (ionChange)="setTimerBurstGap($event)" placeholder="Enter value in s"></ion-input>
       </ion-item>
-      <ion-item *ngIf="radioTimerClickedBurst" class="bottom-border">
+      <ion-item *ngIf="radioTimerClickedBurst" >
        <ion-label color="primary">Number of shots per burst </ion-label>
        <ion-input type="number" [(ngModel)]="timerBurstNumber" (ionChange)="setTimerBurstNumber($event)" ></ion-input>
       </ion-item>
@@ -123,7 +123,7 @@
        <ion-radio value = "2"></ion-radio>
       </ion-item>
 
-      <ion-item *ngIf="radioTimerClickedBulb" class="bottom-border">
+      <ion-item *ngIf="radioTimerClickedBulb" >
         <ion-label color="primary" >Exposure time
           <ion-badge color="primary" item-end>{{this.timerBulbExposureTime}}</ion-badge>
         </ion-label>
@@ -142,7 +142,7 @@
         </ion-label>
         <ion-input type="number" [(ngModel)]="timerVideoDuration" (ionChange)="setTimerVideoDuration($event)" placeholder="seconds"></ion-input>
       </ion-item>     
-      <ion-item *ngIf="radioTimerClickedVideo" class="bottom-border">
+      <ion-item *ngIf="radioTimerClickedVideo" >
         <ion-label color="primary" >Extension time 
           <ion-badge color="primary" item-end>{{this.timerVideoExtension}}</ion-badge>
         </ion-label>
@@ -200,13 +200,13 @@
        <ion-radio value = "1"></ion-radio>
       </ion-item>
       
-      <ion-item *ngIf="radioPirClickedBurst" class="bottom-border">
+      <ion-item *ngIf="radioPirClickedBurst" >
         <ion-label color="primary">Time between bursts
           <ion-badge color="primary" item-end>{{this.pirBurstGap}}</ion-badge>
         </ion-label>
         <ion-input type="number" [(ngModel)]="pirBurstGap" (ionChange)="setPirBurstGap($event)" placeholder="seconds"></ion-input>
       </ion-item>
-      <ion-item *ngIf="radioPirClickedBurst" class="bottom-border">
+      <ion-item *ngIf="radioPirClickedBurst" >
        <ion-label color="primary">Number of shots per burst </ion-label>
        <ion-input type="number" [(ngModel)]="pirBurstNumber" (ionChange)="setPirBurstNumber($event)"></ion-input>
       </ion-item>
@@ -218,7 +218,7 @@
        <ion-radio value = "2"></ion-radio>
       </ion-item>
 
-      <ion-item *ngIf="radioPirClickedBulb" class="bottom-border">
+      <ion-item *ngIf="radioPirClickedBulb" >
         <ion-label color="primary" >Exposure Time
           <ion-badge color="primary" item-end>{{this.pirBulbExposureTime}}</ion-badge>
         </ion-label>
@@ -238,7 +238,7 @@
         <ion-input type="number" [(ngModel)]="pirVideoDuration" (ionChange)="setPirVideoDuration($event)" placeholder="seconds"></ion-input>
       </ion-item>
       
-      <ion-item *ngIf="radioPirClickedVideo" class="bottom-border">
+      <ion-item *ngIf="radioPirClickedVideo" >
         <ion-label color="primary" >Extension time 
           <ion-badge color="primary" item-end>{{this.pirVideoExtension}}</ion-badge>
         </ion-label>
