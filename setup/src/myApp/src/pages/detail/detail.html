@@ -59,7 +59,7 @@
     </ion-card-header>
     <ion-item >
       <ion-label > Timer interval </ion-label>
-      <ion-input type=number [(ngModel)]="timerInterval" (ionChange)="setTriggerTimerInterval($event)" placeholder="units of 100ms"> </ion-input>
+      <ion-input type=number [(ngModel)]="timerInterval" (ionChange)="setTriggerTimerInterval($event)" placeholder="seconds"> </ion-input>
     </ion-item>
   </ion-card>
   <ion-card *ngIf="radioClickedTriggerTimer">  
@@ -284,7 +284,7 @@
     </ion-card-header>
     <ion-item >
       <ion-label>Inter Trigger Time </ion-label> 
-      <ion-input type=number [(ngModel)]="pirInterTriggerTime" (ionChange)="setPirInterTriggerTime($event)" placeholder="Units of 100ms"> </ion-input>   
+      <ion-input type=number [(ngModel)]="pirInterTriggerTime" (ionChange)="setPirInterTriggerTime($event)" placeholder="seconds"> </ion-input>   
       <!-- Removing range as steps of 0.1s difficult to select in a range -->
       <!--
       <ion-range min="5" max="600" pin="true" step="10" snaps="true" [(ngModel)]="pirInterTriggerTime" (ionChange)="setPirInterTriggerTime($event)">
