@@ -24,11 +24,11 @@
     
     <ion-list radio-group [(ngModel)]="triggerSetting" (ionChange)="setTriggerSetting($event)">
       
-      <ion-item>
+      <ion-item >
         <ion-label>Timer Only</ion-label>
         <ion-radio value="0"></ion-radio>
       </ion-item>
-      <ion-item>
+      <ion-item >
         <ion-label>Motion Only</ion-label>
         <ion-radio value="1"></ion-radio>
       </ion-item>      
@@ -58,7 +58,9 @@
       Timer Settings
     </ion-card-header>
     <ion-item >
-      <ion-label > Timer interval </ion-label>
+      <ion-label> Timer interval 
+        <ion-badge color="primary" item-end> {{this.timerInterval}} </ion-badge> 
+      </ion-label>
       <ion-input type=number [(ngModel)]="timerInterval" (ionChange)="setTriggerTimerInterval($event)" placeholder="seconds"> </ion-input>
     </ion-item>
   </ion-card>
@@ -282,8 +284,10 @@
     <ion-card-header class="card-heading">
       Frequency 
     </ion-card-header>
-    <ion-item >
-      <ion-label>Inter Trigger Time </ion-label> 
+    <ion-item>
+      <ion-label > Inter Trigger Time 
+        <ion-badge color="primary" item-end> {{this.pirInterTriggerTime}} </ion-badge> 
+      </ion-label> 
       <ion-input type=number [(ngModel)]="pirInterTriggerTime" (ionChange)="setPirInterTriggerTime($event)" placeholder="seconds"> </ion-input>   
       <!-- Removing range as steps of 0.1s difficult to select in a range -->
       <!--
