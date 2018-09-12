@@ -18,7 +18,7 @@
 -->
   <!-- Card with radio buttons to select trigger mode -->
   <ion-card>
-    <ion-card-header>
+    <ion-card-header class="card-heading">
       Trigger Setting
     </ion-card-header>
     
@@ -41,6 +41,7 @@
     </ion-list>
   </ion-card>
   <!-- Card with drop downs to select camera model attached -->
+  <!-- Not selecting make as of now.
   <ion-card>    
     <ion-item>
       <ion-label>Camera Make</ion-label>
@@ -50,17 +51,22 @@
       </ion-select>
     </ion-item>    
   </ion-card>  
-
+  -->
   <!-- Time interval for timer trigger -->
   <ion-card *ngIf="radioClickedTriggerTimer">  
-    <ion-card-header>
+    <ion-card-header class="card-heading">
       Timer Settings
     </ion-card-header>
-    <ion-item>
-      <ion-label > Timer interval (in mins)</ion-label>
-      <ion-input type=number [(ngModel)]="timerInterval" (ionChange)="setTriggerTimerInterval($event)" min="10" max="1440" value="" placeholder="Enter value in minutes"> </ion-input>
+    <ion-item >
+      <ion-label > Timer interval </ion-label>
+      <ion-input type=number [(ngModel)]="timerInterval" (ionChange)="setTriggerTimerInterval($event)" placeholder="units of 100ms"> </ion-input>
     </ion-item>
-    
+  </ion-card>
+  <ion-card *ngIf="radioClickedTriggerTimer">  
+   <ion-card-header class="card-heading">
+      Operating Mode
+    </ion-card-header>
+   
     <ion-list radio-group [(ngModel)]="timerOpertimeSetting" (ionChange)="setTimerOpertimeSetting($event)">
       <ion-item>
         <ion-label>Night Only</ion-label>
@@ -77,14 +83,18 @@
     </ion-list>  
     <ion-item>
       <ion-label> Day Night Threshold  
-        <ion-badge color="primary" item-end>{{timerDNThreshold}}s</ion-badge>
+        <ion-badge color="primary" item-end>{{timerDNThreshold}}</ion-badge>
       </ion-label>
       <ion-range min="0" max="127" pin="true" [(ngModel)]="timerDNThreshold" (ionChange)="setTimerDNThreshold($event)">
         <ion-label range-left>0</ion-label>
         <ion-label range-right>127</ion-label>
        </ion-range>
     </ion-item>
-
+  </ion-card>
+  <ion-card *ngIf="radioClickedTriggerTimer">  
+   <ion-card-header class="card-heading">
+      Trigger 
+    </ion-card-header>  
     <ion-list radio-group [(ngModel)]="timerMode" (ionChange)="setTimerMode($event)">
       <ion-item>
        <ion-label> Set Single Trigger </ion-label>
@@ -98,13 +108,13 @@
        <ion-radio value = "1"></ion-radio>
       </ion-item>
       
-      <ion-item *ngIf="radioTimerClickedBurst" class="bottom-border">
-        <ion-label color="primary" >Time between bursts in s </ion-label>
-        <ion-input type="number" [(ngModel)]="timerBurstGap" (ionChange)="setTimerBurstGap($event)" min="0.5" max="60" value="" placeholder="Enter value in s"></ion-input>
+      <ion-item *ngIf="radioTimerClickedBurst" >
+        <ion-label color="primary" >Time between bursts </ion-label>
+        <ion-input type="number" [(ngModel)]="timerBurstGap" (ionChange)="setTimerBurstGap($event)" placeholder="Enter value in s"></ion-input>
       </ion-item>
       <ion-item *ngIf="radioTimerClickedBurst" class="bottom-border">
        <ion-label color="primary">Number of shots per burst </ion-label>
-       <ion-input type="number" [(ngModel)]="timerBurstNumber" (ionChange)="setTimerBurstNumber($event)" min="2" max="255" value="" placeholder="Number of Shots"></ion-input>
+       <ion-input type="number" [(ngModel)]="timerBurstNumber" (ionChange)="setTimerBurstNumber($event)" ></ion-input>
       </ion-item>
       
       <ion-item>
@@ -114,10 +124,10 @@
       </ion-item>
 
       <ion-item *ngIf="radioTimerClickedBulb" class="bottom-border">
-        <ion-label color="primary" >Time for exposure in s
-          <ion-badge color="primary" item-end>{{this.timerBulbExposureTime}} s</ion-badge>
+        <ion-label color="primary" >Exposure time
+          <ion-badge color="primary" item-end>{{this.timerBulbExposureTime}}</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="timerBulbExposureTime" (ionChange)="setTimerBulbExposureTime($event)" min="0.5" max="1677215" value="" placeholder="seconds"></ion-input>
+        <ion-input type="number" [(ngModel)]="timerBulbExposureTime" (ionChange)="setTimerBulbExposureTime($event)" placeholder="seconds"></ion-input>
       </ion-item>
       
       <ion-item *ngIf="(make!=1)">
@@ -127,16 +137,16 @@
       </ion-item>
       
       <ion-item *ngIf="radioTimerClickedVideo&&(make!=1)">
-        <ion-label color="primary" >Duration of the video in s
-          <ion-badge color="primary" item-end>{{this.timerVideoDuration}} s</ion-badge>
+        <ion-label color="primary" >Duration of the video
+          <ion-badge color="primary" item-end>{{this.timerVideoDuration}}</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="timerVideoDuration" (ionChange)="setTimerVideoDuration($event)" min="1" max="1000" value="" placeholder="seconds"></ion-input>
+        <ion-input type="number" [(ngModel)]="timerVideoDuration" (ionChange)="setTimerVideoDuration($event)" placeholder="seconds"></ion-input>
       </ion-item>     
       <ion-item *ngIf="radioTimerClickedVideo" class="bottom-border">
-        <ion-label color="primary" >Extension time in case more motion is detected
-          <ion-badge color="primary" item-end>{{this.timerVideoExtension}} s</ion-badge>
+        <ion-label color="primary" >Extension time 
+          <ion-badge color="primary" item-end>{{this.timerVideoExtension}}</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="timerVideoExtension" (ionChange)="setTimerVideoExtension($event)" min="1" max="250" value="" placeholder="seconds"></ion-input>
+        <ion-input type="number" [(ngModel)]="timerVideoExtension" (ionChange)="setTimerVideoExtension($event)" placeholder="seconds"></ion-input>
       </ion-item>
     </ion-list>
 
@@ -144,8 +154,8 @@
   
 
   <ion-card *ngIf="radioClickedTriggerPir">
-    <ion-card-header>
-      PIR Settings
+    <ion-card-header class="card-heading">
+      Operating Mode 
     </ion-card-header>
    
     <ion-list radio-group [(ngModel)]="pirOpertimeSetting" (ionChange)="setPirOpertimeSetting($event)">
@@ -164,14 +174,19 @@
     </ion-list>  
     <ion-item>
       <ion-label> Day Night Threshold  
-        <ion-badge color="primary" item-end>{{pirDNThreshold}}s</ion-badge>
+        <ion-badge color="primary" item-end>{{pirDNThreshold}}</ion-badge>
       </ion-label>
       <ion-range min="0" max="127" pin="true" [(ngModel)]="pirDNThreshold" (ionChange)="setPirDNThreshold($event)">
         <ion-label range-left>0</ion-label>
         <ion-label range-right>127</ion-label>
        </ion-range>
     </ion-item>
-    
+  </ion-card>
+
+  <ion-card *ngIf="radioClickedTriggerPir">
+    <ion-card-header class="card-heading">
+      Trigger Mode 
+    </ion-card-header>
     <ion-list radio-group [(ngModel)]="pirMode" (ionChange)="setPirMode($event)">
       <ion-item>
        <ion-label> Set Single Trigger </ion-label>
@@ -186,14 +201,14 @@
       </ion-item>
       
       <ion-item *ngIf="radioPirClickedBurst" class="bottom-border">
-        <ion-label color="primary">Time between bursts in s
-          <ion-badge color="primary" item-end>{{this.pirBurstGap}} s</ion-badge>
+        <ion-label color="primary">Time between bursts
+          <ion-badge color="primary" item-end>{{this.pirBurstGap}}</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="pirBurstGap" (ionChange)="setPirBurstGap($event)" min="0.5" max="60" value="" placeholder="seconds"></ion-input>
+        <ion-input type="number" [(ngModel)]="pirBurstGap" (ionChange)="setPirBurstGap($event)" placeholder="seconds"></ion-input>
       </ion-item>
       <ion-item *ngIf="radioPirClickedBurst" class="bottom-border">
        <ion-label color="primary">Number of shots per burst </ion-label>
-       <ion-input type="number" [(ngModel)]="pirBurstNumber" (ionChange)="setPirBurstNumber($event)" min="2" max="255" value="" placeholder="Number of Shots"></ion-input>
+       <ion-input type="number" [(ngModel)]="pirBurstNumber" (ionChange)="setPirBurstNumber($event)"></ion-input>
       </ion-item>
 
  
@@ -204,10 +219,10 @@
       </ion-item>
 
       <ion-item *ngIf="radioPirClickedBulb" class="bottom-border">
-        <ion-label color="primary" >Time for exposure at night in s
-          <ion-badge color="primary" item-end>{{this.pirBulbExposureTime}} s</ion-badge>
+        <ion-label color="primary" >Exposure Time
+          <ion-badge color="primary" item-end>{{this.pirBulbExposureTime}}</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="pirBulbExposureTime" (ionChange)="setPirBulbExposureTime($event)" min="0.5" max="16777215" value="" placeholder="seconds"></ion-input>
+        <ion-input type="number" [(ngModel)]="pirBulbExposureTime" (ionChange)="setPirBulbExposureTime($event)" value="" placeholder="seconds"></ion-input>
       </ion-item>
       
       <ion-item *ngIf="(make!=1)">
@@ -217,20 +232,20 @@
       </ion-item>
       
       <ion-item *ngIf="radioPirClickedVideo&&(make!=1)">
-        <ion-label color="primary" >Duration of the video in s
-          <ion-badge color="primary" item-end>{{this.pirVideoDuration}} s</ion-badge>
+        <ion-label color="primary" >Duration of the video
+          <ion-badge color="primary" item-end>{{this.pirVideoDuration}}</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="pirVideoDuration" (ionChange)="setPirVideoDuration($event)" min="1" max="1000" value="" placeholder="seconds"></ion-input>
+        <ion-input type="number" [(ngModel)]="pirVideoDuration" (ionChange)="setPirVideoDuration($event)" placeholder="seconds"></ion-input>
       </ion-item>
       
       <ion-item *ngIf="radioPirClickedVideo" class="bottom-border">
-        <ion-label color="primary" >Extension time in case more motion is detected
-          <ion-badge color="primary" item-end>{{this.pirVideoExtension}} s</ion-badge>
+        <ion-label color="primary" >Extension time 
+          <ion-badge color="primary" item-end>{{this.pirVideoExtension}}</ion-badge>
         </ion-label>
-        <ion-input type="number" [(ngModel)]="pirVideoExtension" (ionChange)="setPirVideoExtension($event)" min="1" max="250" value="" placeholder="seconds"></ion-input>
+        <ion-input type="number" [(ngModel)]="pirVideoExtension" (ionChange)="setPirVideoExtension($event)" placeholder="seconds"></ion-input>
       </ion-item>
     </ion-list>
-
+  </ion-card>
 <!--    <ion-card-header>
   <ion-badge color="primary" item-end>{{this.timerBurstGap}} s</ion-badge>
 
@@ -238,9 +253,13 @@
       <ion-badge color="primary" item-end>{{this.pirThreshold}}%</ion-badge> 
     </ion-card-header>
     -->
+  <ion-card *ngIf="radioClickedTriggerPir">
+    <ion-card-header class="card-heading">
+      Sensitivity 
+    </ion-card-header>
     <ion-item>
       <ion-label> Threshold  
-        <ion-badge color="primary" item-end>{{pirThreshold}}s</ion-badge>
+        <ion-badge color="primary" item-end>{{pirThreshold}}</ion-badge>
       </ion-label>
       <ion-range min="16" max="255" pin="true" [(ngModel)]="pirThreshold" (ionChange)="setPirThreshold($event)">
         <ion-label range-left>16</ion-label>
@@ -250,17 +269,22 @@
 
     <ion-item>
       <ion-label>Amplification 
-        <ion-badge color="primary" item-end>{{pirAmplification}}s</ion-badge>
+        <ion-badge color="primary" item-end>{{pirAmplification}}</ion-badge>
       </ion-label>
       <ion-range min="0" max="63" pin="true" [(ngModel)]="pirAmplification" (ionChange)="setPirAmplification($event)">
         <ion-label range-left>0</ion-label>
         <ion-label range-right>63</ion-label>
        </ion-range>
     </ion-item>
- 
-    <ion-item>
+  </ion-card>
+
+  <ion-card *ngIf="radioClickedTriggerPir">
+    <ion-card-header class="card-heading">
+      Frequency 
+    </ion-card-header>
+    <ion-item >
       <ion-label>Inter Trigger Time </ion-label> 
-      <ion-input type=number [(ngModel)]="pirInterTriggerTime" (ionChange)="setPirInterTriggerTime($event)" min="0.5" max="60" value="" placeholder="Enter value in s"> </ion-input>   
+      <ion-input type=number [(ngModel)]="pirInterTriggerTime" (ionChange)="setPirInterTriggerTime($event)" placeholder="Units of 100ms"> </ion-input>   
       <!-- Removing range as steps of 0.1s difficult to select in a range -->
       <!--
       <ion-range min="5" max="600" pin="true" step="10" snaps="true" [(ngModel)]="pirInterTriggerTime" (ionChange)="setPirInterTriggerTime($event)">
@@ -269,7 +293,6 @@
       </ion-range>
     -->
     </ion-item>
- 
   </ion-card>
   
 </ion-content>
