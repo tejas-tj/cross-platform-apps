@@ -310,7 +310,7 @@ export class DetailPage {
 
     public setPirOpertimeSetting(event) {
       console.log('Pir : PirOpertimeSetting : time was set to ' + event);
-      this.pirOpertimeSetting = event;
+      //this.pirOpertimeSetting = event;
     }
     public setPirDNThreshold(event) {
       console.log('Pir: DayNight Threshold set to ' + this.pirDNThreshold);
