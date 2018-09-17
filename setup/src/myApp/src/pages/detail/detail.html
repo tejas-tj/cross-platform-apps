@@ -61,7 +61,7 @@
       <ion-label> Timer interval 
         <ion-badge color="primary" item-end> {{this.timerInterval}} </ion-badge> 
       </ion-label>
-      <ion-input type=number [(ngModel)]="timerInterval" (ionChange)="setTriggerTimerInterval($event)" placeholder="seconds"> </ion-input>
+      <ion-input type=number [(ngModel)]="timerInterval" ng-init="timerInterval=0" (ionChange)="setTriggerTimerInterval($event)" placeholder="seconds"> </ion-input>
     </ion-item>
   </ion-card>
   <ion-card *ngIf="radioClickedTriggerTimer">  
