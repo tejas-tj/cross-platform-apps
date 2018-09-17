@@ -69,7 +69,7 @@
       Operating Mode
     </ion-card-header>
    
-    <ion-list radio-group [(ngModel)]="timerOpertimeSetting" ng-init="timerOpertimeSetting=1" (ionChange)="setTimerOpertimeSetting($event)">
+    <ion-list radio-group [(ngModel)]="timerOpertimeSetting" ng-init="timerOpertimeSetting=2" (ionChange)="setTimerOpertimeSetting($event)">
       <ion-item>
         <ion-label>Night Only</ion-label>
         <ion-radio value="0"></ion-radio>
@@ -160,7 +160,7 @@
       Operating Mode 
     </ion-card-header>
    
-    <ion-list radio-group [(ngModel)]="pirOpertimeSetting" ng-init="pirOpertimeSetting=1" (ionChange)="setPirOpertimeSetting($event)">
+    <ion-list radio-group [(ngModel)]="pirOpertimeSetting" ng-init="pirOpertimeSetting=2" (ionChange)="setPirOpertimeSetting($event)">
       <ion-item>
         <ion-label>Night Only</ion-label>
         <ion-radio value="0"></ion-radio>
@@ -288,7 +288,7 @@
       <ion-label > Inter Trigger Time 
         <ion-badge color="primary" item-end> {{this.pirInterTriggerTime}} </ion-badge> 
       </ion-label> 
-      <ion-input type=number [(ngModel)]="pirInterTriggerTime" ng-init="pirInterTriggerTime=50" (ionChange)="setPirInterTriggerTime($event)" placeholder="seconds"> </ion-input>   
+      <ion-input type=number [(ngModel)]="pirInterTriggerTime" ng-init="pirInterTriggerTime=5" (ionChange)="setPirInterTriggerTime($event)" placeholder="seconds"> </ion-input>   
       <!-- Removing range as steps of 0.1s difficult to select in a range -->
       <!--
       <ion-range min="5" max="600" pin="true" step="10" snaps="true" [(ngModel)]="pirInterTriggerTime" (ionChange)="setPirInterTriggerTime($event)">

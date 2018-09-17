@@ -135,7 +135,7 @@ export class DetailPage {
     this.triggerSetting=1;
 
     this.timerInterval=50;
-    this.timerOpertimeSetting=1;
+    this.timerOpertimeSetting=2;
     this.timerDNThreshold=0;
     this.timerMode=0;
     this.timerBurstGap=0;
@@ -144,7 +144,7 @@ export class DetailPage {
     this.timerVideoDuration=0;
     this.timerVideoExtension=0;
     
-    this.pirOpertimeSetting=1;
+    this.pirOpertimeSetting=2;
     this.pirDNThreshold=0;
     this.pirMode=0;
     this.pirBurstGap=0;
@@ -154,7 +154,7 @@ export class DetailPage {
     this.pirVideoExtension=0;
     this.pirThreshold=100;
     this.pirAmplification=31;
-    this.pirInterTriggerTime=50;
+    this.pirInterTriggerTime=5;
 
   }
 
