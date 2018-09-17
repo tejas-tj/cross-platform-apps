@@ -131,6 +131,33 @@ export class DetailPage {
     'clickBg': false
   };
   
+  initializeVars() {
+    this.triggerSetting=1;
+
+    this.timerInterval=50;
+    this.timerOpertimeSetting=1;
+    this.timerDNThreshold=0;
+    this.timerMode=0;
+    this.timerBurstGap=0;
+    this.timerBurstNumber=0;
+    this.timerBulbExposureTime=0;
+    this.timerVideoDuration=0;
+    this.timerVideoExtension=0;
+    
+    this.pirOpertimeSetting=1;
+    this.pirDNThreshold=0;
+    this.pirMode=0;
+    this.pirBurstGap=0;
+    this.pirBurstNumber=0;
+    this.pirBulbExposureTime=0;
+    this.pirVideoDuration=0;
+    this.pirVideoExtension=0;
+    this.pirThreshold=100;
+    this.pirAmplification=31;
+    this.pirInterTriggerTime=50;
+
+  }
+
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private ble: BLE,
@@ -139,6 +166,7 @@ export class DetailPage {
     private nstorage: NativeStorage,
     private ngZone: NgZone) {
       
+      this.initializeVars();
       let device = navParams.get('device');
   
       if (device.name == APPIKO_DUMMY_DEVICE_NAME) {
