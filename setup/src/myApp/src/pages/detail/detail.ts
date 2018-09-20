@@ -207,13 +207,25 @@ export class DetailPage {
       
     }
     
-    
     // When connection to the peripheral is successful
     onConnected(peripheral) {
       
       this.peripheral = peripheral;
       this.setStatus('Connected to ' + (peripheral.name || peripheral.id));
       console.log(JSON.stringify(peripheral, null, 2));
+
+      //once connected, read the current config on the device.
+      this.ble.read(this.peripheral.id, UUID_SENSE_PI_SERVICE, UUID_SENSE_PI_USER_SETTINGS).then(
+        data => {
+          console.log("read the config from the sensepi "),
+          console.log("====================== SETTINGS READ AND LOADED FROM THE DEVICE =================="),
+          this.print_settings_arraybufffer(data),
+          this.loadDeviceConfigs(data)
+        }
+      ).catch(
+         (e) => console.log("Error trying to read data from service " + UUID_SENSE_PI_SERVICE + " and char " + UUID_SENSE_PI_USER_SETTINGS + " : " + e)
+      );
+
       //pnarasim : why this?
       /*this.ble.startNotification(this.peripheral.id, UUID_SENSE_PI_SERVICE, UUID_SENSE_PI_USER_SETTINGS).subscribe(
         () => this.showAlert('Unexpected Error', 'Failed to subscribe')
@@ -438,10 +450,85 @@ export class DetailPage {
       console.log('Make = ' + event.id + " Make name = " + event.name);
     }
 
+    public loadDeviceConfigs(config) {
+      /*
+        Read the ArrayBuffer just sent by the board : make this fw version dependent next        
+      */
+
+      var dataview = new DataView(config);
+
+      this.triggerSetting = dataview.getUint8(OFFSET_TRIGGER_SETTING);
+      
+      this.pirDNThreshold = (dataview.getUint8(OFFSET_PIR_OPER))>>1;
+      this.pirOpertimeSetting = dataview.getUint8(OFFSET_PIR_OPER) & 1;
+
+      this.pirMode = dataview.getUint8(OFFSET_PIR_MODE);
+      
+      switch (+this.pirMode) {
+        case MODE_SETTING.TRIGGER_SINGLE: {
+          //no extra data to record.
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BURST: {
+          this.pirBurstGap = (dataview.getUint16(OFFSET_PIR_MODE_BURST_GAP))/10;
+          this.pirBurstNumber = dataview.getUint8(OFFSET_PIR_MODE_BURST_NUMBER);
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
+          this.pirBulbExposureTime = ((dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE)) + (dataview.getUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2)<<16));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_VIDEO: {
+          this.pirVideoDuration = dataview.getUint16(OFFSET_PIR_MODE_VIDEO_DURATION);
+          this.pirVideoExtension = dataview.getUint8(OFFSET_PIR_MODE_VIDEO_EXTENSION);
+          break;
+        }
+        default: {
+          break;
+        }
+      } 
+      this.pirThreshold = dataview.getUint8(OFFSET_PIR_THRESHOLD);
+      this.pirAmplification = dataview.getUint8(OFFSET_PIR_AMPLIFICATION);
+      this.pirInterTriggerTime = (dataview.getUint16(OFFSET_PIR_INTERTRIGGERTIME))/10;
+      
+      //dataview.setUint8(OFFSET_MAKE, this.make); 
+
+      // ==== TIMER SETTINGS ++++
+      this.timerInterval = (dataview.getUint16(OFFSET_TIMER_INTERVAL))/10;
+      
+      this.timerDNThreshold = (dataview.getUint8(OFFSET_TIMER_OPER))>>1;
+      this.timerOpertimeSetting = dataview.getUint8(OFFSET_TIMER_OPER) & 1;
+      
+      this.timerMode = dataview.getUint8(OFFSET_TIMER_MODE);
+      
+      switch (+this.timerMode) {
+        case MODE_SETTING.TRIGGER_SINGLE: {
+          //no extra data to record.
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BURST: {
+          this.timerBurstGap = (dataview.getUint16(OFFSET_TIMER_MODE_BURST_GAP))/10;
+          this.timerBurstNumber = dataview.getUint8(OFFSET_TIMER_MODE_BURST_NUMBER);
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
+          this.timerBulbExposureTime = ((dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE)) + (dataview.getUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2)<<16));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_VIDEO: {
+          this.timerVideoDuration = dataview.getUint16(OFFSET_TIMER_MODE_VIDEO_DURATION);
+          this.timerVideoExtension = dataview.getUint8(OFFSET_TIMER_MODE_VIDEO_EXTENSION); 
+          break;
+        }
+        default: {
+          break;
+        }
+      } 
+    }
+
     public print_settings_arraybufffer(writeBuffer:ArrayBuffer) {
 
       var dataview = new DataView(writeBuffer);
-      console.log("===============SETTINGS WRITTEN TO BOARD ============================")
 
       console.log('triggerSetting (1 byte)= ' + dataview.getUint8(OFFSET_TRIGGER_SETTING));
       // == PIR Settings ====
@@ -616,7 +703,8 @@ export class DetailPage {
           break;
         }
       } 
-      
+
+      console.log("===============SETTINGS THAT WILL BE WRITTEN TO THE DEVICE ============================")
       this.print_settings_arraybufffer(writeBuffer);
       
       return writeBuffer;

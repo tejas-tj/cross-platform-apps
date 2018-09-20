@@ -51,7 +51,7 @@ export class HomePage {
       this.setStatus('Scanning for Appiko BLE Devices');
       this.devices = [];  // clear list
       
-      this.ble.startScan([]).subscribe(
+      this.ble.startScan([UUID_SENSE_PI_SERVICE]).subscribe(
         device => this.onDeviceDiscovered(device), 
         error => this.scanError(error)
       );
@@ -63,12 +63,8 @@ export class HomePage {
     onDeviceDiscovered(device) {
       console.log('Discovered ' + JSON.stringify(device, null, 2));
       this.ngZone.run(() => {
-        var device_name_str = new String(device.name);
-        if ((device.name == APPIKO_SENSE_PI_COMPLETE_LOCAL_NAME) || (device_name_str.search(APPIKO_SENSE_RE)>=0) ) {
           console.log('Discovered device is an Appiko SensePi');
-          this.devices.push(device);
-        } else
-            console.log('Discovered device is NOT an Appiko SensePi');
+          this.devices.push(device); 
         }
       );
       
