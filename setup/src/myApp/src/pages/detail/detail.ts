@@ -475,7 +475,7 @@ export class DetailPage {
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          this.pirBulbExposureTime = ((dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE, true)) + (dataview.getUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2)<<16));
+          this.pirBulbExposureTime = (((dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE, true)) + (dataview.getUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2)<<16)))/10;
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
@@ -512,7 +512,7 @@ export class DetailPage {
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          this.timerBulbExposureTime = ((dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE, true)) + (dataview.getUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2)<<16));
+          this.timerBulbExposureTime = ((dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE, true)) + (dataview.getUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2)<<16))/10;
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
