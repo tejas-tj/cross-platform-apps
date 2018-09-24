@@ -470,16 +470,16 @@ export class DetailPage {
           break;
         }
         case MODE_SETTING.TRIGGER_BURST: {
-          this.pirBurstGap = (dataview.getUint16(OFFSET_PIR_MODE_BURST_GAP))/10;
+          this.pirBurstGap = (dataview.getUint16(OFFSET_PIR_MODE_BURST_GAP, true))/10;
           this.pirBurstNumber = dataview.getUint8(OFFSET_PIR_MODE_BURST_NUMBER);
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          this.pirBulbExposureTime = ((dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE)) + (dataview.getUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2)<<16));
+          this.pirBulbExposureTime = ((dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE, true)) + (dataview.getUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2)<<16));
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
-          this.pirVideoDuration = dataview.getUint16(OFFSET_PIR_MODE_VIDEO_DURATION);
+          this.pirVideoDuration = dataview.getUint16(OFFSET_PIR_MODE_VIDEO_DURATION, true);
           this.pirVideoExtension = dataview.getUint8(OFFSET_PIR_MODE_VIDEO_EXTENSION);
           break;
         }
@@ -489,12 +489,12 @@ export class DetailPage {
       } 
       this.pirThreshold = dataview.getUint8(OFFSET_PIR_THRESHOLD);
       this.pirAmplification = dataview.getUint8(OFFSET_PIR_AMPLIFICATION);
-      this.pirInterTriggerTime = (dataview.getUint16(OFFSET_PIR_INTERTRIGGERTIME))/10;
+      this.pirInterTriggerTime = (dataview.getUint16(OFFSET_PIR_INTERTRIGGERTIME, true))/10;
       
       //dataview.setUint8(OFFSET_MAKE, this.make); 
 
       // ==== TIMER SETTINGS ++++
-      this.timerInterval = (dataview.getUint16(OFFSET_TIMER_INTERVAL))/10;
+      this.timerInterval = (dataview.getUint16(OFFSET_TIMER_INTERVAL, true))/10;
       
       this.timerDNThreshold = (dataview.getUint8(OFFSET_TIMER_OPER))>>1;
       this.timerOpertimeSetting = dataview.getUint8(OFFSET_TIMER_OPER) & 1;
@@ -507,16 +507,16 @@ export class DetailPage {
           break;
         }
         case MODE_SETTING.TRIGGER_BURST: {
-          this.timerBurstGap = (dataview.getUint16(OFFSET_TIMER_MODE_BURST_GAP))/10;
+          this.timerBurstGap = (dataview.getUint16(OFFSET_TIMER_MODE_BURST_GAP, true))/10;
           this.timerBurstNumber = dataview.getUint8(OFFSET_TIMER_MODE_BURST_NUMBER);
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
-          this.timerBulbExposureTime = ((dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE)) + (dataview.getUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2)<<16));
+          this.timerBulbExposureTime = ((dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE, true)) + (dataview.getUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2)<<16));
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
-          this.timerVideoDuration = dataview.getUint16(OFFSET_TIMER_MODE_VIDEO_DURATION);
+          this.timerVideoDuration = dataview.getUint16(OFFSET_TIMER_MODE_VIDEO_DURATION, true);
           this.timerVideoExtension = dataview.getUint8(OFFSET_TIMER_MODE_VIDEO_EXTENSION); 
           break;
         }
@@ -539,22 +539,22 @@ export class DetailPage {
       switch(+dataview.getUint8(OFFSET_PIR_MODE)) {
         case MODE_SETTING.TRIGGER_SINGLE: {
           //no extra data to record.
-          console.log("PIR Mode Larger Value (2 bytes) =" + dataview.getUint16(OFFSET_PIR_MODE_DATA_LARGER_VALUE));
+          console.log("PIR Mode Larger Value (2 bytes) =" + dataview.getUint16(OFFSET_PIR_MODE_DATA_LARGER_VALUE, true));
           console.log("PIR Mode Smaller Value (1 bytes) =" + dataview.getUint8(OFFSET_PIR_MODE_DATA_SMALLER_VALUE));
           break;
         }
         case MODE_SETTING.TRIGGER_BURST: {
-          console.log("PIR BurstGap (2 bytes)= " + dataview.getUint16(OFFSET_PIR_MODE_BURST_GAP));
+          console.log("PIR BurstGap (2 bytes)= " + dataview.getUint16(OFFSET_PIR_MODE_BURST_GAP, true));
           console.log("PIR BurstNumber (1 byte)= " + dataview.getUint8(OFFSET_PIR_MODE_BURST_NUMBER));
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
           console.log("PIR BulbExposureTime = (3 bytes)" + 
-            ((dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE)) + (dataview.getUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2)<<16)));
+            ((dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE, true)) + (dataview.getUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2)<<16)));
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
-          console.log("PIR VideoDuration = (2 bytes)" + dataview.getUint16(OFFSET_PIR_MODE_VIDEO_DURATION) + " VideoExtension (1 byte)= " + dataview.getUint8(OFFSET_PIR_MODE_VIDEO_EXTENSION)); 
+          console.log("PIR VideoDuration = (2 bytes)" + dataview.getUint16(OFFSET_PIR_MODE_VIDEO_DURATION, true) + " VideoExtension (1 byte)= " + dataview.getUint8(OFFSET_PIR_MODE_VIDEO_EXTENSION)); 
           break;
         }
         default: {
@@ -565,10 +565,10 @@ export class DetailPage {
     
       console.log('PIR Threshold (1 byte)= ' + dataview.getUint8(OFFSET_PIR_THRESHOLD));
       console.log('PIR Amplification (1 byte)= ' + dataview.getUint8(OFFSET_PIR_AMPLIFICATION));
-      console.log('PIR InterTriggerTime (2 bytes)= ' + dataview.getUint16(OFFSET_PIR_INTERTRIGGERTIME));
+      console.log('PIR InterTriggerTime (2 bytes)= ' + dataview.getUint16(OFFSET_PIR_INTERTRIGGERTIME, true));
       
       // === TIMER Settings ===
-      console.log('TIMER timerInterval (2 bytes)= ' + dataview.getUint16(OFFSET_TIMER_INTERVAL));
+      console.log('TIMER timerInterval (2 bytes)= ' + dataview.getUint16(OFFSET_TIMER_INTERVAL, true));
       
       if (dataview.getUint8(OFFSET_TIMER_OPER) == 1) {
         console.log("TIMER DN mode = both");
@@ -581,22 +581,22 @@ export class DetailPage {
       switch(+dataview.getUint8(OFFSET_TIMER_MODE)) {
         case MODE_SETTING.TRIGGER_SINGLE: {
           //no extra data to record.
-          console.log("TIMER Mode Larger Value (2 bytes)=" + dataview.getUint16(OFFSET_TIMER_MODE_DATA_LARGER_VALUE));
+          console.log("TIMER Mode Larger Value (2 bytes)=" + dataview.getUint16(OFFSET_TIMER_MODE_DATA_LARGER_VALUE, true));
           console.log("TIMER Mode Smaller Value (1 byte)=" + dataview.getUint8(OFFSET_TIMER_MODE_DATA_SMALLER_VALUE));
           break;
         }
         case MODE_SETTING.TRIGGER_BURST: {
-          console.log("TIMER BurstGap (2 bytes)= " + dataview.getUint16(OFFSET_TIMER_MODE_BURST_GAP));
+          console.log("TIMER BurstGap (2 bytes)= " + dataview.getUint16(OFFSET_TIMER_MODE_BURST_GAP, true));
           console.log("TIMER BurstNumber (1 byte)= " + dataview.getUint8(OFFSET_TIMER_MODE_BURST_NUMBER));
           break;
         }
         case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
           console.log("TIMER BulbExposureTime (3 bytes) = " + 
-            ((dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE))+(dataview.getUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2)<<16)));
+            ((dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE, true))+(dataview.getUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2)<<16)));
           break;
         }
         case MODE_SETTING.TRIGGER_VIDEO: {
-          console.log("TIMER VideoDuration (2 bytes)= " + dataview.getUint16(OFFSET_TIMER_MODE_VIDEO_DURATION) + " VideoExtension (1 byte)= " + dataview.getUint8(OFFSET_TIMER_MODE_VIDEO_EXTENSION)); 
+          console.log("TIMER VideoDuration (2 bytes)= " + dataview.getUint16(OFFSET_TIMER_MODE_VIDEO_DURATION, true) + " VideoExtension (1 byte)= " + dataview.getUint8(OFFSET_TIMER_MODE_VIDEO_EXTENSION)); 
           break;
         }
         default: {
