@@ -137,7 +137,7 @@
        <ion-icon name="videocam" item-start></ion-icon>
        <ion-radio value = "3"></ion-radio>
       </ion-item>
-      
+
       <ion-item *ngIf="radioTimerClickedVideo&&(make!=1)">
         <ion-label color="primary" >Duration of the video
           <ion-badge color="primary" item-end>{{this.timerVideoDuration}}</ion-badge>
@@ -149,6 +149,12 @@
           <ion-badge color="primary" item-end>{{this.timerVideoExtension}}</ion-badge>
         </ion-label>
         <ion-input type="number" [(ngModel)]="timerVideoExtension" ng-init="timerVideoExtension=0" (ionChange)="setTimerVideoExtension($event)" placeholder="seconds"></ion-input>
+      </ion-item>
+
+      <ion-item>
+       <ion-label> Set Focus Only </ion-label>
+       <ion-icon name="aperture" item-start></ion-icon>
+       <ion-radio value = "4"></ion-radio>
       </ion-item>
     </ion-list>
 
@@ -245,6 +251,12 @@
           <ion-badge color="primary" item-end>{{this.pirVideoExtension}}</ion-badge>
         </ion-label>
         <ion-input type="number" [(ngModel)]="pirVideoExtension" ng-init="pirVideoExtension=0" (ionChange)="setPirVideoExtension($event)" placeholder="seconds"></ion-input>
+      </ion-item>
+
+      <ion-item>
+       <ion-label> Set Focus Only </ion-label>
+       <ion-icon name="aperture" item-start></ion-icon>
+       <ion-radio value = "4"></ion-radio>
       </ion-item>
     </ion-list>
   </ion-card>
