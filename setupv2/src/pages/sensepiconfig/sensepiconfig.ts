@@ -1,15 +1,12 @@
 import { Component, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 import { BLE } from '@ionic-native/ble';
 import { ToastController } from 'ionic-angular';
 
 import { AppikoCommonProvider } from '../../providers/appiko-common/appiko-common';
-
-// Bluetooth UUIDs
-const UUID_SENSE_PI_BOARD_SETTINGS = '3c73dc51-07f5-480d-b066-837407fbde0a';
-const UUID_SENSE_PI_USER_SETTINGS = '3c73dc52-07f5-480d-b066-837407fbde0a';
+import { appikoDeviceDataModel } from '../scanlist/appikoDeviceDataModel';
 
 const SENSEPI_SETTINGS_LENGTH = 17;
 
@@ -27,7 +24,7 @@ const SENSEPI_SETTINGS_LENGTH = 17;
 })
 export class SensepiconfigPage {
 
-	peripheral: any;
+	bleDevice: appikoDeviceDataModel;
 	statusMessage: string;
 
 	triggerSettingsForm: FormGroup;
@@ -37,26 +34,28 @@ export class SensepiconfigPage {
   		private ble: BLE,
   		private formBuilder: FormBuilder,
   		private ngZone: NgZone,
-  		public appikocommon: AppikoCommonProvider) {
+      public alertCtrl: AlertController,
+  		public appikoCommon: AppikoCommonProvider) {
 
-  		this.peripheral = navParams.get('peripheral');
-  		this.onConnected(this.peripheral);
+  		this.bleDevice = navParams.get('peripheral');
+  		this.onConnected(this.bleDevice);
 
   		this.triggerSettingsForm = this.formBuilder.group({
-  			triggerMode: [''],	
+  			triggerMode: [''],
+        timerInerval: [''],
+        timerOperMode: [''],
   		});
   	}
 
   	// When connection to the peripheral is successful
-  	onConnected(peripheral) {      
-		this.peripheral = peripheral;
-		this.setStatus('Connected to ' + (peripheral.name || peripheral.id));
+  	onConnected(bleDevice) {      
+		  this.setStatus('Connected to ' + (bleDevice.shortenedname));
 
-		console.log(JSON.stringify(peripheral, null, 2));
-		//pnarasim : why this?
-		/*this.ble.startNotification(this.peripheral.id, UUID_SENSE_PI_SERVICE, UUID_SENSE_PI_USER_SETTINGS).subscribe(
-	    	() => this.showAlert('Unexpected Error', 'Failed to subscribe')
-		)*/
+		  //console.log(JSON.stringify(peripheral, null, 2));
+  		//pnarasim : why this?
+		  /*this.ble.startNotification(bleDevice.devicemac, this.appikoCommon.UUID_SENSE_PI_SERVICE, this.appikoCommon.UUID_SENSE_PI_USER_SETTINGS).subscribe(
+	      	() => this.showAlert('Unexpected Error', 'Failed to subscribe')
+		  )*/
   	}
   	
   	ionViewDidLoad() {
@@ -68,28 +67,29 @@ export class SensepiconfigPage {
         	});
     	}
   	}
-	// Disconnect peripheral when leaving the page
-  	ionViewWillLeave() {
-		console.log('ionViewWillLeave disconnecting Bluetooth');
 
-		this.ble.disconnect(this.peripheral.id).then(
-    		() => console.log('Disconnected ' + JSON.stringify(this.peripheral)),
-    		() => console.log('ERROR disconnecting ' + JSON.stringify(this.peripheral))
+	// Disconnect peripheral when leaving the page
+    ionViewWillLeave() {
+		  console.log('ionViewWillLeave disconnecting Bluetooth');
+
+		  this.ble.disconnect(this.bleDevice.devicemac).then(
+    	  	() => console.log('Disconnected ' + JSON.stringify(this.bleDevice.shortenedname)),
+    		  () => console.log('ERROR disconnecting ' + JSON.stringify(this.bleDevice.shortenedname))
   		)
   		let tabs = document.querySelectorAll('.show-tabbar');
-		if (tabs !== null) {
-			Object.keys(tabs).map((key) => {
-				tabs[key].style.display = 'flex';
-			});
-		}
-	}
+		  if (tabs !== null) {
+			  Object.keys(tabs).map((key) => {
+				   tabs[key].style.display = 'flex';
+			  });
+		  }
+	  }
 
 	// To write the value of each characteristic to the device 
     onButtonClickWrite(event) {
        let data = new ArrayBuffer(SENSEPI_SETTINGS_LENGTH);
       //let data = this.constructArrayBufferToWrite();  
       console.log("Size of buffer being written is " + data.byteLength);    
-      this.ble.write(this.peripheral.id, this.appikocommon.UUID_SENSE_PI_SERVICE, UUID_SENSE_PI_USER_SETTINGS, data).then(
+      this.ble.write(this.bleDevice.devicemac, this.appikoCommon.UUID_SENSE_PI_SERVICE, this.appikoCommon.UUID_SENSE_PI_USER_SETTINGS, data).then(
         () => this.setStatus('Write Success'),
         //console.log('Wrote all settings to the device = ' + data)
       )
@@ -106,4 +106,15 @@ export class SensepiconfigPage {
     		this.statusMessage = message;
   		});
 	}  
+
+  // To alert messages on the screen
+  showAlert(title, message) {
+      let alert = this.alertCtrl.create({
+      title: title,
+      subTitle: message,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+    
 }
