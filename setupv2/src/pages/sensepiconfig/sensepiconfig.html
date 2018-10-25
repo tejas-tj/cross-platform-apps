@@ -39,7 +39,7 @@
   <form [formGroup]="timerSettingsBasic">
     <ion-item>
       <ion-label> Timer Interval </ion-label>
-      <ion-input type="number" formControlName="timerInterval" [class.invalid]="!timerSettingsBasic.controls.timerInterval.valid && (timerSettingsBasic.controls.timerInterval.dirty || timerSettingsBasic.controls.timerInterval.touched)"> </ion-input>
+      <ion-input type="number" formControlName="timerInterval" [class.invalid]="!timerSettingsBasic.controls.timerInterval.valid && (timerSettingsBasic.controls.timerInterval.dirty || timerSettingsBasic.controls.timerInterval.touched)">  {{ timerSettingsBasic.controls.timerInterval.value }} </ion-input>
     </ion-item>
     
     <ion-item *ngIf="!timerSettingsBasic.controls.timerInterval.valid  && (timerSettingsBasic.controls.timerInterval.dirty || timerSettingsBasic.controls.timerInterval.touched)">
@@ -97,7 +97,6 @@
 
       <ion-item *ngIf="radioTimerClickedBurst==true" >
         <ion-label color="primary" >Time between bursts </ion-label>
-        <ion-input type="number" formControlName="timerBurstGap" placeholder="Enter value in s"></ion-input>
         <ion-input type="number" formControlName="timerBurstGap" [class.invalid]="!timerSettingsMode.controls.timerBurstGap.valid && (timerSettingsMode.controls.timerBurstGap.dirty || timerSettingsMode.controls.timerBurstGap.touched)"></ion-input>
       </ion-item>
       <ion-item *ngIf="!timerSettingsMode.controls.timerBurstGap.valid  && (timerSettingsMode.controls.timerBurstGap.dirty || timerSettingsMode.controls.timerBurstGap.touched)">
@@ -106,7 +105,7 @@
 
       <ion-item *ngIf="radioTimerClickedBurst" >
        <ion-label color="primary">Number of shots per burst </ion-label>
-       <ion-input type="number"  formControlName="timerBurstNumber" [class.invalid]="!timerSettingsMode.controls.timerBurstNumber.valid && (timerSettingsMode.controls.timerBurstNumber.dirty || timerSettingsMode.controls.timerBurstNumber.touched)"></ion-input>
+       <ion-input type="number"  formControlName="timerBurstNumber" [class.invalid]="!timerSettingsMode.controls.timerBurstNumber.valid && (timerSettingsMode.controls.timerBurstNumber.dirty || timerSettingsMode.controls.timerBurstNumber.touched)"> {{ timerSettingsMode.controls.timerBurstNumber.value }} </ion-input>
       </ion-item>
       <ion-item *ngIf="!timerSettingsMode.controls.timerBurstNumber.valid  && (timerSettingsMode.controls.timerBurstNumber.dirty || timerSettingsMode.controls.timerBurstNumber.touched)">
                 <p>Please enter a whole number between 2 and 50</p>
@@ -120,9 +119,9 @@
 
       <ion-item *ngIf="radioTimerClickedBulb" >
         <ion-label color="primary" >Exposure Time 
-          <ion-badge color="primary" item-end>{{this.timerBulbExposureTime}}</ion-badge>
+          <!--<ion-badge color="primary" item-end>{{this.timerBulbExposureTime}}</ion-badge>-->
         </ion-label>
-        <ion-input type="number" formControlName="timerBulbExposureTime" [class.invalid]="!timerSettingsMode.controls.timerBulbExposureTime.valid && (timerSettingsMode.controls.timerBulbExposureTime.dirty || timerSettingsMode.controls.timerBulbExposureTime.touched)"></ion-input>
+        <ion-input type="number" formControlName="timerBulbExposureTime" [class.invalid]="!timerSettingsMode.controls.timerBulbExposureTime.valid && (timerSettingsMode.controls.timerBulbExposureTime.dirty || timerSettingsMode.controls.timerBulbExposureTime.touched)"> {{ timerSettingsMode.controls.timerBulbExposureTime.value }} </ion-input>
       </ion-item>
       <ion-item *ngIf="!timerSettingsMode.controls.timerBulbExposureTime.valid  && (timerSettingsMode.controls.timerBulbExposureTime.dirty || timerSettingsMode.controls.timerBulbExposureTime.touched)">
                 <p>Please enter a single decimal place</p>
@@ -136,9 +135,9 @@
 
       <ion-item *ngIf="radioTimerClickedVideo&&(make!=1)">
         <ion-label color="primary" >Duration of the video
-          <ion-badge color="primary" item-end>{{this.timerVideoDuration}}</ion-badge>
+          <!--<ion-badge color="primary" item-end>{{this.timerVideoDuration}}</ion-badge>-->
         </ion-label>
-        <ion-input type="number" formControlName="timerVideoDuration" [class.invalid]="!timerSettingsMode.controls.timerVideoDuration.valid && (timerSettingsMode.controls.timerVideoDuration.dirty || timerSettingsMode.controls.timerVideoDuration.touched)"></ion-input>
+        <ion-input type="number" formControlName="timerVideoDuration" [class.invalid]="!timerSettingsMode.controls.timerVideoDuration.valid && (timerSettingsMode.controls.timerVideoDuration.dirty || timerSettingsMode.controls.timerVideoDuration.touched)"> {{ timerSettingsMode.controls.timerVideoDuration.value }} </ion-input>
       </ion-item>
       <ion-item *ngIf="!timerSettingsMode.controls.timerVideoDuration.valid  && (timerSettingsMode.controls.timerVideoDuration.dirty || timerSettingsMode.controls.timerVideoDuration.touched)">
                 <p>Please enter a single decimal place</p>
@@ -146,9 +145,9 @@
       
       <ion-item *ngIf="radioTimerClickedVideo&&(make!=1)" >
         <ion-label color="primary" >Extension time 
-          <ion-badge color="primary" item-end>{{this.timerVideoExtension}}</ion-badge>
+          <!--<ion-badge color="primary" item-end>{{this.timerVideoExtension}}</ion-badge>-->
         </ion-label>
-        <ion-input type="number" formControlName="timerVideoExtension" [class.invalid]="!timerSettingsMode.controls.timerVideoExtension.valid && (timerSettingsMode.controls.timerVideoExtension.dirty || timerSettingsMode.controls.timerVideoExtension.touched)"></ion-input>
+        <ion-input type="number" formControlName="timerVideoExtension" [class.invalid]="!timerSettingsMode.controls.timerVideoExtension.valid && (timerSettingsMode.controls.timerVideoExtension.dirty || timerSettingsMode.controls.timerVideoExtension.touched)"> {{ timerSettingsMode.controls.timerVideoExtension.value }} </ion-input>
         </ion-item>
       <ion-item *ngIf="!timerSettingsMode.controls.timerVideoExtension.valid  && (timerSettingsMode.controls.timerVideoExtension.dirty || timerSettingsMode.controls.timerVideoExtension.touched)">
                 <p>Please enter a single decimal place</p>
@@ -199,7 +198,7 @@
   <form [formGroup]="pirSettingsBasic">
     <ion-item>
       <ion-label> Pir Threshold </ion-label>
-      <ion-input type="number" formControlName="pirThreshold" [class.invalid]="!pirSettingsBasic.controls.pirThreshold.valid && (pirSettingsBasic.controls.pirThreshold.dirty || pirSettingsBasic.controls.pirThreshold.touched)"> </ion-input>
+      <ion-input type="number" formControlName="pirThreshold" [class.invalid]="!pirSettingsBasic.controls.pirThreshold.valid && (pirSettingsBasic.controls.pirThreshold.dirty || pirSettingsBasic.controls.pirThreshold.touched)"> {{ pirSettingsBasic.controls.pirThreshold.value }} </ion-input>
     </ion-item>
     
     <ion-item *ngIf="!pirSettingsBasic.controls.pirThreshold.valid  && (pirSettingsBasic.controls.pirThreshold.dirty || pirSettingsBasic.controls.pirThreshold.touched)">
@@ -207,7 +206,7 @@
     </ion-item>
     <ion-item>
       <ion-label> Pir Amplification </ion-label>
-      <ion-input type="number" formControlName="pirAmplification" [class.invalid]="!pirSettingsBasic.controls.pirAmplification.valid && (pirSettingsBasic.controls.pirAmplification.dirty || pirSettingsBasic.controls.pirAmplification.touched)"> </ion-input>
+      <ion-input type="number" formControlName="pirAmplification" [class.invalid]="!pirSettingsBasic.controls.pirAmplification.valid && (pirSettingsBasic.controls.pirAmplification.dirty || pirSettingsBasic.controls.pirAmplification.touched)"> {{ pirSettingsBasic.controls.pirAmplification.value }} </ion-input>
     </ion-item>
     
     <ion-item *ngIf="!pirSettingsBasic.controls.pirAmplification.valid  && (pirSettingsBasic.controls.pirAmplification.dirty || pirSettingsBasic.controls.pirAmplification.touched)">
@@ -216,7 +215,7 @@
 
     <ion-item>
       <ion-label> Pir Inter Trigger Time </ion-label>
-      <ion-input type="number" formControlName="pirInterTriggerTime" [class.invalid]="!pirSettingsBasic.controls.pirInterTriggerTime.valid && (pirSettingsBasic.controls.pirInterTriggerTime.dirty || pirSettingsBasic.controls.pirInterTriggerTime.touched)"> </ion-input>
+      <ion-input type="number" formControlName="pirInterTriggerTime" [class.invalid]="!pirSettingsBasic.controls.pirInterTriggerTime.valid && (pirSettingsBasic.controls.pirInterTriggerTime.dirty || pirSettingsBasic.controls.pirInterTriggerTime.touched)"> {{ pirSettingsBasic.controls.pirInterTriggerTime.value  }} </ion-input>
     </ion-item>
     
     <ion-item *ngIf="!pirSettingsBasic.controls.pirInterTriggerTime.valid  && (pirSettingsBasic.controls.pirInterTriggerTime.dirty || pirSettingsBasic.controls.pirInterTriggerTime.touched)">
@@ -243,8 +242,7 @@
 
       <ion-item *ngIf="radioPirClickedBurst==true" >
         <ion-label color="primary" >Time between bursts </ion-label>
-        <ion-input type="number" formControlName="pirBurstGap" placeholder="Enter value in s"></ion-input>
-        <ion-input type="number" formControlName="pirBurstGap" [class.invalid]="!pirSettingsMode.controls.pirBurstGap.valid && (pirSettingsMode.controls.pirBurstGap.dirty || pirSettingsMode.controls.pirBurstGap.touched)"></ion-input>
+        <ion-input type="number" formControlName="pirBurstGap" [class.invalid]="!pirSettingsMode.controls.pirBurstGap.valid && (pirSettingsMode.controls.pirBurstGap.dirty || pirSettingsMode.controls.pirBurstGap.touched)"> {{ pirSettingsMode.controls.pirBurstGap.value  }} </ion-input>
       </ion-item>
       <ion-item *ngIf="!pirSettingsMode.controls.pirBurstGap.valid  && (pirSettingsMode.controls.pirBurstGap.dirty || pirSettingsMode.controls.pirBurstGap.touched)">
                 <p>Please enter a single decimal place</p>
@@ -252,7 +250,7 @@
 
       <ion-item *ngIf="radioPirClickedBurst" >
        <ion-label color="primary">Number of shots per burst </ion-label>
-       <ion-input type="number"  formControlName="pirBurstNumber" [class.invalid]="!pirSettingsMode.controls.pirBurstNumber.valid && (pirSettingsMode.controls.pirBurstNumber.dirty || pirSettingsMode.controls.pirBurstNumber.touched)"></ion-input>
+       <ion-input type="number"  formControlName="pirBurstNumber" [class.invalid]="!pirSettingsMode.controls.pirBurstNumber.valid && (pirSettingsMode.controls.pirBurstNumber.dirty || pirSettingsMode.controls.pirBurstNumber.touched)"> {{ pirSettingsMode.controls.pirBurstNumber.value  }}</ion-input>
       </ion-item>
       <ion-item *ngIf="!pirSettingsMode.controls.pirBurstNumber.valid  && (pirSettingsMode.controls.pirBurstNumber.dirty || pirSettingsMode.controls.pirBurstNumber.touched)">
                 <p>Please enter a whole number between 2 and 50 </p>
@@ -266,9 +264,9 @@
 
       <ion-item *ngIf="radioPirClickedBulb" >
         <ion-label color="primary" >Exposure Time 
-          <ion-badge color="primary" item-end>{{this.pirBulbExposureTime}}</ion-badge>
+          <!--<ion-badge color="primary" item-end>{{this.pirBulbExposureTime}}</ion-badge>-->
         </ion-label>
-        <ion-input type="number" formControlName="pirBulbExposureTime" [class.invalid]="!pirSettingsMode.controls.pirBulbExposureTime.valid && (pirSettingsMode.controls.pirBulbExposureTime.dirty || pirSettingsMode.controls.pirBulbExposureTime.touched)"></ion-input>
+        <ion-input type="number" formControlName="pirBulbExposureTime" [class.invalid]="!pirSettingsMode.controls.pirBulbExposureTime.valid && (pirSettingsMode.controls.pirBulbExposureTime.dirty || pirSettingsMode.controls.pirBulbExposureTime.touched)"> {{ pirSettingsMode.controls.pirBulbExposureTime.value }} </ion-input>
       </ion-item>
       <ion-item *ngIf="!pirSettingsMode.controls.pirBulbExposureTime.valid  && (pirSettingsMode.controls.pirBulbExposureTime.dirty || pirSettingsMode.controls.pirBulbExposureTime.touched)">
                 <p>Please enter a single decimal place</p>
@@ -282,9 +280,9 @@
 
       <ion-item *ngIf="radioPirClickedVideo&&(make!=1)">
         <ion-label color="primary" >Duration of the video
-          <ion-badge color="primary" item-end>{{this.pirVideoDuration}}</ion-badge>
+          <!--<ion-badge color="primary" item-end>{{this.pirVideoDuration}}</ion-badge>-->
         </ion-label>
-        <ion-input type="number" formControlName="pirVideoDuration" [class.invalid]="!pirSettingsMode.controls.pirVideoDuration.valid && (pirSettingsMode.controls.pirVideoDuration.dirty || pirSettingsMode.controls.pirVideoDuration.touched)"></ion-input>
+        <ion-input type="number" formControlName="pirVideoDuration" [class.invalid]="!pirSettingsMode.controls.pirVideoDuration.valid && (pirSettingsMode.controls.pirVideoDuration.dirty || pirSettingsMode.controls.pirVideoDuration.touched)"> {{ pirSettingsMode.controls.pirVideoDuration.value }} </ion-input>
       </ion-item>
       <ion-item *ngIf="!pirSettingsMode.controls.pirVideoDuration.valid  && (pirSettingsMode.controls.pirVideoDuration.dirty || pirSettingsMode.controls.pirVideoDuration.touched)">
                 <p>Please enter a single decimal place</p>
@@ -292,9 +290,9 @@
       
       <ion-item *ngIf="radioPirClickedVideo&&(make!=1)" >
         <ion-label color="primary" >Extension time 
-          <ion-badge color="primary" item-end>{{this.pirVideoExtension}}</ion-badge>
+          <!--<ion-badge color="primary" item-end>{{this.pirVideoExtension}}</ion-badge>-->
         </ion-label>
-        <ion-input type="number" formControlName="pirVideoExtension" [class.invalid]="!pirSettingsMode.controls.pirVideoExtension.valid && (pirSettingsMode.controls.pirVideoExtension.dirty || pirSettingsMode.controls.pirVideoExtension.touched)"></ion-input>
+        <ion-input type="number" formControlName="pirVideoExtension" [class.invalid]="!pirSettingsMode.controls.pirVideoExtension.valid && (pirSettingsMode.controls.pirVideoExtension.dirty || pirSettingsMode.controls.pirVideoExtension.touched)">  {{ pirSettingsMode.controls.pirVideoExtension.value }} </ion-input>
         </ion-item>
       <ion-item *ngIf="!pirSettingsMode.controls.pirVideoExtension.valid  && (pirSettingsMode.controls.pirVideoExtension.dirty || pirSettingsMode.controls.pirVideoExtension.touched)">
                 <p>Please enter a single decimal place</p>

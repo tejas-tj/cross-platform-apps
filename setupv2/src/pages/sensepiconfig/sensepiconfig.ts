@@ -152,6 +152,18 @@ export class SensepiconfigPage {
   	// When connection to the peripheral is successful
   	onConnected(bleDevice) {      
 		  this.setStatus('Connected to ' + (bleDevice.shortenedname));
+      
+      //once connected, read the current config on the device.
+      this.ble.read(this.bleDevice.devicemac, this.appikoCommon.UUID_SENSE_PI_SERVICE, this.appikoCommon.UUID_SENSE_PI_USER_SETTINGS).then(
+        data => {
+          console.log("read the config from the sensepi "),
+          console.log("====================== SETTINGS READ AND LOADED FROM THE DEVICE =================="),
+          this.print_settings_arraybufffer(data),
+          this.loadDeviceConfigs(data)
+        }
+      ).catch(
+         (e) => console.log("Error trying to read data from service " + this.appikoCommon.UUID_SENSE_PI_SERVICE + " and char " + this.appikoCommon.UUID_SENSE_PI_USER_SETTINGS + " : " + e)
+      );
 
 		  //console.log(JSON.stringify(peripheral, null, 2));
   		//pnarasim : need notification when settings on device change? nope.
@@ -186,65 +198,313 @@ export class SensepiconfigPage {
 		  }
 	  }
 
-	  // To write the value of each characteristic to the device 
-    onButtonClickWrite(event) {
-      /*if (this.triggerType.get('triggerSetting').valid) {
-        console.log("Trigger type is " + this.triggerType.get('triggerSetting').value);
-        // Save your values, using this.form.get('myField').value;
+    public print_settings_arraybufffer(writeBuffer:ArrayBuffer) {
+
+      var dataview = new DataView(writeBuffer);
+
+      console.log('triggerSetting (1 byte)= ' + dataview.getUint8(OFFSET_TRIGGER_SETTING));
+      // == PIR Settings ====
+      console.log('PIR OpertimeSetting DN Threshold = ' + (dataview.getUint8(OFFSET_PIR_OPER)>>1));
+      console.log('PIR OpertimeSetting DN mode = ' + (dataview.getUint8(OFFSET_PIR_OPER) & 1));
+
+      console.log('PIR mode (1 byte)= ' + dataview.getUint8(OFFSET_PIR_MODE));
+      switch(+dataview.getUint8(OFFSET_PIR_MODE)) {
+        case MODE_SETTING.TRIGGER_SINGLE: {
+          //no extra data to record.
+          console.log("PIR Mode Larger Value (2 bytes) =" + dataview.getUint16(OFFSET_PIR_MODE_DATA_LARGER_VALUE, true));
+          console.log("PIR Mode Smaller Value (1 bytes) =" + dataview.getUint8(OFFSET_PIR_MODE_DATA_SMALLER_VALUE));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BURST: {
+          console.log("PIR BurstGap (2 bytes)= " + dataview.getUint16(OFFSET_PIR_MODE_BURST_GAP, true));
+          console.log("PIR BurstNumber (1 byte)= " + dataview.getUint8(OFFSET_PIR_MODE_BURST_NUMBER));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
+          console.log("PIR BulbExposureTime = (3 bytes)" + 
+            ((dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE, true)) + (dataview.getUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2)<<16)));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_VIDEO: {
+          console.log("PIR VideoDuration = (2 bytes)" + dataview.getUint16(OFFSET_PIR_MODE_VIDEO_DURATION, true) + " VideoExtension (1 byte)= " + dataview.getUint8(OFFSET_PIR_MODE_VIDEO_EXTENSION)); 
+          break;
+        }
+        default: {
+          break;
+        }
+      
       }
-      console.log("Timer interval chosen is " + this.timerSettingsBasic.get('timerInterval').value);
-      if (this.timerSettingsBasic.get('timerInterval').valid) {
-        //console.log("Timer interval chosen is " + this.timerSettingsBasic.get('timerInterval'));
+    
+      console.log('PIR Threshold (1 byte)= ' + dataview.getUint8(OFFSET_PIR_THRESHOLD));
+      console.log('PIR Amplification (1 byte)= ' + dataview.getUint8(OFFSET_PIR_AMPLIFICATION));
+      console.log('PIR InterTriggerTime (2 bytes)= ' + dataview.getUint16(OFFSET_PIR_INTERTRIGGERTIME, true));
+      
+      // === TIMER Settings ===
+      console.log('TIMER timerInterval (2 bytes)= ' + dataview.getUint16(OFFSET_TIMER_INTERVAL, true));
+      
+      if (dataview.getUint8(OFFSET_TIMER_OPER) == 1) {
+        console.log("TIMER DN mode = both");
       } else {
-        console.log("Timer value is invalid.");
+        console.log('TIMER OpertimeSetting DN threshold = ' + (dataview.getUint8(OFFSET_TIMER_OPER)>>1));
+        console.log('TIMER OpertimeSetting DN mode = ' + (dataview.getUint8(OFFSET_TIMER_OPER)&1));  
       }
+      
+      console.log('TIMER mode (1 byte)= ' + dataview.getUint8(OFFSET_TIMER_MODE));
+      switch(+dataview.getUint8(OFFSET_TIMER_MODE)) {
+        case MODE_SETTING.TRIGGER_SINGLE: {
+          //no extra data to record.
+          console.log("TIMER Mode Larger Value (2 bytes)=" + dataview.getUint16(OFFSET_TIMER_MODE_DATA_LARGER_VALUE, true));
+          console.log("TIMER Mode Smaller Value (1 byte)=" + dataview.getUint8(OFFSET_TIMER_MODE_DATA_SMALLER_VALUE));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BURST: {
+          console.log("TIMER BurstGap (2 bytes)= " + dataview.getUint16(OFFSET_TIMER_MODE_BURST_GAP, true));
+          console.log("TIMER BurstNumber (1 byte)= " + dataview.getUint8(OFFSET_TIMER_MODE_BURST_NUMBER));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
+          console.log("TIMER BulbExposureTime (3 bytes) = " + 
+            ((dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE, true))+(dataview.getUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2)<<16)));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_VIDEO: {
+          console.log("TIMER VideoDuration (2 bytes)= " + dataview.getUint16(OFFSET_TIMER_MODE_VIDEO_DURATION, true) + " VideoExtension (1 byte)= " + dataview.getUint8(OFFSET_TIMER_MODE_VIDEO_EXTENSION)); 
+          break;
+        }
+        default: {
+          break;
+        }
+      
+      }
+    
+      console.log("===========================================")
+    }
+
+    
+    public constructArrayBufferToWrite():ArrayBuffer {
+      /*
+        Format of ArrayBuffer that the board expects : make this fw version dependent next        
       */
 
-      let data = new ArrayBuffer(SENSEPI_SETTINGS_LENGTH);
-      //let data = this.constructArrayBufferToWrite();  
+      let writeBuffer = new ArrayBuffer(SENSEPI_SETTINGS_LENGTH);
+      var dataview = new DataView(writeBuffer);
+
+      //start writing the values
+      
+      dataview.setUint8(OFFSET_TRIGGER_SETTING, this.triggerSetting);
+
+      // ==== PIR SETTINGS ++++
+      if (this.pirSettingsBasic.controls.pirOpertimeSetting.value == TIME_SETTING.DAYNIGHT_BOTH) {
+        dataview.setUint8(OFFSET_PIR_OPER, 1);
+      } else {
+        dataview.setUint8(OFFSET_PIR_OPER, ((this.pirSettingsBasic.controls.pirDNThreshold.value<<1) + (this.pirSettingsBasic.controls.pirOpertimeSetting.value&0x01)));
+        console.log('PIR DNT = ' + (this.pirSettingsBasic.controls.pirDNThreshold.value<<1) + ' + ' + this.pirSettingsBasic.controls.pirOpertimeSetting.value + ' = ' + 
+          (((this.pirSettingsBasic.controls.pirDNThreshold.value<<1) + (this.pirSettingsBasic.controls.pirOpertimeSetting.value&0x01))));
+      }
+      
+      dataview.setUint8(OFFSET_PIR_MODE,this.pirSettingsMode.controls.pirMode.value);
+      
+      switch (+this.pirSettingsMode.controls.pirMode.value) {
+        case MODE_SETTING.TRIGGER_SINGLE: {
+          //no extra data to record.
+          dataview.setUint16(OFFSET_PIR_MODE_DATA_LARGER_VALUE, 0);
+          dataview.setUint8(OFFSET_PIR_MODE_DATA_SMALLER_VALUE, 0);
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BURST: {
+          dataview.setUint16(OFFSET_PIR_MODE_BURST_GAP, (this.pirSettingsMode.controls.pirBurstGap.value*10), true);
+          dataview.setUint8(OFFSET_PIR_MODE_BURST_NUMBER, this.pirSettingsMode.controls.pirBurstNumber.value);
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
+          dataview.setUint16(OFFSET_PIR_MODE_BULB_EXPOSURE, ((this.pirSettingsMode.controls.pirBulbExposureTime.value*10)&0xFFFF), true);
+          dataview.setUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2, ((this.pirSettingsMode.controls.pirBulbExposureTime.value*10) >>16));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_VIDEO: {
+          dataview.setUint16(OFFSET_PIR_MODE_VIDEO_DURATION, this.pirSettingsMode.controls.pirVideoDuration.value, true);
+          dataview.setUint8(OFFSET_PIR_MODE_VIDEO_EXTENSION, this.pirSettingsMode.controls.pirVideoExtension.value); 
+          break;
+        }
+        default: {
+          break;
+        }
+      } 
+      dataview.setUint8(OFFSET_PIR_THRESHOLD, this.pirSettingsBasic.controls.pirThreshold.value);
+      dataview.setUint8(OFFSET_PIR_AMPLIFICATION, this.pirSettingsBasic.controls.pirAmplification.value);
+      dataview.setUint16(OFFSET_PIR_INTERTRIGGERTIME, (this.pirSettingsBasic.controls.pirInterTriggerTime.value*10), true); 
+      
+      //dataview.setUint8(OFFSET_MAKE, this.make); 
+
+      // ==== TIMER SETTINGS ++++
+      dataview.setUint16(OFFSET_TIMER_INTERVAL, (this.timerSettingsBasic.controls.timerInterval.value*10), true);
+      
+      if (this.timerSettingsBasic.controls.timerOpertimeSetting.value == TIME_SETTING.DAYNIGHT_BOTH) {
+        dataview.setUint8(OFFSET_TIMER_OPER, 1);
+      } else {
+        dataview.setUint8(OFFSET_TIMER_OPER, ((this.timerSettingsBasic.controls.timerDNThreshold.value<<1) + (this.timerSettingsBasic.controls.timerOpertimeSetting.value&0x01)));
+        console.log('TIMER DNT = ' + (this.timerSettingsBasic.controls.timerDNThreshold.value<<1) + ' + ' + this.timerSettingsBasic.controls.timerOpertimeSetting.value + ' = ' + 
+          (((this.timerSettingsBasic.controls.timerDNThreshold.value<<1) + (this.timerSettingsBasic.controls.timerOpertimeSetting.value&0x01))));
+      }
+      
+      dataview.setUint8(OFFSET_TIMER_MODE,this.timerSettingsMode.controls.timerMode.value);
+      
+      switch (+this.timerSettingsMode.controls.timerMode.value) {
+        case MODE_SETTING.TRIGGER_SINGLE: {
+          //no extra data to record.
+          dataview.setUint16(OFFSET_TIMER_MODE_DATA_LARGER_VALUE, 0);
+          dataview.setUint8(OFFSET_TIMER_MODE_DATA_SMALLER_VALUE, 0);
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BURST: {
+          dataview.setUint16(OFFSET_TIMER_MODE_BURST_GAP, (this.timerSettingsMode.controls.timerBurstGap.value*10), true);
+          dataview.setUint8(OFFSET_TIMER_MODE_BURST_NUMBER, this.timerSettingsMode.controls.timerBurstNumber.value);
+          break;
+        }
+        case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
+          dataview.setUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE, ((this.timerSettingsMode.controls.timerBulbExposureTime.value*10)&0xFFFF), true);
+          dataview.setUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2, ((this.timerSettingsMode.controls.timerBulbExposureTime.value*10)>>16));
+          break;
+        }
+        case MODE_SETTING.TRIGGER_VIDEO: {
+          dataview.setUint16(OFFSET_TIMER_MODE_VIDEO_DURATION, this.timerSettingsMode.controls.timerVideoDuration.value, true);
+          dataview.setUint8(OFFSET_TIMER_MODE_VIDEO_EXTENSION, this.timerSettingsMode.controls.timerVideoExtension.value); 
+          break;
+        }
+        default: {
+          break;
+        }
+      } 
+
+      console.log("===============SETTINGS THAT WILL BE WRITTEN TO THE DEVICE ============================")
+      this.print_settings_arraybufffer(writeBuffer);
+      
+      return writeBuffer;
+
+    }
+
+	  // To write the value of each characteristic to the device 
+    onButtonClickWrite(event) {
+      let data = this.constructArrayBufferToWrite();  
       console.log("Size of buffer being written is " + data.byteLength);    
-      /*this.ble.write(this.bleDevice.devicemac, this.appikoCommon.UUID_SENSE_PI_SERVICE, this.appikoCommon.UUID_SENSE_PI_USER_SETTINGS, data).then(
+      this.ble.write(this.bleDevice.devicemac, this.appikoCommon.UUID_SENSE_PI_SERVICE, this.appikoCommon.UUID_SENSE_PI_USER_SETTINGS, data).then(
         () => this.setStatus('Write Success'),
-        //console.log('Wrote all settings to the device = ' + data)
+          //console.log('Wrote all settings to the device = ' + data)
       )
       .catch(
         e => console.log('error in writing to device : ' + e),
       );
-       */
     }
+
+  public loadDeviceConfigs(config) {
+    /*
+      Read the ArrayBuffer just sent by the board : make this fw version dependent next        
+    */
+
+    var dataview = new DataView(config);
+
+    this.triggerSetting = dataview.getUint8(OFFSET_TRIGGER_SETTING);
+    
+    this.pirSettingsBasic.controls.pirDNThreshold.setValue((dataview.getUint8(OFFSET_PIR_OPER))>>1);
+    this.pirSettingsBasic.controls.pirOpertimeSetting.setValue(dataview.getUint8(OFFSET_PIR_OPER) & 1);
+
+    this.pirSettingsMode.controls.pirMode.setValue(dataview.getUint8(OFFSET_PIR_MODE));
+    
+    switch (+this.pirSettingsMode.controls.pirMode.value) {
+      case MODE_SETTING.TRIGGER_SINGLE: {
+        //no extra data to record.
+        break;
+      }
+      case MODE_SETTING.TRIGGER_BURST: {
+        this.pirSettingsMode.controls.pirBurstGap.setValue((dataview.getUint16(OFFSET_PIR_MODE_BURST_GAP, true))/10);
+        this.pirSettingsMode.controls.pirBurstNumber.setValue(dataview.getUint8(OFFSET_PIR_MODE_BURST_NUMBER));
+        break;
+      }
+      case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
+        this.pirSettingsMode.controls.pirBulbExposureTime.setValue((((dataview.getUint16(OFFSET_PIR_MODE_BULB_EXPOSURE, true)) + (dataview.getUint8(OFFSET_PIR_MODE_BULB_EXPOSURE+2)<<16)))/10);
+        break;
+      }
+      case MODE_SETTING.TRIGGER_VIDEO: {
+        this.pirSettingsMode.controls.pirVideoDuration.setValue(dataview.getUint16(OFFSET_PIR_MODE_VIDEO_DURATION, true));
+        this.pirSettingsMode.controls.pirVideoExtension.setValue(dataview.getUint8(OFFSET_PIR_MODE_VIDEO_EXTENSION));
+        break;
+      }
+      default: {
+        break;
+      }
+    } 
+    this.pirSettingsBasic.controls.pirThreshold.setValue(dataview.getUint8(OFFSET_PIR_THRESHOLD));
+    this.pirSettingsBasic.controls.pirAmplification.setValue(dataview.getUint8(OFFSET_PIR_AMPLIFICATION));
+    this.pirSettingsBasic.controls.pirInterTriggerTime.setValue((dataview.getUint16(OFFSET_PIR_INTERTRIGGERTIME, true))/10);
+    
+    //dataview.setUint8(OFFSET_MAKE, this.make); 
+
+    // ==== TIMER SETTINGS ++++
+    this.timerSettingsBasic.controls.timerInterval.setValue((dataview.getUint16(OFFSET_TIMER_INTERVAL, true))/10);
+    
+    this.timerSettingsBasic.controls.timerDNThreshold.setValue((dataview.getUint8(OFFSET_TIMER_OPER))>>1);
+    this.timerSettingsBasic.controls.timerOpertimeSetting.setValue(dataview.getUint8(OFFSET_TIMER_OPER) & 1);
+    
+    this.timerSettingsMode.controls.timerMode.setValue(dataview.getUint8(OFFSET_TIMER_MODE));
+    
+    switch (+this.timerSettingsMode.controls.timerMode.value) {
+      case MODE_SETTING.TRIGGER_SINGLE: {
+        //no extra data to record.
+        break;
+      }
+      case MODE_SETTING.TRIGGER_BURST: {
+        this.timerSettingsMode.controls.timerBurstGap.setValue((dataview.getUint16(OFFSET_TIMER_MODE_BURST_GAP, true))/10);
+        this.timerSettingsMode.controls.timerBurstNumber.setValue(dataview.getUint8(OFFSET_TIMER_MODE_BURST_NUMBER));
+        break;
+      }
+      case MODE_SETTING.TRIGGER_BULB_EXPOSURE: {
+        this.timerSettingsMode.controls.timerBulbExposureTime.setValue(((dataview.getUint16(OFFSET_TIMER_MODE_BULB_EXPOSURE, true)) + (dataview.getUint8(OFFSET_TIMER_MODE_BULB_EXPOSURE+2)<<16))/10);
+        break;
+      }
+      case MODE_SETTING.TRIGGER_VIDEO: {
+        this.timerSettingsMode.controls.timerVideoDuration.setValue(dataview.getUint16(OFFSET_TIMER_MODE_VIDEO_DURATION, true));
+        this.timerSettingsMode.controls.timerVideoExtension.setValue(dataview.getUint8(OFFSET_TIMER_MODE_VIDEO_EXTENSION)); 
+        break;
+      }
+      default: {
+        break;
+      }
+    } 
+  }
+
   
-     // TIMER Settings
-    public setTriggerSetting(event) {
-      console.log('triggerSetting : trigger was set to ' + event);
-      this.triggerSetting = event;
-      switch (+event)  {
-        case TRIGGER_SETTING.TRIGGER_TIMER_ONLY : {
-          console.log("Trigger mode is TIMER only");
-          this.radioClickedTriggerTimer = true;
-          this.radioClickedTriggerPir = false;
-          this.radioClickedTriggerBoth = false;
-          break;
-        }
-        case TRIGGER_SETTING.TRIGGER_PIR_ONLY : {
-          console.log("Trigger mode is MOTION only");
-          this.radioClickedTriggerTimer = false;
-          this.radioClickedTriggerPir = true;
-          this.radioClickedTriggerBoth = false;
-          break;
-        }
-        case TRIGGER_SETTING.TRIGGER_BOTH : {
-          console.log("Trigger mode is TIMER + MOTION");
-          this.radioClickedTriggerTimer = true;
-          this.radioClickedTriggerPir = true;
-          this.radioClickedTriggerBoth = true;
-          break;
-        }
-        default :{
-          console.log("default trigger?");
-          break;
-        }
+  // TIMER Settings
+  public setTriggerSetting(event) {
+    console.log('triggerSetting : trigger was set to ' + event);
+    this.triggerSetting = event;
+    switch (+event)  {
+      case TRIGGER_SETTING.TRIGGER_TIMER_ONLY : {
+        console.log("Trigger mode is TIMER only");
+        this.radioClickedTriggerTimer = true;
+        this.radioClickedTriggerPir = false;
+        this.radioClickedTriggerBoth = false;
+        break;
+      }
+      case TRIGGER_SETTING.TRIGGER_PIR_ONLY : {
+        console.log("Trigger mode is MOTION only");
+        this.radioClickedTriggerTimer = false;
+        this.radioClickedTriggerPir = true;
+        this.radioClickedTriggerBoth = false;
+        break;
+      }
+      case TRIGGER_SETTING.TRIGGER_BOTH : {
+        console.log("Trigger mode is TIMER + MOTION");
+        this.radioClickedTriggerTimer = true;
+        this.radioClickedTriggerPir = true;
+        this.radioClickedTriggerBoth = true;
+        break;
+      }
+      default :{
+        console.log("default trigger?");
+        break;
       }
     }
+  }
 
   public resetTimerModes() {
       this.radioTimerClickedSingle = false;
