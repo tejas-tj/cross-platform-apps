@@ -112,7 +112,7 @@ export class SensepiconfigPage {
   		this.onConnected(this.bleDevice);
 
       this.triggerType = this.formBuilder.group({
-        triggerSetting: new FormControl('', Validators.required)
+        triggerSetting: new FormControl('')
       });
 
       this.timerSettingsBasic = this.formBuilder.group({
@@ -188,7 +188,7 @@ export class SensepiconfigPage {
 
 	  // To write the value of each characteristic to the device 
     onButtonClickWrite(event) {
-      if (this.triggerType.get('triggerSetting').valid) {
+      /*if (this.triggerType.get('triggerSetting').valid) {
         console.log("Trigger type is " + this.triggerType.get('triggerSetting').value);
         // Save your values, using this.form.get('myField').value;
       }
@@ -198,6 +198,7 @@ export class SensepiconfigPage {
       } else {
         console.log("Timer value is invalid.");
       }
+      */
 
       let data = new ArrayBuffer(SENSEPI_SETTINGS_LENGTH);
       //let data = this.constructArrayBufferToWrite();  

@@ -5,6 +5,7 @@ import { ToastController } from 'ionic-angular';
 
 import { ConnecthistoryPage } from '../connecthistory/connecthistory';
 import { SensepiconfigPage } from '../sensepiconfig/sensepiconfig';
+import { SensebeconfigPage } from '../sensebeconfig/sensebeconfig';
 import { AppikoCommonProvider } from '../../providers/appiko-common/appiko-common';
 import { appikoDeviceDataModel } from './appikoDeviceDataModel';
 
@@ -141,8 +142,15 @@ export class ScanlistPage {
         		loading.dismiss();
         		switch (device.typestr) {
         			case this.appikoCommon.APPIKO_SENSE_PI_SHORTENED_NAME: {
-        				console.log('Found a SensePi /SP : loading config page');
+        				console.log('Found a SensePi/SP : loading config page');
         				this.navCtrl.push(SensepiconfigPage, {
+        					peripheral: device
+        				});
+        				break;
+        			}
+        			case this.appikoCommon.APPIKO_SENSE_BE_SHORTENED_NAME: {
+        				console.log('Found a SenseBe/SB : loading config page');
+        				this.navCtrl.push(SensebeconfigPage, {
         					peripheral: device
         				});
         				break;

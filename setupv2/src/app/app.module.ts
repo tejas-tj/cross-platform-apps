@@ -9,6 +9,7 @@ import { HomePage } from '../pages/home/home';
 import { ScanlistPage } from '../pages/scanlist/scanlist';
 import { ConnecthistoryPage } from '../pages/connecthistory/connecthistory';
 import { SensepiconfigPage } from '../pages/sensepiconfig/sensepiconfig';
+import { SensebeconfigPage } from '../pages/sensebeconfig/sensebeconfig';
 import { AboutPage } from '../pages/about/about';
 import { AppikoCommonProvider } from '../providers/appiko-common/appiko-common';
 
@@ -19,6 +20,7 @@ import { AppikoCommonProvider } from '../providers/appiko-common/appiko-common';
     ScanlistPage,
     ConnecthistoryPage,
     SensepiconfigPage,
+    SensebeconfigPage,
     AboutPage
   ],
   imports: [
@@ -32,6 +34,7 @@ import { AppikoCommonProvider } from '../providers/appiko-common/appiko-common';
     ScanlistPage,
     ConnecthistoryPage,
     SensepiconfigPage,
+    SensebeconfigPage,
     AboutPage
   ],
   providers: [

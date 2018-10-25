@@ -27,7 +27,14 @@ export class AppikoCommonProvider {
     UUID_SENSE_PI_USER_SETTINGS = '3c73dc52-07f5-480d-b066-837407fbde0a';
     APPIKO_SENSE_PI_COMPLETE_LOCAL_NAME = 'SensePi';
     // shortened local name is SPaabbyymmddnnnn : aa is board rev, bb is manufacturing location
-    APPIKO_SENSE_PI_SHORTENED_NAME = 'SP' 
+    APPIKO_SENSE_PI_SHORTENED_NAME = 'SP'; 
+
+
+    //SENSEBE
+    APPIKO_SENSE_BE_COMPLETE_LOCAL_NAME = 'SenseBe';
+    APPIKO_SENSE_BE_SHORTENED_NAME = 'SB';
+
+    
     FW_VER = '1.0';
 
 

@@ -21,19 +21,20 @@
     <ion-list radio-group formControlName="triggerSetting" (ionChange)="setTriggerSetting($event)">
       <ion-item>
         <ion-label> Timer Only </ion-label>
-        <ion-radio value="0"> </ion-radio>
+        <ion-radio value="0" > </ion-radio>
       </ion-item>
       <ion-item>
         <ion-label> Motion Only </ion-label>
-        <ion-radio value="1">  </ion-radio>
+        <ion-radio value="1" >  </ion-radio>
       </ion-item>
     </ion-list>
   </form>
 </ion-card>
 
-<!--<ion-card *ngIf="triggerSetting==0">-->
+<!--<ion-card *ngIf="triggerSetting==0"  *ngIf="(triggerType.controls.triggerSetting.value == 0)" >-->
   <!-- *ngIf="radioClickedTriggerTimer"-->
-<ion-card >
+
+<ion-card  *ngIf="radioClickedTriggerTimer">
   <ion-card-header> Timer Frequency </ion-card-header>
   <form [formGroup]="timerSettingsBasic">
     <ion-item>
@@ -308,8 +309,6 @@
     </ion-list>
   </form>  
 </ion-card>
-
-
  
 </ion-content>
 
