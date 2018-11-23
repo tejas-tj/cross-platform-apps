@@ -114,10 +114,15 @@ export class DetailPage {
   radioPirClickedVideo: boolean = false;
   radioPirClickedFocus: boolean = false;
 
-
   pirThreshold: number;
   pirAmplification: number;
   pirInterTriggerTime: number;
+
+  sysinfoFwVerMajor: number;
+  sysinfoFwVerMinor: number;
+  sysinfoFwVerBuild: number;
+  sysinfoBattVolt: number;
+  sysinfoBattOK: string;
   
   public buttonColor: string = "plain";
     
@@ -226,10 +231,22 @@ export class DetailPage {
          (e) => console.log("Error trying to read data from service " + UUID_SENSE_PI_SERVICE + " and char " + UUID_SENSE_PI_USER_SETTINGS + " : " + e)
       );
 
+      //once connected, read the current config on the device.
+      this.ble.read(this.peripheral.id, UUID_SENSE_PI_SERVICE, UUID_SENSE_BOARD_SETTINGS).then(
+        data => {
+          console.log("read the sysinfo from the sensepi "),
+          console.log("====================== SYSINFO READ =================="),
+          this.loadSysInfo(data)
+        }
+      ).catch(
+         (e) => console.log("Error trying to read data from service " + UUID_SENSE_PI_SERVICE + " and char " + UUID_SENSE_PI_USER_SETTINGS + " : " + e)
+      );
+
       //pnarasim : why this?
       /*this.ble.startNotification(this.peripheral.id, UUID_SENSE_PI_SERVICE, UUID_SENSE_PI_USER_SETTINGS).subscribe(
         () => this.showAlert('Unexpected Error', 'Failed to subscribe')
       )*/
+      
     }
   
     // TIMER Settings
@@ -525,6 +542,35 @@ export class DetailPage {
         }
       } 
     }
+
+    public loadSysInfo(info) {
+      /*
+        Read the ArrayBuffer just sent by the board : make this fw version dependent next        
+      */
+
+      var dataview = new DataView(info);
+
+      this.sysinfoBattVolt = (dataview.getUint8(16)*3.6/256);
+      this.sysinfoBattVolt = parseFloat(this.sysinfoBattVolt.toFixed(2));      
+      this.sysinfoFwVerMajor = dataview.getUint8(17);
+      this.sysinfoFwVerMinor = dataview.getUint8(18);
+      this.sysinfoFwVerBuild = dataview.getUint8(19);
+
+      if(this.sysinfoBattVolt > 2.3)
+      {
+      	this.sysinfoBattOK = '👍';
+      } else {
+		this.sysinfoBattOK = '👎';
+      }
+
+      console.log('sysinfoBattVolt' + this.sysinfoBattVolt + typeof(this.sysinfoBattVolt));
+      console.log('sysinfoFwVerMajor' + this.sysinfoFwVerMajor);
+      console.log('sysinfoFwVerMinor' + this.sysinfoFwVerMinor);
+      console.log('sysinfoFwVerBuild' + this.sysinfoFwVerBuild);
+      console.log('sysinfoBattOK' + this.sysinfoBattOK);
+ 
+    }
+
 
     public print_settings_arraybufffer(writeBuffer:ArrayBuffer) {
 
