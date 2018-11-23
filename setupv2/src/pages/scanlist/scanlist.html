@@ -10,11 +10,10 @@
 <ion-content padding>
   <ion-list> 
     <button ion-item *ngFor="let device of devices" (click)="deviceSelected(device)">
-        <ion-row> {{ device.name}} </ion-row> 
-        <ion-row *ngIf="platform.is('ios')" > {{ device.advertising.kCBAdvDataLocalName }} </ion-row>
-        <ion-row *ngIf="platform.is('android')" > {{ device.name }} </ion-row>
-        <ion-row *ngIf="platform.is('ios')" > Battery Level: {{ device.advertising.kCBAdvDataTxPowerLevel}} RSSI: {{ device.rssi }} </ion-row>
-        <ion-row *ngIf="platform.is('android')" > Battery Level : {{ device.power }} RSSI: {{ device.rssi }} </ion-row>
+      <ion-row>  {{ device.completename }} : {{ device.shortenedname }} </ion-row>
+      <ion-row>  Battery Level : {{ device.txpower }} </ion-row>
+      <ion-row> RSSI : {{ device.rssi }} </ion-row>
+      
     </button>  
   </ion-list>
 </ion-content>

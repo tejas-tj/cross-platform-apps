@@ -14,15 +14,300 @@
 
 
 <ion-content padding>
+
 <ion-card>
-	<form [formGroup]="triggerSettingsForm">	
-		<ion-item>
-			<ion-label> Trigger Setting </ion-label>
-			<ion-input [formControl]="triggerSettingsForm.controls['triggerMode']"> </ion-input>
-		</ion-item>
-    </form>
+	<form [formGroup]="triggerType">
+    <ion-label> Choose Operating Mode </ion-label> 	
+    <ion-list radio-group formControlName="triggerSetting" (ionChange)="setTriggerSetting($event)">
+      <ion-item>
+        <ion-label> Timer Only </ion-label>
+        <ion-radio value="0" > </ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label> Motion Only </ion-label>
+        <ion-radio value="1" >  </ion-radio>
+      </ion-item>
+    </ion-list>
+  </form>
 </ion-card>
-Hello there
+
+<!--<ion-card *ngIf="triggerSetting==0"  *ngIf="(triggerType.controls.triggerSetting.value == 0)" >-->
+  <!-- *ngIf="radioClickedTriggerTimer"-->
+
+<ion-card  *ngIf="radioClickedTriggerTimer">
+  <ion-card-header> Timer Frequency </ion-card-header>
+  <form [formGroup]="timerSettingsBasic">
+    <ion-item>
+      <ion-label> Timer Interval </ion-label>
+      <ion-input type="number" formControlName="timerInterval" [class.invalid]="!timerSettingsBasic.controls.timerInterval.valid && (timerSettingsBasic.controls.timerInterval.dirty || timerSettingsBasic.controls.timerInterval.touched)">  {{ timerSettingsBasic.controls.timerInterval.value }} </ion-input>
+    </ion-item>
+    
+    <ion-item *ngIf="!timerSettingsBasic.controls.timerInterval.valid  && (timerSettingsBasic.controls.timerInterval.dirty || timerSettingsBasic.controls.timerInterval.touched)">
+                <p>Please enter a single decimal place</p>
+    </ion-item>
+  </form>
+</ion-card>
+
+<ion-card *ngIf="radioClickedTriggerTimer">
+  <ion-card-header> Timer Operating Mode </ion-card-header>
+  <form [formGroup]="timerSettingsBasic">
+    
+    <ion-label> Operate During </ion-label>  
+    <ion-list radio-group formControlName="timerOpertimeSetting">
+      <ion-item>
+        <ion-label> Day Only </ion-label>
+        <ion-radio value="0"> </ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label> Night Only </ion-label>
+        <ion-radio value="1">  </ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>24 hours</ion-label>
+        <ion-radio value="2">  </ion-radio>
+      </ion-item>
+    </ion-list>
+
+    <ion-item>
+      <ion-label> Light Threshold </ion-label>
+      <ion-range min="0" max="127" pin="true" formControlName="timerDNThreshold">
+        <ion-label range-left>Light</ion-label>
+        <ion-label range-right>Dark</ion-label>
+      </ion-range>
+  </ion-item>
+  
+  </form>
+</ion-card>
+
+<ion-card *ngIf="radioClickedTriggerTimer">
+  <ion-card-header> Trigger </ion-card-header>
+  <form [formGroup]="timerSettingsMode">
+    <ion-list radio-group formControlName="timerMode" (ionChange)="setTimerMode($event)">
+      <ion-item>
+       <ion-label> Set Single Trigger </ion-label>
+       <ion-icon name="image" item-start></ion-icon>
+       <ion-radio value = "0"></ion-radio>
+      </ion-item>
+      
+      <ion-item>
+       <ion-label> Set Burst Trigger</ion-label>
+       <ion-icon name="images" item-start></ion-icon>
+       <ion-radio value = "1"></ion-radio>
+      </ion-item>
+
+      <ion-item *ngIf="radioTimerClickedBurst==true" >
+        <ion-label color="primary" >Time between bursts </ion-label>
+        <ion-input type="number" formControlName="timerBurstGap" [class.invalid]="!timerSettingsMode.controls.timerBurstGap.valid && (timerSettingsMode.controls.timerBurstGap.dirty || timerSettingsMode.controls.timerBurstGap.touched)"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="!timerSettingsMode.controls.timerBurstGap.valid  && (timerSettingsMode.controls.timerBurstGap.dirty || timerSettingsMode.controls.timerBurstGap.touched)">
+                <p>Please enter a single decimal place</p>
+      </ion-item>
+
+      <ion-item *ngIf="radioTimerClickedBurst" >
+       <ion-label color="primary">Number of shots per burst </ion-label>
+       <ion-input type="number"  formControlName="timerBurstNumber" [class.invalid]="!timerSettingsMode.controls.timerBurstNumber.valid && (timerSettingsMode.controls.timerBurstNumber.dirty || timerSettingsMode.controls.timerBurstNumber.touched)"> {{ timerSettingsMode.controls.timerBurstNumber.value }} </ion-input>
+      </ion-item>
+      <ion-item *ngIf="!timerSettingsMode.controls.timerBurstNumber.valid  && (timerSettingsMode.controls.timerBurstNumber.dirty || timerSettingsMode.controls.timerBurstNumber.touched)">
+                <p>Please enter a whole number between 2 and 50</p>
+      </ion-item>
+      
+      <ion-item>
+       <ion-label> Set Bulb Exposure </ion-label>
+       <ion-icon name="bulb" item-start></ion-icon>
+       <ion-radio value = "2"></ion-radio>
+      </ion-item>
+
+      <ion-item *ngIf="radioTimerClickedBulb" >
+        <ion-label color="primary" >Exposure Time 
+          <!--<ion-badge color="primary" item-end>{{this.timerBulbExposureTime}}</ion-badge>-->
+        </ion-label>
+        <ion-input type="number" formControlName="timerBulbExposureTime" [class.invalid]="!timerSettingsMode.controls.timerBulbExposureTime.valid && (timerSettingsMode.controls.timerBulbExposureTime.dirty || timerSettingsMode.controls.timerBulbExposureTime.touched)"> {{ timerSettingsMode.controls.timerBulbExposureTime.value }} </ion-input>
+      </ion-item>
+      <ion-item *ngIf="!timerSettingsMode.controls.timerBulbExposureTime.valid  && (timerSettingsMode.controls.timerBulbExposureTime.dirty || timerSettingsMode.controls.timerBulbExposureTime.touched)">
+                <p>Please enter a single decimal place</p>
+      </ion-item>
+      
+      <ion-item *ngIf="(make!=1)">
+       <ion-label> Set Video Mode </ion-label>
+       <ion-icon name="videocam" item-start></ion-icon>
+       <ion-radio value = "3"></ion-radio>
+      </ion-item>
+
+      <ion-item *ngIf="radioTimerClickedVideo&&(make!=1)">
+        <ion-label color="primary" >Duration of the video
+          <!--<ion-badge color="primary" item-end>{{this.timerVideoDuration}}</ion-badge>-->
+        </ion-label>
+        <ion-input type="number" formControlName="timerVideoDuration" [class.invalid]="!timerSettingsMode.controls.timerVideoDuration.valid && (timerSettingsMode.controls.timerVideoDuration.dirty || timerSettingsMode.controls.timerVideoDuration.touched)"> {{ timerSettingsMode.controls.timerVideoDuration.value }} </ion-input>
+      </ion-item>
+      <ion-item *ngIf="!timerSettingsMode.controls.timerVideoDuration.valid  && (timerSettingsMode.controls.timerVideoDuration.dirty || timerSettingsMode.controls.timerVideoDuration.touched)">
+                <p>Please enter a single decimal place</p>
+      </ion-item>
+      
+      <ion-item *ngIf="radioTimerClickedVideo&&(make!=1)" >
+        <ion-label color="primary" >Extension time 
+          <!--<ion-badge color="primary" item-end>{{this.timerVideoExtension}}</ion-badge>-->
+        </ion-label>
+        <ion-input type="number" formControlName="timerVideoExtension" [class.invalid]="!timerSettingsMode.controls.timerVideoExtension.valid && (timerSettingsMode.controls.timerVideoExtension.dirty || timerSettingsMode.controls.timerVideoExtension.touched)"> {{ timerSettingsMode.controls.timerVideoExtension.value }} </ion-input>
+        </ion-item>
+      <ion-item *ngIf="!timerSettingsMode.controls.timerVideoExtension.valid  && (timerSettingsMode.controls.timerVideoExtension.dirty || timerSettingsMode.controls.timerVideoExtension.touched)">
+                <p>Please enter a single decimal place</p>
+      </ion-item>
+        
+      <ion-item>
+       <ion-label> Set Focus Only </ion-label>
+       <ion-icon name="aperture" item-start></ion-icon>
+       <ion-radio value = "4"></ion-radio>
+      </ion-item>
+  
+    </ion-list>
+  </form>  
+</ion-card>
+
+<ion-card *ngIf="radioClickedTriggerPir">
+  <ion-card-header> Pir Operating Mode </ion-card-header>
+  <form [formGroup]="pirSettingsBasic">
+    
+    <ion-label> Operate During </ion-label>  
+    <ion-list radio-group formControlName="pirOpertimeSetting">
+      <ion-item>
+        <ion-label> Day Only </ion-label>
+        <ion-radio value="0"> </ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label> Night Only </ion-label>
+        <ion-radio value="1">  </ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>24 hours</ion-label>
+        <ion-radio value="2">  </ion-radio>
+      </ion-item>
+    </ion-list>
+
+    <ion-item>
+      <ion-label> Light Threshold </ion-label>
+      <ion-range min="0" max="127" pin="true" formControlName="pirDNThreshold">
+        <ion-label range-left>Light</ion-label>
+        <ion-label range-right>Dark</ion-label>
+      </ion-range>
+  </ion-item>
+  </form>
+</ion-card>
+
+<ion-card *ngIf="radioClickedTriggerPir">
+  <ion-card-header> Pir Sensitivity </ion-card-header>
+  <form [formGroup]="pirSettingsBasic">
+    <ion-item>
+      <ion-label> Pir Threshold </ion-label>
+      <ion-input type="number" formControlName="pirThreshold" [class.invalid]="!pirSettingsBasic.controls.pirThreshold.valid && (pirSettingsBasic.controls.pirThreshold.dirty || pirSettingsBasic.controls.pirThreshold.touched)"> {{ pirSettingsBasic.controls.pirThreshold.value }} </ion-input>
+    </ion-item>
+    
+    <ion-item *ngIf="!pirSettingsBasic.controls.pirThreshold.valid  && (pirSettingsBasic.controls.pirThreshold.dirty || pirSettingsBasic.controls.pirThreshold.touched)">
+                <p>Please enter a whole number between 16 and 255</p>
+    </ion-item>
+    <ion-item>
+      <ion-label> Pir Amplification </ion-label>
+      <ion-input type="number" formControlName="pirAmplification" [class.invalid]="!pirSettingsBasic.controls.pirAmplification.valid && (pirSettingsBasic.controls.pirAmplification.dirty || pirSettingsBasic.controls.pirAmplification.touched)"> {{ pirSettingsBasic.controls.pirAmplification.value }} </ion-input>
+    </ion-item>
+    
+    <ion-item *ngIf="!pirSettingsBasic.controls.pirAmplification.valid  && (pirSettingsBasic.controls.pirAmplification.dirty || pirSettingsBasic.controls.pirAmplification.touched)">
+                <p>Please enter a whole number between 0 and 63 </p>
+    </ion-item>
+
+    <ion-item>
+      <ion-label> Pir Inter Trigger Time </ion-label>
+      <ion-input type="number" formControlName="pirInterTriggerTime" [class.invalid]="!pirSettingsBasic.controls.pirInterTriggerTime.valid && (pirSettingsBasic.controls.pirInterTriggerTime.dirty || pirSettingsBasic.controls.pirInterTriggerTime.touched)"> {{ pirSettingsBasic.controls.pirInterTriggerTime.value  }} </ion-input>
+    </ion-item>
+    
+    <ion-item *ngIf="!pirSettingsBasic.controls.pirInterTriggerTime.valid  && (pirSettingsBasic.controls.pirInterTriggerTime.dirty || pirSettingsBasic.controls.pirInterTriggerTime.touched)">
+                <p>Please enter a single decimal place </p>
+    </ion-item>
+ </form>
+</ion-card>
+
+<ion-card *ngIf="radioClickedTriggerPir">
+  <ion-card-header> Trigger </ion-card-header>
+  <form [formGroup]="pirSettingsMode">
+    <ion-list radio-group formControlName="pirMode" (ionChange)="setPirMode($event)">
+      <ion-item>
+       <ion-label> Set Single Trigger </ion-label>
+       <ion-icon name="image" item-start></ion-icon>
+       <ion-radio value = "0"></ion-radio>
+      </ion-item>
+      
+      <ion-item>
+       <ion-label> Set Burst Trigger</ion-label>
+       <ion-icon name="images" item-start></ion-icon>
+       <ion-radio value = "1"></ion-radio>
+      </ion-item>
+
+      <ion-item *ngIf="radioPirClickedBurst==true" >
+        <ion-label color="primary" >Time between bursts </ion-label>
+        <ion-input type="number" formControlName="pirBurstGap" [class.invalid]="!pirSettingsMode.controls.pirBurstGap.valid && (pirSettingsMode.controls.pirBurstGap.dirty || pirSettingsMode.controls.pirBurstGap.touched)"> {{ pirSettingsMode.controls.pirBurstGap.value  }} </ion-input>
+      </ion-item>
+      <ion-item *ngIf="!pirSettingsMode.controls.pirBurstGap.valid  && (pirSettingsMode.controls.pirBurstGap.dirty || pirSettingsMode.controls.pirBurstGap.touched)">
+                <p>Please enter a single decimal place</p>
+      </ion-item>
+
+      <ion-item *ngIf="radioPirClickedBurst" >
+       <ion-label color="primary">Number of shots per burst </ion-label>
+       <ion-input type="number"  formControlName="pirBurstNumber" [class.invalid]="!pirSettingsMode.controls.pirBurstNumber.valid && (pirSettingsMode.controls.pirBurstNumber.dirty || pirSettingsMode.controls.pirBurstNumber.touched)"> {{ pirSettingsMode.controls.pirBurstNumber.value  }}</ion-input>
+      </ion-item>
+      <ion-item *ngIf="!pirSettingsMode.controls.pirBurstNumber.valid  && (pirSettingsMode.controls.pirBurstNumber.dirty || pirSettingsMode.controls.pirBurstNumber.touched)">
+                <p>Please enter a whole number between 2 and 50 </p>
+      </ion-item>
+      
+      <ion-item>
+       <ion-label> Set Bulb Exposure </ion-label>
+       <ion-icon name="bulb" item-start></ion-icon>
+       <ion-radio value = "2"></ion-radio>
+      </ion-item>
+
+      <ion-item *ngIf="radioPirClickedBulb" >
+        <ion-label color="primary" >Exposure Time 
+          <!--<ion-badge color="primary" item-end>{{this.pirBulbExposureTime}}</ion-badge>-->
+        </ion-label>
+        <ion-input type="number" formControlName="pirBulbExposureTime" [class.invalid]="!pirSettingsMode.controls.pirBulbExposureTime.valid && (pirSettingsMode.controls.pirBulbExposureTime.dirty || pirSettingsMode.controls.pirBulbExposureTime.touched)"> {{ pirSettingsMode.controls.pirBulbExposureTime.value }} </ion-input>
+      </ion-item>
+      <ion-item *ngIf="!pirSettingsMode.controls.pirBulbExposureTime.valid  && (pirSettingsMode.controls.pirBulbExposureTime.dirty || pirSettingsMode.controls.pirBulbExposureTime.touched)">
+                <p>Please enter a single decimal place</p>
+      </ion-item>
+      
+      <ion-item *ngIf="(make!=1)">
+       <ion-label> Set Video Mode </ion-label>
+       <ion-icon name="videocam" item-start></ion-icon>
+       <ion-radio value = "3"></ion-radio>
+      </ion-item>
+
+      <ion-item *ngIf="radioPirClickedVideo&&(make!=1)">
+        <ion-label color="primary" >Duration of the video
+          <!--<ion-badge color="primary" item-end>{{this.pirVideoDuration}}</ion-badge>-->
+        </ion-label>
+        <ion-input type="number" formControlName="pirVideoDuration" [class.invalid]="!pirSettingsMode.controls.pirVideoDuration.valid && (pirSettingsMode.controls.pirVideoDuration.dirty || pirSettingsMode.controls.pirVideoDuration.touched)"> {{ pirSettingsMode.controls.pirVideoDuration.value }} </ion-input>
+      </ion-item>
+      <ion-item *ngIf="!pirSettingsMode.controls.pirVideoDuration.valid  && (pirSettingsMode.controls.pirVideoDuration.dirty || pirSettingsMode.controls.pirVideoDuration.touched)">
+                <p>Please enter a single decimal place</p>
+      </ion-item>
+      
+      <ion-item *ngIf="radioPirClickedVideo&&(make!=1)" >
+        <ion-label color="primary" >Extension time 
+          <!--<ion-badge color="primary" item-end>{{this.pirVideoExtension}}</ion-badge>-->
+        </ion-label>
+        <ion-input type="number" formControlName="pirVideoExtension" [class.invalid]="!pirSettingsMode.controls.pirVideoExtension.valid && (pirSettingsMode.controls.pirVideoExtension.dirty || pirSettingsMode.controls.pirVideoExtension.touched)">  {{ pirSettingsMode.controls.pirVideoExtension.value }} </ion-input>
+        </ion-item>
+      <ion-item *ngIf="!pirSettingsMode.controls.pirVideoExtension.valid  && (pirSettingsMode.controls.pirVideoExtension.dirty || pirSettingsMode.controls.pirVideoExtension.touched)">
+                <p>Please enter a single decimal place</p>
+      </ion-item>
+        
+      <ion-item>
+       <ion-label> Set Focus Only </ion-label>
+       <ion-icon name="aperture" item-start></ion-icon>
+       <ion-radio value = "4"></ion-radio>
+      </ion-item>
+  
+    </ion-list>
+  </form>  
+</ion-card>
+ 
 </ion-content>
 
 <!-- Footer which displays status messages and consists of write button -->

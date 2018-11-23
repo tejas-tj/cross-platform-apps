@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar color="appiko">
-    <ion-title>{{ peripheral.name}}</ion-title>
+    <ion-title>{{ peripheral.name}} | Fw {{sysinfoFwVerMajor}}.{{sysinfoFwVerMinor}}.{{sysinfoFwVerBuild}} | 🔋{{sysinfoBattOK}} {{sysinfoBattVolt}} V </ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -58,7 +58,7 @@
       Timer Settings
     </ion-card-header>
     <ion-item >
-      <ion-label> Timer interval 
+      <ion-label> Timer interval (s)
         <ion-badge color="primary" item-end> {{this.timerInterval}} </ion-badge> 
       </ion-label>
       <ion-input type=number [(ngModel)]="timerInterval" ng-init="timerInterval=50" (ionChange)="setTriggerTimerInterval($event)" placeholder="seconds"> </ion-input>
@@ -99,60 +99,60 @@
     </ion-card-header>  
     <ion-list radio-group [(ngModel)]="timerMode" ng-init="timerMode=0" (ionChange)="setTimerMode($event)">
       <ion-item>
-       <ion-label> Set Single Trigger </ion-label>
+       <ion-label> Single Shot </ion-label>
        <ion-icon name="image" item-start></ion-icon>
        <ion-radio value = "0"></ion-radio>
       </ion-item>
       
       <ion-item>
-       <ion-label> Set Burst Trigger</ion-label>
+       <ion-label> Multi Shot </ion-label>
        <ion-icon name="images" item-start></ion-icon>
        <ion-radio value = "1"></ion-radio>
       </ion-item>
       
       <ion-item *ngIf="radioTimerClickedBurst" >
-        <ion-label color="primary" >Time between bursts </ion-label>
+        <ion-label color="primary" >Time between shots (s) </ion-label>
         <ion-input type="number" [(ngModel)]="timerBurstGap" ng-init="timerBurstGap=0" (ionChange)="setTimerBurstGap($event)" placeholder="Enter value in s"></ion-input>
       </ion-item>
       <ion-item *ngIf="radioTimerClickedBurst" >
-       <ion-label color="primary">Number of shots per burst </ion-label>
+       <ion-label color="primary">Number of shots per trigger </ion-label>
        <ion-input type="number" [(ngModel)]="timerBurstNumber" ng-init="timerBurstNumber=0" (ionChange)="setTimerBurstNumber($event)" ></ion-input>
       </ion-item>
       
       <ion-item>
-       <ion-label> Set Bulb Exposure </ion-label>
+       <ion-label> Long Press </ion-label>
        <ion-icon name="bulb" item-start></ion-icon>
        <ion-radio value = "2"></ion-radio>
       </ion-item>
 
       <ion-item *ngIf="radioTimerClickedBulb" >
-        <ion-label color="primary" >Exposure time
+        <ion-label color="primary" >Long press time (s)
           <ion-badge color="primary" item-end>{{this.timerBulbExposureTime}}</ion-badge>
         </ion-label>
         <ion-input type="number" [(ngModel)]="timerBulbExposureTime" ng-init="timerBulbExposureTime=0" (ionChange)="setTimerBulbExposureTime($event)" placeholder="seconds"></ion-input>
       </ion-item>
       
       <ion-item *ngIf="(make!=1)">
-       <ion-label> Set Video Mode </ion-label>
+       <ion-label> Video Mode </ion-label>
        <ion-icon name="videocam" item-start></ion-icon>
        <ion-radio value = "3"></ion-radio>
       </ion-item>
 
       <ion-item *ngIf="radioTimerClickedVideo&&(make!=1)">
-        <ion-label color="primary" >Duration of the video
+        <ion-label color="primary" >Duration of the video (s)
           <ion-badge color="primary" item-end>{{this.timerVideoDuration}}</ion-badge>
         </ion-label>
         <ion-input type="number" [(ngModel)]="timerVideoDuration" ng-init="timerVideoDuration=0" (ionChange)="setTimerVideoDuration($event)" placeholder="seconds"></ion-input>
       </ion-item>     
       <ion-item *ngIf="radioTimerClickedVideo" >
-        <ion-label color="primary" >Extension time 
+        <ion-label color="primary" >Extension time (s)
           <ion-badge color="primary" item-end>{{this.timerVideoExtension}}</ion-badge>
         </ion-label>
         <ion-input type="number" [(ngModel)]="timerVideoExtension" ng-init="timerVideoExtension=0" (ionChange)="setTimerVideoExtension($event)" placeholder="seconds"></ion-input>
       </ion-item>
 
       <ion-item>
-       <ion-label> Set Focus Only </ion-label>
+       <ion-label> Half Press (Focus) </ion-label>
        <ion-icon name="aperture" item-start></ion-icon>
        <ion-radio value = "4"></ion-radio>
       </ion-item>
@@ -197,64 +197,64 @@
     </ion-card-header>
     <ion-list radio-group [(ngModel)]="pirMode" ng-init="pirMode=0" (ionChange)="setPirMode($event)">
       <ion-item>
-       <ion-label> Set Single Trigger </ion-label>
+       <ion-label> Single Shot </ion-label>
        <ion-icon name="image" item-start></ion-icon>
        <ion-radio value = "0"></ion-radio>
       </ion-item>
       
       <ion-item>
-       <ion-label> Set Burst Trigger</ion-label>
+       <ion-label> Multi Shot </ion-label>
        <ion-icon name="images" item-start></ion-icon>
        <ion-radio value = "1"></ion-radio>
       </ion-item>
       
       <ion-item *ngIf="radioPirClickedBurst" >
-        <ion-label color="primary">Time between bursts
+        <ion-label color="primary">Time between shots (s)
           <ion-badge color="primary" item-end>{{this.pirBurstGap}}</ion-badge>
         </ion-label>
         <ion-input type="number" [(ngModel)]="pirBurstGap" ng-init="pirBurstGap=0" (ionChange)="setPirBurstGap($event)" placeholder="seconds"></ion-input>
       </ion-item>
       <ion-item *ngIf="radioPirClickedBurst" >
-       <ion-label color="primary">Number of shots per burst </ion-label>
+       <ion-label color="primary">Number of shots per trigger </ion-label>
        <ion-input type="number" [(ngModel)]="pirBurstNumber" ng-init="pirBurstNumber=0" (ionChange)="setPirBurstNumber($event)"></ion-input>
       </ion-item>
 
  
       <ion-item>
-       <ion-label> Set Bulb Exposure </ion-label>
+       <ion-label> Long Press </ion-label>
        <ion-icon name="bulb" item-start></ion-icon>
        <ion-radio value = "2"></ion-radio>
       </ion-item>
 
       <ion-item *ngIf="radioPirClickedBulb" >
-        <ion-label color="primary" >Exposure Time
+        <ion-label color="primary" >Long press time (s)
           <ion-badge color="primary" item-end>{{this.pirBulbExposureTime}}</ion-badge>
         </ion-label>
         <ion-input type="number" [(ngModel)]="pirBulbExposureTime" ng-init="pirBulbExposureTime=0" (ionChange)="setPirBulbExposureTime($event)" value="" placeholder="seconds"></ion-input>
       </ion-item>
       
       <ion-item *ngIf="(make!=1)">
-       <ion-label> Set Video Mode </ion-label>
+       <ion-label> Video Mode </ion-label>
        <ion-icon name="videocam" item-start></ion-icon>
        <ion-radio value = "3"></ion-radio>
       </ion-item>
       
       <ion-item *ngIf="radioPirClickedVideo&&(make!=1)">
-        <ion-label color="primary" >Duration of the video
+        <ion-label color="primary" >Duration of the video (s)
           <ion-badge color="primary" item-end>{{this.pirVideoDuration}}</ion-badge>
         </ion-label>
         <ion-input type="number" [(ngModel)]="pirVideoDuration" ng-init="pirVideoDuration=0" (ionChange)="setPirVideoDuration($event)" placeholder="seconds"></ion-input>
       </ion-item>
       
       <ion-item *ngIf="radioPirClickedVideo" >
-        <ion-label color="primary" >Extension time 
+        <ion-label color="primary" >Extension time (s)
           <ion-badge color="primary" item-end>{{this.pirVideoExtension}}</ion-badge>
         </ion-label>
         <ion-input type="number" [(ngModel)]="pirVideoExtension" ng-init="pirVideoExtension=0" (ionChange)="setPirVideoExtension($event)" placeholder="seconds"></ion-input>
       </ion-item>
 
       <ion-item>
-       <ion-label> Set Focus Only </ion-label>
+       <ion-label> Half Press (Focus) </ion-label>
        <ion-icon name="aperture" item-start></ion-icon>
        <ion-radio value = "4"></ion-radio>
       </ion-item>
