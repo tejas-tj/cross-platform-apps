@@ -1,5 +1,5 @@
-import { Component, NgZone } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { Component, NgZone, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, AlertController, Slides } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 import { BLE } from '@ionic-native/ble';
@@ -70,6 +70,11 @@ enum TRIGGER_SETTING {
 })
 export class SensepiconfigPage {
 
+  @ViewChild(Slides) slides: Slides;
+  currentSlide: boolean;
+  timerSettingsDone: boolean;
+  pirSettingsDone: boolean;
+
 	bleDevice: appikoDeviceDataModel;
 	statusMessage: string;
 
@@ -99,6 +104,12 @@ export class SensepiconfigPage {
   radioPirClickedBulb: boolean = false;
   radioPirClickedVideo: boolean = false;
   radioPirClickedFocus: boolean = false;
+
+  sysinfoFwVerMajor: number;
+  sysinfoFwVerMinor: number;
+  sysinfoFwVerBuild: number;
+  sysinfoBattVolt: number;
+  sysinfoBattOK: string;
 
   	constructor(public navCtrl: NavController, 
   		public navParams: NavParams,
@@ -147,6 +158,9 @@ export class SensepiconfigPage {
         pirVideoExtension: new FormControl('', Validators.compose([Validators.required, Validators.pattern('^\\d+\\.\\d{1}$')]))
       });
 
+      this.currentSlide = true;
+      this.timerSettingsDone = false;
+      this.pirSettingsDone = false;
   	}
 
   	// When connection to the peripheral is successful
@@ -160,6 +174,15 @@ export class SensepiconfigPage {
           console.log("====================== SETTINGS READ AND LOADED FROM THE DEVICE =================="),
           this.print_settings_arraybufffer(data),
           this.loadDeviceConfigs(data)
+        }
+      ).catch(
+         (e) => console.log("Error trying to read data from service " + this.appikoCommon.UUID_SENSE_PI_SERVICE + " and char " + this.appikoCommon.UUID_SENSE_PI_USER_SETTINGS + " : " + e)
+      );
+      this.ble.read(this.bleDevice.devicemac, this.appikoCommon.UUID_SENSE_PI_SERVICE, this.appikoCommon.UUID_SENSE_PI_BOARD_SETTINGS).then(
+        data => {
+          console.log("read the sysinfo from the sensepi "),
+          console.log("====================== SYSINFO READ =================="),
+          this.loadSystemInfo(data)
         }
       ).catch(
          (e) => console.log("Error trying to read data from service " + this.appikoCommon.UUID_SENSE_PI_SERVICE + " and char " + this.appikoCommon.UUID_SENSE_PI_USER_SETTINGS + " : " + e)
@@ -469,9 +492,35 @@ export class SensepiconfigPage {
       default: {
         break;
       }
-    } 
+    }
   }
 
+  loadSystemInfo(config) {
+    /*
+      Read the ArrayBuffer just sent by the board : make this fw version dependent next        
+    */
+
+    var dataview = new DataView(config);    
+
+    this.sysinfoBattVolt = (dataview.getUint8(16)*3.6/256);
+    this.sysinfoBattVolt = parseFloat(this.sysinfoBattVolt.toFixed(2));      
+    this.sysinfoFwVerMajor = dataview.getUint8(17);
+    this.sysinfoFwVerMinor = dataview.getUint8(18);
+    this.sysinfoFwVerBuild = dataview.getUint8(19);
+
+    if(this.sysinfoBattVolt > 2.3)
+    {
+      this.sysinfoBattOK = '👍';
+    } else {
+      this.sysinfoBattOK = '👎';
+    }
+
+    console.log('sysinfoBattVolt' + this.sysinfoBattVolt + typeof(this.sysinfoBattVolt));
+    console.log('sysinfoFwVerMajor' + this.sysinfoFwVerMajor);
+    console.log('sysinfoFwVerMinor' + this.sysinfoFwVerMinor);
+    console.log('sysinfoFwVerBuild' + this.sysinfoFwVerBuild);
+    console.log('sysinfoBattOK' + this.sysinfoBattOK);
+  }
   
   // TIMER Settings
   public setTriggerSetting(event) {
@@ -483,6 +532,7 @@ export class SensepiconfigPage {
         this.radioClickedTriggerTimer = true;
         this.radioClickedTriggerPir = false;
         this.radioClickedTriggerBoth = false;
+        this.slides.slideTo(1,500);
         break;
       }
       case TRIGGER_SETTING.TRIGGER_PIR_ONLY : {
@@ -490,6 +540,7 @@ export class SensepiconfigPage {
         this.radioClickedTriggerTimer = false;
         this.radioClickedTriggerPir = true;
         this.radioClickedTriggerBoth = false;
+        this.slides.slideTo(1,500); // in both cases, based on ngif var triggerSetting, its slide 1.
         break;
       }
       case TRIGGER_SETTING.TRIGGER_BOTH : {
@@ -497,6 +548,7 @@ export class SensepiconfigPage {
         this.radioClickedTriggerTimer = true;
         this.radioClickedTriggerPir = true;
         this.radioClickedTriggerBoth = true;
+        this.slides.slideTo(1,500); 
         break;
       }
       default :{
@@ -504,6 +556,19 @@ export class SensepiconfigPage {
         break;
       }
     }
+  }
+
+  slideTimerSettingsBasicFreq(event) {
+    console.log("Here in timer freq change");
+    if (this.timerSettingsBasic.controls.timerInterval.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid Timer Frequency : pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid Timer Frequency : proceeding");
+    }
+
   }
 
   public resetTimerModes() {
@@ -551,6 +616,61 @@ export class SensepiconfigPage {
       default: { 
         break; 
       } 
+    }
+  }
+
+  slideTimerSettingsModeBurstGap(event) {
+    if (this.timerSettingsMode.controls.timerBurstGap.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid Timer Mode settings Burst Gap: pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid Timer Mode settings Burst Gap: proceeding");
+    }
+  }
+
+  slideTimerSettingsModeBurstNum(event) {
+    if (this.timerSettingsMode.controls.timerBurstNumber.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid Timer Mode settings Burst Num: pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid Timer Mode settings Burst Num: proceeding");
+    }
+  }
+
+  slideTimerSettingsModeBulbExp(event) {
+    if (this.timerSettingsMode.controls.timerBulbExposure.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid Timer Mode settings Bulb Exp: pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid Timer Mode settings Bulb Exp: proceeding");
+    }
+  }
+
+  slideTimerSettingsModeVidDur(event) {
+    if (this.timerSettingsMode.controls.timerVideoDuration.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid Timer Mode settings Video Duration: pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid Timer Mode settings Video Duration: proceeding");
+    }
+  }
+
+  slideTimerSettingsModeVidExt(event) {
+    if (this.timerSettingsMode.controls.timerVideoExtension.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid Timer Mode settings Video Extension: pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid Timer Mode settings Video Extension: proceeding");
     }
   }
 
@@ -602,6 +722,147 @@ export class SensepiconfigPage {
     }
   }
 
+  slidePirSettingsBasicThresh(event) {
+    if (this.pirSettingsBasic.controls.pirThreshold.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid PIR Basic Threshold : pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid PIR Basic Threshold: proceeding");
+    }
+  }
+
+  slidePirSettingsBasicAmpl(event) {
+    if (this.pirSettingsBasic.controls.pirAmplification.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid PIR Basic Amplitude: pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid PIR Basic Amplitude: proceeding");
+    }
+  }
+
+  slidePirSettingsBasicITT(event) {
+    if (this.pirSettingsBasic.controls.pirInterTriggerTime.invalid ) {
+      //disable next till user enters a valid value here
+      console.log("Invalid PIR Basic ITT: pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid PIR Basic ITT: proceeding");
+    }
+  }
+
+  slidePirSettingsModeBurstGap(event) {
+    if (this.pirSettingsMode.controls.pirBurstGap.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid PIR Mode settings Burst Gap: pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid PIR Mode settings Burst Gap: proceeding");
+    }
+  }
+
+  slidePirSettingsModeBurstNum(event) {
+    if (this.pirSettingsMode.controls.pirBurstNumber.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid PIR Mode settings Burst Num: pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid PIR Mode settings Burst Num: proceeding");
+    }
+  }
+
+  slidePirSettingsModeBulbExp(event) {
+    if (this.pirSettingsMode.controls.pirBulbExposureTime.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid PIR Mode settings Bulb Exp: pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid PIR Mode settings Bulb Exp: proceeding");
+    }
+  }
+
+  slidePirSettingsModeVidDur(event) {
+    if (this.pirSettingsMode.controls.pirVideoDuration.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid PIR Mode settings Video Duration: pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid PIR Mode settings Video Duration: proceeding");
+    }
+  }
+
+  slidePirSettingsModeVidExt(event) {
+    if (this.pirSettingsMode.controls.pirVideoExtension.invalid) {
+      //disable next till user enters a valid value here
+      console.log("Invalid PIR Mode settings Video Extension: pls enter a valid value  to proceed");
+      this.currentSlide = false;
+    } else {
+      this.currentSlide = true;
+      console.log("Valid PIR Mode settings Video Extension: proceeding");
+    }
+  }
+
+
+  slideChanged() {
+    let currentIndex = this.slides.getActiveIndex();
+    console.log('Current index is', currentIndex);
+  }
+
+  next() {
+    switch (+this.triggerSetting) {
+      case TRIGGER_SETTING.TRIGGER_TIMER_ONLY: {
+        if ((this.slides.getActiveIndex() == 3)) {
+          console.log("No more timer settings, write to device or exit");
+          this.showAlert("Settings Done", "Settings Done : pls write to device or disconnect");
+          this.timerSettingsDone = true;
+        } else {
+            console.log("Next slide");
+            this.slides.slideNext();  
+          }  
+        break;
+      }
+      case TRIGGER_SETTING.TRIGGER_PIR_ONLY: {
+        if ((this.slides.getActiveIndex() == 3)) {
+          console.log("No more pir settings, write to device or exit");
+          this.showAlert("Settings Done", "Settings Done: pls write to device or disconnect");
+          this.pirSettingsDone = true;
+        } else {
+            console.log("Next slide");
+            this.slides.slideNext();    
+          }
+        break;
+      }
+      case TRIGGER_SETTING.TRIGGER_BOTH : {
+       if ((this.slides.getActiveIndex() == 6)) {
+          console.log("No more timer + pir settings, write to device or exit");
+          this.showAlert("Settings Done", "Settings Done: pls write to device or disconnect");
+          this.pirSettingsDone = true;
+        } else {
+            console.log("Next slide");
+            this.slides.slideNext();    
+          }
+        break; 
+      }
+      default: {
+         console.log("DOnt know trigger setting");
+         break;
+      }
+    }
+
+    
+  }
+
+  prev() {
+    this.slides.slidePrev();
+  }
   // Display messages in the footer
 	setStatus(message) {
   		console.log(message);

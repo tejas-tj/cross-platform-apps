@@ -10,14 +10,18 @@
 <ion-content padding>
   <ion-list> 
     <button ion-item *ngFor="let device of devices" (click)="deviceSelected(device)">
-      <ion-row>  {{ device.completename }} : {{ device.shortenedname }} </ion-row>
-      <ion-row>  Battery Level : {{ device.txpower }} </ion-row>
-      <ion-row> RSSI : {{ device.rssi }} </ion-row>
+      <ion-row>  {{ device.completename }} : {{ device.hwdate}}/{{device.hwmonth}}/{{device.hwyear}} : Unit {{ device.swrevision }}
+      </ion-row> 
+      <!-- date and last 4 unit id -->
+      <!--<ion-row>  Battery Level : {{ device.txpower }} </ion-row> FW xx.yy.zz TBD -->
+      <ion-row> RSSI : {{ device.rssi }} </ion-row> 
+      <!-- categorize based on distance as near, far etc -->
       
     </button>  
   </ion-list>
 </ion-content>
 
+<!-- put tips here TBD --> 
 <ion-footer>
   <ion-toolbar>
     <p>{{ statusMessage }}</p>

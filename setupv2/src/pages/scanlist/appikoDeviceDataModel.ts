@@ -3,6 +3,7 @@
 const SHORTENED_LOCAL_NAME = "0x08";
 const COMPLETE_LOCAL_NAME = "0x09";
 const TX_POWER_LEVEL = "0x0A";
+const FW_VERSION = "0xFF"; /// TBD xx.yy.zz 
 
 enum platforms {
 	IOS=0,
@@ -23,7 +24,7 @@ export class appikoDeviceDataModel {
   	hwyear: number;
   	hwmonth: number;
   	hwdate: number;
-  	swrevision: number;
+  	swrevision: number; // unit id
   	rssi: number;
   	txpower: number;
 
