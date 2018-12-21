@@ -5,18 +5,18 @@ import { ToastController } from 'ionic-angular';
 import { DetailPage } from '../detail/detail'; 
 
 // Appiko Sense Device Names by default
-const APPIKO_SENSE_PI = 'SensePi';
-const APPIKO_SENSE_PI_COMPLETE_LOCAL_NAME = 'SensePi';
+const LED_CONTROL = 'LED_Control';
+const LED_CONTROL_COMPLETE_LOCAL_NAME = 'LED_Control';
 // shortened local name is SPaabbyymmddnnnn : aa is board rev, bb is manufacturing location
-const APPIKO_SENSE_SHORTENED_LOCAL_NAME = 'SP' 
+const LED_CONTROL_SHORTENED_LOCAL_NAME = 'LC' 
 
-const APPIKO_SENSE_RE = /SP[0-9]+/g;
+const LED_CONTROL_RE = /LC[0-9]+/g;
 
 // Bluetooth UUIDs
-const UUID_SENSE_PI_SERVICE = '3c73dc50-07f5-480d-b066-837407fbde0a';
+const UUID_LED_CONTROL_SERVICE = '3c73dc50-07f5-480d-b066-837407fbde0a';
 
 //pnarasim : old UUID
-//const APPIKOSENSE_SERVICE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
+//const LED_CONTROL_SERVICE = '3c73dc5c-07f5-480d-b066-837407fbde0a';
 
 @Component({
   selector: 'page-home',
@@ -48,10 +48,10 @@ export class HomePage {
     
     // To continuously scan for BLE Devices (stopScan is never called)
     scan() {
-      this.setStatus('Scanning for Appiko BLE Devices');
+      this.setStatus('Scanning Devices');
       this.devices = [];  // clear list
       
-      this.ble.startScan([UUID_SENSE_PI_SERVICE]).subscribe(
+      this.ble.startScan([UUID_LED_CONTROL_SERVICE]).subscribe(
         device => this.onDeviceDiscovered(device), 
         error => this.scanError(error)
       );
@@ -63,7 +63,7 @@ export class HomePage {
     onDeviceDiscovered(device) {
       console.log('Discovered ' + JSON.stringify(device, null, 2));
       this.ngZone.run(() => {
-          console.log('Discovered device is an Appiko SensePi');
+          console.log('Discovered device');
           this.devices.push(device); 
         }
       );
@@ -79,7 +79,7 @@ export class HomePage {
     scanError(error) {
       this.setStatus('Error ' + error);
       let toast = this.toastCtrl.create({
-        message: 'Error scanning for Appiko BLE devices',
+        message: 'Error scanning devices',
         position: 'middle',
         /* duration: 15000 */
       });

@@ -1,8 +1,7 @@
 {
-  "name": "Appiko-Setup",
-  "app_id": "",
-  "type": "ionic-angular",
+  "name": "Light Control",
   "integrations": {
     "cordova": {}
-  }
+  },
+  "type": "ionic-angular"
 }
